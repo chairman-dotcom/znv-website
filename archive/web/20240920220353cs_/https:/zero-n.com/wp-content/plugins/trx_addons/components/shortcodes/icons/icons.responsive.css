@@ -1,0 +1,40 @@
+@media (max-width: 1279px) {
+  /* Icons */
+  .sc_icons .sc_icons_icon + .sc_icons_item_title,
+  .sc_icons .sc_icons_icon + .sc_icons_item_description {
+    margin-top: 1em;
+  }
+
+  .sc_icons .sc_icons_item_description {
+    font-size: 14px;
+  }
+}
+@media (max-width: 479px) {
+  /* Icons */
+  .sc_icons_columns_wrap .sc_icons_column {
+    width: 100% !important;
+  }
+}
+
+/*# sourceMappingURL=icons.responsive.css.map */
+
+/*
+     FILE ARCHIVED ON 22:03:47 Sep 20, 2024 AND RETRIEVED FROM THE
+     INTERNET ARCHIVE ON 03:26:10 Aug 12, 2025.
+     JAVASCRIPT APPENDED BY WAYBACK MACHINE, COPYRIGHT INTERNET ARCHIVE.
+
+     ALL OTHER CONTENT MAY ALSO BE PROTECTED BY COPYRIGHT (17 U.S.C.
+     SECTION 108(a)(3)).
+*/
+/*
+playback timings (ms):
+  captures_list: 0.544
+  exclusion.robots: 0.03
+  exclusion.robots.policy: 0.017
+  esindex: 0.01
+  cdx.remote: 3264.96
+  LoadShardBlock: 565.78 (3)
+  PetaboxLoader3.datanode: 392.845 (4)
+  PetaboxLoader3.resolve: 397.144 (2)
+  load_resource: 321.768
+*/
