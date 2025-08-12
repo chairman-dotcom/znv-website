@@ -1,11 +1,11 @@
 @font-face {
   font-family: 'fontello';
-  src: url('archive/web/20240920213948im_/https://zero-n.com/wp-content/themes/stratego/skins/default/css/font-icons/font/fontello.eot?87918236');
-  src: url('archive/web/20240920213948im_/https://zero-n.com/wp-content/themes/stratego/skins/default/css/font-icons/font/fontello.eot?87918236') format('embedded-opentype'),
-       url('archive/web/20240920213948im_/https://zero-n.com/wp-content/themes/stratego/skins/default/css/font-icons/font/fontello.woff2?87918236') format('woff2'),
-       url('archive/web/20240920213948im_/https://zero-n.com/wp-content/themes/stratego/skins/default/css/font-icons/font/fontello.woff?87918236') format('woff'),
-       url('archive/web/20240920213948im_/https://zero-n.com/wp-content/themes/stratego/skins/default/css/font-icons/font/fontello.ttf?87918236') format('truetype'),
-       url('archive/web/20240920213948im_/https://zero-n.com/wp-content/themes/stratego/skins/default/css/font-icons/font/fontello.svg?87918236') format('svg');
+  src: url('https://zero-n.com/wp-content/themes/stratego/skins/default/css/font-icons/font/fontello.eot?87918236');
+  src: url('https://zero-n.com/wp-content/themes/stratego/skins/default/css/font-icons/font/fontello.eot?87918236') format('embedded-opentype'),
+       url('https://zero-n.com/wp-content/themes/stratego/skins/default/css/font-icons/font/fontello.woff2?87918236') format('woff2'),
+       url('https://zero-n.com/wp-content/themes/stratego/skins/default/css/font-icons/font/fontello.woff?87918236') format('woff'),
+       url('https://zero-n.com/wp-content/themes/stratego/skins/default/css/font-icons/font/fontello.ttf?87918236') format('truetype'),
+       url('https://zero-n.com/wp-content/themes/stratego/skins/default/css/font-icons/font/fontello.svg?87918236') format('svg');
   font-weight: normal;
   font-style: normal;
 }
