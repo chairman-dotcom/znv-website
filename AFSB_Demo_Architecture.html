@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AFSB — Architecture</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="afsb-shared.css">
+</head>
+<body>
+  <div class="topbar">
+    <div class="topbar-left">
+      <a class="hub-link" href="AFSB_Demo_Hub.html">← Suite</a>
+      <div class="topbar-title">Architecture</div>
+    </div>
+    <div class="topbar-right">
+      <span class="zeron-badge"><img class="zeron-logo" src="https://zero-n.com/wp-content/uploads/2024/08/ZeroN_logo-Wtrans.png" alt="Zero.N" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-block';"><span class="zeron-fallback">Zero.N</span>Powered by Zero.N Ventures</span>
+      <span class="ai-badge">Proprietary technology throughout</span>
+    </div>
+  </div>
+
+  <main>
+    <div class="eyebrow">Module 04</div>
+    <h1>Four layers, one system.</h1>
+    <p class="lede">Each layer exists to make the one above it trustworthy. Three of the four are built as proprietary technology — owned or exclusively licensed IP, not just an operating process. Click a layer to expand.</p>
+
+    <div class="arch-card open" data-arch="1">
+      <div class="arch-head"><span class="atitle">01 · Verification — automation</span><span class="chevron">▾</span></div>
+      <div class="arch-body"><p>Sensors and automated processing generate attested, tamper-resistant records of intake quality, preservation conditions, and processing provenance — so the reserve's condition and every product's origin are proven, not reported.</p></div>
+    </div>
+    <div class="arch-card" data-arch="2">
+      <div class="arch-head"><span class="atitle">02 · Coordination — blockchain <span class="ip-tag">proprietary</span></span><span class="chevron">▾</span></div>
+      <div class="arch-body"><p>Procurement smart contracts settle open-market acquisitions with attested provenance from intake onward, and a co-funding structure gives the founding partner — and every partner it invites — an auditable record of exactly where each dirham went. In a crisis, the same layer runs the fast-track settlement engine: agentic AI coordinating customs, port, transport, compliance, and insurance counterparties, each on their own existing channel, with blockchain attesting every response before the contract authorizes release.</p></div>
+    </div>
+    <div class="arch-card" data-arch="3">
+      <div class="arch-head"><span class="atitle">03 · Optimization — AI <span class="ip-tag">proprietary</span></span><span class="chevron">▾</span></div>
+      <div class="arch-body"><p>Times and mixes open-market acquisitions to accumulate the cheapest, most diversified reserve; monitors exposure continuously and flags windows to lock in price; personalizes the premium nutrition and cosmetics lines through Apotek's AI-personalization engine — and, once a crisis is under way, routes stock to where it's needed most.</p></div>
+    </div>
+    <div class="arch-card" data-arch="4">
+      <div class="arch-head"><span class="atitle">04 · Visibility — Z.AI</span><span class="chevron">▾</span></div>
+      <div class="arch-body"><p>The bank's digital architecture is incorporated into Z.AI, the sponsor's AI initiative — giving every stakeholder full visibility and granular, real-time insight into reserves, flows, contracts, and impact through a single interface, queryable directly in natural language. "Trust us" becomes "see for yourself."</p></div>
+    </div>
+
+    <div class="panel" style="margin-top:20px; border-color:rgba(139,127,209,.4);">
+      <h3 style="color:var(--violet);">Proprietary technology as a balance-sheet asset</h3>
+      <div class="sub">Not just operating capability — owned or exclusively licensed IP</div>
+      <p style="font-size:12.5px;color:var(--sand-dim);line-height:1.7;margin:0;">The fast-track agentic settlement engine, the preservation and packaging technology behind each product line (Everstock, Terra Sancta), and Apotek's AI-personalization engine are each being developed as technology the entity owns or exclusively licenses — assets on the AFSB's own balance sheet, not dependencies on a third party's roadmap.</p>
+    </div>
+
+    <p class="footnote">Run to the highest standards of prudent financial management — conservative asset valuation, capital adequacy, independent audit — the AFSB works, like any bank, to maximize both impact and economic sustainability.</p>
+  </main>
+
+<script>
+  document.querySelectorAll('.arch-card').forEach(card => {
+    card.addEventListener('click', () => card.classList.toggle('open'));
+  });
+</script>
+</body>
+</html>

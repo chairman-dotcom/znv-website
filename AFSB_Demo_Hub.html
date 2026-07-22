@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AFSB — Demo Suite</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="afsb-shared.css">
+<style>
+  main{max-width:1080px;}
+  .hero{padding:26px 0 40px 0;}
+  .hero h1{font-size:38px; max-width:720px;}
+  .modgrid{display:grid; grid-template-columns:1fr 1fr; gap:18px;}
+  .modcard{
+    background:var(--panel); border:1px solid var(--hair); border-radius:12px; padding:26px 26px 22px 26px;
+    text-decoration:none; color:var(--sand); display:block; transition:border-color .15s, transform .15s;
+    position:relative; overflow:hidden;
+  }
+  .modcard:hover{border-color:var(--amber); transform:translateY(-2px);}
+  .modcard .midx{font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--amber); margin-bottom:10px;}
+  .modcard .mtitle{font-family:'Space Grotesk',sans-serif; font-size:19px; font-weight:600; margin-bottom:8px;}
+  .modcard .mdesc{font-size:12.5px; color:var(--sand-dim); line-height:1.65; margin-bottom:14px;}
+  .modcard .mtags{display:flex; gap:6px; flex-wrap:wrap;}
+  .mtag{font-family:'IBM Plex Mono',monospace; font-size:9.5px; color:var(--sand-dim); background:var(--panel-2); padding:3px 8px; border-radius:8px;}
+  .modcard .menter{
+    position:absolute; top:24px; right:24px; font-size:18px; color:var(--sand-dim); transition:transform .15s, color .15s;
+  }
+  .modcard:hover .menter{transform:translateX(4px); color:var(--amber);}
+  .modcard.wide{grid-column:1 / -1;}
+  .suite-note{
+    margin-top:36px; padding:18px 22px; border:1px solid var(--hair); border-radius:10px; background:var(--panel);
+    font-size:11.5px; color:var(--sand-dim); line-height:1.7;
+  }
+  .suite-note b{color:var(--amber);}
+</style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="topbar-left">
+      <div class="vault-mark"></div>
+      <div>
+        <div class="topbar-title">AFSB Demo Suite</div>
+        <div class="topbar-sub">Advanced Food Security Bank</div>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <span class="zeron-badge"><img class="zeron-logo" src="https://zero-n.com/wp-content/uploads/2024/08/ZeroN_logo-Wtrans.png" alt="Zero.N" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-block';"><span class="zeron-fallback">Zero.N</span>Powered by Zero.N Ventures</span>
+      <span class="ai-badge">AI &amp; automation throughout</span>
+    </div>
+  </div>
+
+  <main>
+    <div class="hero">
+      <div class="eyebrow">Eight modules, one institution</div>
+      <h1>Every layer of the AFSB, demonstrated separately — and built the same way.</h1>
+      <p class="lede">Each module below is a standalone, interactive walkthrough of one part of the model. Together they show what AI, automation, and blockchain are actually doing at every stage — not just what they enable in theory.</p>
+    </div>
+
+    <div class="modgrid">
+      <a class="modcard" href="AFSB_Demo_Products.html">
+        <div class="menter">→</div>
+        <div class="midx">01</div>
+        <div class="mtitle">Product Showcase</div>
+        <div class="mdesc">Everstock emergency food, Apotek personalized nutrition &amp; cosmetics, and Terra Sancta's Farmer &amp; Food Entrepreneur Support olive oil line — with full traceability behind every product.</div>
+        <div class="mtags"><span class="mtag">Everstock</span><span class="mtag">Apotek</span><span class="mtag">Terra Sancta</span></div>
+      </a>
+
+      <a class="modcard" href="AFSB_Reserve_Console_Demo.html">
+        <div class="menter">→</div>
+        <div class="midx">02</div>
+        <div class="mtitle">Reserve Console</div>
+        <div class="mdesc">The full reserve model — who's building it, shock response, the value chain, sourcing reach, and capital amplification.</div>
+        <div class="mtags"><span class="mtag">Simulator</span><span class="mtag">Map</span><span class="mtag">6 tabs</span></div>
+      </a>
+
+      <a class="modcard" href="AFSB_Demo_Settlement.html">
+        <div class="menter">→</div>
+        <div class="midx">03</div>
+        <div class="mtitle">Digital Settlement &amp; Custody</div>
+        <div class="mdesc">A shipment from loading to payment — tokenized bill of lading, on-chain custody events, and smart-contract settlement, running end to end.</div>
+        <div class="mtags"><span class="mtag">Digital B/L</span><span class="mtag">Smart contract</span></div>
+      </a>
+
+      <a class="modcard" href="AFSB_Demo_RiskHedging.html">
+        <div class="menter">→</div>
+        <div class="midx">04</div>
+        <div class="mtitle">Risk Monitoring &amp; Hedging</div>
+        <div class="mdesc">Live exposure by commodity, AI-flagged hedge windows, and locking in a price with a forward contract — watch coverage and mark-to-market update in real time.</div>
+        <div class="mtags"><span class="mtag">AI monitoring</span><span class="mtag">Dynamic hedging</span></div>
+      </a>
+
+      <a class="modcard" href="AFSB_Demo_ZAI_Audit.html">
+        <div class="menter">→</div>
+        <div class="midx">05</div>
+        <div class="mtitle">Z.AI Audit Portal</div>
+        <div class="mdesc">Switch between stakeholder roles — founding partner, fixed-income investor, independent auditor — and see exactly what each one can access. Full visibility, granular by design.</div>
+        <div class="mtags"><span class="mtag">Role-based access</span><span class="mtag">Full audit trail</span><span class="mtag">Z.AI</span></div>
+      </a>
+
+      <a class="modcard" href="AFSB_Demo_Architecture.html">
+        <div class="menter">→</div>
+        <div class="midx">06</div>
+        <div class="mtitle">Architecture</div>
+        <div class="mdesc">The four-layer system — three of them proprietary technology, not just process. Verification, coordination, optimization, visibility.</div>
+        <div class="mtags"><span class="mtag">Proprietary IP</span><span class="mtag">4 layers</span></div>
+      </a>
+
+      <a class="modcard" href="AFSB_Demo_Engagement.html">
+        <div class="menter">→</div>
+        <div class="midx">07</div>
+        <div class="mtitle">Engagement</div>
+        <div class="mdesc">The proposed path — a three-month design engagement, then a founding commitment. Institutionalizing a legacy, not funding a program.</div>
+        <div class="mtags"><span class="mtag">Two-phase</span><span class="mtag">Legacy</span></div>
+      </a>
+
+      <a class="modcard" href="AFSB_Demo_FoodWaste.html">
+        <div class="menter">→</div>
+        <div class="midx">08</div>
+        <div class="mtitle">Food Rescue &amp; Value Capture</div>
+        <div class="mdesc">Acquire surplus and near-waste lots at a steep discount, preserve them, and watch discounted cost turn into reserve value — with running totals for money, water, CO&#8322;, and meals saved.</div>
+        <div class="mtags"><span class="mtag">Discount sourcing</span><span class="mtag">Waste reduction</span></div>
+      </a>
+    </div>
+
+    <div class="suite-note">
+      <b>Illustrative demo suite.</b> All figures, names, shipments, and stakeholder data throughout are representative, for discussion — not reported holdings, transactions, or persons. Keep all files in the same folder when opening; the modules link to each other by relative path.
+    </div>
+  </main>
+</body>
+</html>
