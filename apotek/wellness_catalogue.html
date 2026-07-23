@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700;9..144,800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<title>Apotek — US Innovative Nutrition &amp; Wellness Catalogue (2026)</title>
+<style>
+  :root{
+    --paper:#FAF8FF;
+    --ink:#211A36;
+    --ink-soft:#6E6488;
+    --line:#E7E0F7;
+    --card:#ffffff;
+    --accent:#FF5C7C;
+    --accent2:#00C2A8;
+    --accent3:#FFC24B;
+    --accent3-deep:#C98A12;
+    --accent4:#6C5CE7;
+    --regal:#4A2E42;
+    --gold:#FFC24B;
+
+    --c-hydration:#1E88E5;
+    --c-functional:#00B894;
+    --c-oral:#00A99D;
+    --c-tinctures:#8854D0;
+    --c-infrared:#FF6B5B;
+    --c-detox:#D6336C;
+    --c-longevity:#5B4FE9;
+    --c-recovery:#00A8CC;
+    --c-sleep:#3F5EFB;
+    --c-gut:#4CAF50;
+    --c-women:#E91E63;
+
+    --e-strong:#22B573;
+    --e-moderate:#00BFA5;
+    --e-emerging:#FFB300;
+    --e-weak:#FF7043;
+    --e-caution:#E5383B;
+    --e-mixed:#8D6E63;
+    --e-na:#9E9E9E;
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    font-size:16px;
+    line-height:1.55;
+  }
+  .sans{font-family: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;}
+  .display{font-family: "Fraunces", Georgia, serif;}
+
+  /* ---------- Brand bar ---------- */
+  .brandbar{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:1rem;
+    padding:1.1rem 6vw;
+    border-bottom:1px solid var(--line);
+    background:#ffffff;
+    font-family: "Plus Jakarta Sans", sans-serif;
+  }
+  .brandbar .mark{
+    display:flex;
+    align-items:center;
+    gap:.65rem;
+    text-decoration:none;
+  }
+  .brandbar .mark-icon{
+    width:34px;height:34px;flex:none;
+    border-radius:10px;
+    display:flex;align-items:center;justify-content:center;
+    background:var(--accent4);
+    box-shadow:0 6px 14px -6px rgba(108,92,231,.45);
+  }
+  .brandbar svg{width:19px;height:19px;color:#fff;}
+  .brandbar .wordmark{
+    font-family:"Fraunces",Georgia,serif;
+    font-weight:700;
+    font-size:1.25rem;
+    letter-spacing:-0.01em;
+    color:var(--regal);
+  }
+  .brandbar .right-group{display:flex;align-items:center;gap:2rem;}
+  .suite-nav{display:flex;gap:1.6rem;}
+  .suite-nav a{
+    font-size:.82rem;font-weight:700;color:var(--ink-soft);text-decoration:none;
+    padding:.3rem 0;border-bottom:2px solid transparent;
+  }
+  .suite-nav a:hover{color:var(--ink);}
+  .suite-nav a.active{color:var(--accent4);border-bottom-color:var(--accent4);}
+  .brandbar .tagline{
+    font-size:.72rem;
+    text-transform:uppercase;
+    letter-spacing:.14em;
+    color:var(--ink-soft);
+    white-space:nowrap;
+    font-weight:600;
+  }
+  @media (max-width:760px){
+    .brandbar{padding:1rem 5vw;flex-wrap:wrap;gap:.7rem;}
+    .brandbar .tagline{display:none;}
+    .suite-nav{gap:1rem;}
+  }
+
+  /* ---------- Header ---------- */
+  header.hero{
+    padding:4.5rem 6vw 3.8rem;
+    border-bottom:1px solid var(--line);
+    position:relative;
+    background:#F2EEFC;
+  }
+  .eyebrow{
+    font-family:inherit;
+    text-transform:uppercase;
+    letter-spacing:.22em;
+    font-size:.72rem;
+    font-weight:700;
+    color:var(--accent4);
+    margin:0 0 1.2rem;
+  }
+  h1.title{
+    font-family:"Fraunces",Georgia,serif;
+    font-size:clamp(2.6rem,6.4vw,4.9rem);
+    line-height:0.98;
+    margin:0 0 1.4rem;
+    font-weight:700;
+    max-width:17ch;
+    letter-spacing:-0.015em;
+    color:var(--ink);
+  }
+  h1.title .accent-word{
+    color:var(--accent4);
+  }
+  .dek{
+    max-width:52ch;
+    font-size:1.15rem;
+    color:var(--ink-soft);
+    margin:0 0 2.6rem;
+  }
+  .specimen-count{
+    display:flex;
+    gap:2.6rem;
+    flex-wrap:wrap;
+    position:relative;
+  }
+  .specimen-count div{font-family:"Plus Jakarta Sans", sans-serif;}
+  .specimen-count b{
+    display:block;
+    font-family:"Fraunces",Georgia,serif;
+    font-size:2.1rem;
+    font-weight:700;
+    color:var(--num-color, var(--accent4));
+  }
+  .specimen-count span{
+    font-size:.72rem;
+    text-transform:uppercase;
+    letter-spacing:.14em;
+    color:var(--ink-soft);
+    font-weight:600;
+  }
+
+  /* ---------- Legend ---------- */
+  .legend{
+    padding:2.8rem 6vw;
+    border-bottom:1px solid var(--line);
+    background:#F1ECFF;
+  }
+  .legend h2{
+    font-family:"Fraunces",Georgia,serif;
+    font-size:1.05rem;
+    letter-spacing:.02em;
+    font-weight:700;
+    margin:0 0 1.3rem;
+    color:var(--ink);
+  }
+  .legend-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(210px,1fr));
+    gap:1rem 2rem;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  }
+  .legend-item{display:flex; gap:.65rem; align-items:flex-start;}
+  .swatch{
+    width:.65rem;height:.65rem;border-radius:50%;
+    margin-top:.35rem;flex:none;
+  }
+  .legend-item b{display:block;font-size:.82rem;text-transform:uppercase;letter-spacing:.06em;}
+  .legend-item p{margin:.15rem 0 0;font-size:.82rem;color:var(--ink-soft);line-height:1.4;}
+  .legend-note{
+    margin-top:1.4rem;font-size:.78rem;color:var(--ink-soft);font-style:italic;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    max-width:70ch;
+  }
+
+  /* ---------- TOC ---------- */
+  nav.toc{
+    display:flex;
+    flex-wrap:wrap;
+    gap:.55rem .6rem;
+    padding:1.8rem 6vw;
+    border-bottom:1px solid var(--line);
+    font-family: "Plus Jakarta Sans", sans-serif;
+    background:#fff;
+  }
+  nav.toc a{
+    text-decoration:none;
+    font-size:.76rem;
+    text-transform:uppercase;
+    letter-spacing:.05em;
+    font-weight:700;
+    color:var(--tag-color);
+    border:1.5px solid var(--tag-color);
+    background:color-mix(in srgb, var(--tag-color) 8%, white);
+    padding:.42rem .85rem;
+    border-radius:100px;
+    white-space:nowrap;
+    transition:background .15s ease, color .15s ease, transform .15s ease;
+  }
+  nav.toc a:hover{
+    background:var(--tag-color);
+    color:#fff;
+    transform:translateY(-1px);
+  }
+
+  /* ---------- Category sections ---------- */
+  section.category{
+    padding:4.4rem 6vw 1.2rem;
+    border-bottom:1px solid var(--line);
+    background:color-mix(in srgb, var(--cat-color) 5%, var(--paper));
+  }
+  .cat-head{
+    display:flex;
+    align-items:center;
+    gap:1rem;
+    margin-bottom:.5rem;
+  }
+  .cat-num{
+    font-family:"Plus Jakarta Sans", sans-serif;
+    font-size:.78rem;
+    font-weight:800;
+    color:#fff;
+    background:var(--cat-color);
+    padding:.32rem .7rem;
+    border-radius:100px;
+    letter-spacing:.04em;
+    box-shadow:0 6px 14px -6px color-mix(in srgb, var(--cat-color) 60%, transparent);
+  }
+  .cat-head h2{
+    font-family:"Fraunces",Georgia,serif;
+    font-size:clamp(1.6rem,3vw,2.3rem);
+    margin:0;
+    font-weight:700;
+    color:var(--cat-color);
+  }
+  .cat-sub{
+    font-family: "Plus Jakarta Sans", sans-serif;
+    color:var(--ink-soft);
+    font-size:.9rem;
+    margin:0 0 2.3rem;
+    max-width:70ch;
+  }
+
+  /* Featured (photographed) product cards */
+  .featured-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(240px,1fr));
+    gap:1.7rem;
+    margin-bottom:2.3rem;
+  }
+  .pcard{
+    background:var(--card);
+    border:1px solid color-mix(in srgb, var(--cat-color) 20%, var(--line));
+    border-radius:18px;
+    overflow:hidden;
+    display:flex;
+    flex-direction:column;
+    text-decoration:none;
+    color:inherit;
+    transition:transform .2s ease, box-shadow .2s ease;
+  }
+  .pcard:hover{
+    transform:translateY(-5px);
+    box-shadow:0 22px 40px -18px color-mix(in srgb, var(--cat-color) 55%, transparent);
+  }
+  .pcard .imgwrap{
+    aspect-ratio:1/1;
+    background:color-mix(in srgb, var(--cat-color) 7%, white);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:1.1rem;
+    position:relative;
+  }
+  .pcard .imgwrap img{
+    max-width:100%;
+    max-height:100%;
+    object-fit:contain;
+    mix-blend-mode:multiply;
+  }
+  .pcard .imgwrap .fallback{
+    display:none;
+    font-family: "Plus Jakarta Sans", sans-serif;
+    font-size:.72rem;
+    color:var(--ink-soft);
+    text-align:center;
+    padding:0 1rem;
+  }
+  .pcard .imgwrap img.broken{display:none;}
+  .pcard .imgwrap img.broken + .fallback{display:block;}
+  .pcard .tag{
+    position:absolute;
+    top:.6rem;right:.6rem;
+    font-family: "Plus Jakarta Sans", sans-serif;
+    font-size:.62rem;
+    text-transform:uppercase;
+    letter-spacing:.05em;
+    color:#fff;
+    padding:.24rem .55rem;
+    border-radius:100px;
+    font-weight:700;
+    box-shadow:0 4px 10px -3px rgba(0,0,0,.25);
+  }
+  .pcard .body{
+    padding:1.05rem 1.15rem 1.25rem;
+    font-family: "Plus Jakarta Sans", sans-serif;
+    border-top:1px solid color-mix(in srgb, var(--cat-color) 16%, var(--line));
+  }
+  .pcard .brand{
+    font-size:.66rem;
+    text-transform:uppercase;
+    letter-spacing:.1em;
+    color:var(--cat-color);
+    font-weight:800;
+    margin-bottom:.25rem;
+  }
+  .pcard h3{
+    margin:0 0 .4rem;
+    font-family: "Fraunces","Palatino Linotype",Georgia,serif;
+    font-size:1.18rem;
+    font-weight:700;
+    line-height:1.25;
+    color:var(--ink);
+  }
+  .pcard .meta{
+    font-size:.78rem;
+    color:var(--ink-soft);
+    margin:0 0 .6rem;
+  }
+  .pcard .foot{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    font-size:.74rem;
+    color:var(--ink-soft);
+    border-top:1px dashed color-mix(in srgb, var(--cat-color) 22%, var(--line));
+    padding-top:.6rem;
+    margin-top:.3rem;
+  }
+  .pcard .foot .view{
+    color:var(--cat-color);
+    font-weight:700;
+  }
+
+  /* More-in-category list (text only, no photo) */
+  .more-list{
+    font-family: "Plus Jakarta Sans", sans-serif;
+    border-top:1px solid color-mix(in srgb, var(--cat-color) 18%, var(--line));
+    padding-top:1.4rem;
+    margin-bottom:2.6rem;
+  }
+  .more-list summary{
+    cursor:pointer;
+    font-size:.82rem;
+    text-transform:uppercase;
+    letter-spacing:.08em;
+    color:var(--cat-color);
+    font-weight:700;
+    margin-bottom:1rem;
+  }
+  .more-table{
+    width:100%;
+    border-collapse:collapse;
+    font-size:.86rem;
+    background:#fff;
+    border-radius:12px;
+    overflow:hidden;
+  }
+  .more-table th{
+    text-align:left;
+    font-size:.68rem;
+    text-transform:uppercase;
+    letter-spacing:.08em;
+    color:var(--ink-soft);
+    padding:.55rem .7rem;
+    border-bottom:2px solid color-mix(in srgb, var(--cat-color) 25%, var(--line));
+  }
+  .more-table td{
+    padding:.6rem .7rem;
+    border-bottom:1px solid #ECE7F8;
+    vertical-align:top;
+  }
+  .more-table tr:hover td{background:color-mix(in srgb, var(--cat-color) 6%, white);}
+  .pill{
+    display:inline-block;
+    font-size:.66rem;
+    text-transform:uppercase;
+    letter-spacing:.04em;
+    color:#fff;
+    padding:.2rem .55rem;
+    border-radius:100px;
+    font-weight:700;
+    white-space:nowrap;
+  }
+
+  footer{
+    padding:3.2rem 6vw 4rem;
+    font-family: "Plus Jakarta Sans", sans-serif;
+    color:var(--ink-soft);
+    font-size:.82rem;
+    max-width:70ch;
+    background:#F5F2FD;
+  }
+  footer a{color:var(--accent4);}
+  footer p:last-child{
+    font-weight:700;
+    color:var(--ink);
+  }
+
+  @media (max-width:640px){
+    header.hero{padding:3.5rem 5vw 2.5rem;}
+    section.category{padding:3rem 5vw 1rem;}
+    .legend, nav.toc{padding-left:5vw;padding-right:5vw;}
+  }
+</style>
+</head>
+<body>
+
+<div class="brandbar">
+  <a href="index.html" class="mark">
+    <div class="mark-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <rect x="9.25" y="1.2" width="5.5" height="2.3" rx=".6"></rect>
+        <rect x="10.3" y="3.4" width="3.4" height="2.6"></rect>
+        <path d="M6.2 6.9h11.6c.6 0 1 .5 1 1.1v11.4c0 1.5-1.2 2.7-2.7 2.7H7.9c-1.5 0-2.7-1.2-2.7-2.7V8c0-.6.4-1.1 1-1.1z"></path>
+        <line x1="7.6" y1="13.6" x2="16.4" y2="13.6"></line>
+        <line x1="7.6" y1="16.4" x2="13.2" y2="16.4"></line>
+      </svg>
+    </div>
+    <div class="wordmark">Apotek</div>
+  </a>
+  <div class="right-group">
+    <nav class="suite-nav">
+      <a href="wellness_catalogue.html" class="active">Catalogue</a>
+      <a href="apotek_ritual_demo.html">AI Ritual Designer</a>
+    </nav>
+    <div class="tagline">The Wellness Catalogue</div>
+  </div>
+</div>
+
+<header class="hero">
+  <p class="eyebrow sans">Apotek · Field Catalogue · United States · 2026</p>
+  <h1 class="title">Innovative Nutrition &amp; Wellness <span class="accent-word">Specimens</span></h1>
+  <p class="dek">A photographed reference of the products defining hydration, functional beverages, oral care, biohacking, and recovery on the US market right now — sourced directly from each brand's own product page.</p>
+  <div class="specimen-count">
+    <div><b style="--num-color:var(--accent)">78</b><span>Products catalogued</span></div>
+    <div><b style="--num-color:var(--accent2)">11</b><span>Categories</span></div>
+    <div><b style="--num-color:var(--accent3-deep)">13</b><span>Photographed in full</span></div>
+  </div>
+</header>
+
+<section class="legend">
+  <h2 class="sans">Evidence strength — how to read every entry</h2>
+  <div class="legend-grid">
+    <div class="legend-item"><span class="swatch" style="background:var(--e-strong)"></span><div><b>Strong</b><p>Multiple human trials / long clinical track record support the core claim.</p></div></div>
+    <div class="legend-item"><span class="swatch" style="background:var(--e-moderate)"></span><div><b>Moderate</b><p>Some human data or an established mechanism; claims run a bit ahead of it.</p></div></div>
+    <div class="legend-item"><span class="swatch" style="background:var(--e-emerging)"></span><div><b>Emerging</b><p>Plausible and growing evidence base, but still early-stage.</p></div></div>
+    <div class="legend-item"><span class="swatch" style="background:var(--e-weak)"></span><div><b>Weak</b><p>Marketing outpaces the science; mostly anecdotal or in vitro.</p></div></div>
+    <div class="legend-item"><span class="swatch" style="background:var(--e-caution)"></span><div><b>Unproven / Caution</b><p>No credible evidence for the claim and/or documented safety concerns.</p></div></div>
+  </div>
+  <p class="legend-note">Reference only, not medical or purchasing advice. Photos and links go to each brand's own product page — click any photo to view the source. Where a specific product couldn't be sourced to a real photo, it's listed in the text table below its category instead of using a stand-in image.</p>
+</section>
+
+<nav class="toc sans">
+  <a href="#hydration" style="--tag-color:var(--c-hydration)">Hydration</a>
+  <a href="#functional" style="--tag-color:var(--c-functional)">Functional &amp; Adaptogenic</a>
+  <a href="#oral" style="--tag-color:var(--c-oral)">Oral Care</a>
+  <a href="#tinctures" style="--tag-color:var(--c-tinctures)">Other Tinctures</a>
+  <a href="#infrared" style="--tag-color:var(--c-infrared)">Infrared &amp; Light</a>
+  <a href="#detox" style="--tag-color:var(--c-detox)">Parasite &amp; Detox</a>
+  <a href="#longevity" style="--tag-color:var(--c-longevity)">Longevity</a>
+  <a href="#recovery" style="--tag-color:var(--c-recovery)">Recovery &amp; Thermal</a>
+  <a href="#sleep" style="--tag-color:var(--c-sleep)">Sleep &amp; Wearables</a>
+  <a href="#gut" style="--tag-color:var(--c-gut)">Gut Health</a>
+  <a href="#women" style="--tag-color:var(--c-women)">Women's Health</a>
+</nav>
+
+<!-- ================= HYDRATION ================= -->
+<section class="category" id="hydration" style="--cat-color:var(--c-hydration)">
+  <div class="cat-head"><span class="cat-num">01</span><h2>Hydration</h2></div>
+  <p class="cat-sub">Electrolyte powders, tablets, and functional waters — the most crowded shelf in the store, boosted by GLP-1 users and TikTok's 363% search growth for "hydration."</p>
+
+  <div class="featured-grid">
+    <a class="pcard" href="https://www.liquid-iv.com/products/lemon-lime-hydration-multiplier" target="_blank" rel="noopener">
+      <div class="imgwrap"><span class="tag" style="background:var(--e-moderate)">Moderate</span><img src="https://cdn.shopify.com/s/files/1/1515/2714/files/LiquidIV_AcaiBerry_SS_1200x1200.png?v=1762198802" alt="Liquid I.V. Hydration Multiplier packet"></div>
+      <div class="body">
+        <div class="brand">Liquid I.V.</div>
+        <h3>Hydration Multiplier</h3>
+        <p class="meta">Stick-pack powder · sodium, potassium, glucose, B vitamins</p>
+        <div class="foot"><span>Price: $</span><span class="view">View product →</span></div>
+      </div>
+    </a>
+    <a class="pcard" href="https://drinklmnt.com/products/lmnt-recharge-electrolyte-drink" target="_blank" rel="noopener">
+      <div class="imgwrap"><span class="tag" style="background:var(--e-moderate)">Moderate</span><img src="https://res.cloudinary.com/drinklmnt/image/upload/f_auto,q_auto/v1759900501/lmnt-citrus-salt-30ct-box_ux0v3u.webp" alt="LMNT Citrus Salt electrolyte box"></div>
+      <div class="body">
+        <div class="brand">LMNT</div>
+        <h3>Citrus Salt Drink Mix</h3>
+        <p class="meta">Stick-pack powder · high sodium, potassium, magnesium, no sugar</p>
+        <div class="foot"><span>Price: $</span><span class="view">View product →</span></div>
+      </div>
+    </a>
+    <a class="pcard" href="https://nuunlife.com/products/nuun-zero" target="_blank" rel="noopener">
+      <div class="imgwrap"><span class="tag" style="background:var(--e-moderate)">Moderate</span><img src="https://nuunlife.com/cdn/shop/files/Nuun_AMZ_ZERO_SUGAR_RASPBERRY_LEMONADE_2.png?v=1734039921" alt="Nuun Zero Sugar effervescent tablet tube"></div>
+      <div class="body">
+        <div class="brand">Nuun</div>
+        <h3>Zero Sugar Tablets</h3>
+        <p class="meta">Effervescent tablet · 5 electrolytes, zero sugar</p>
+        <div class="foot"><span>Price: $</span><span class="view">View product →</span></div>
+      </div>
+    </a>
+  </div>
+
+  <details class="more-list">
+    <summary>+ 14 more Hydration products cataloged (no photo sourced)</summary>
+    <table class="more-table">
+      <tr><th>Product</th><th>Format</th><th>Key actives</th><th>Price</th><th>Evidence</th></tr>
+      <tr><td>DripDrop ORS</td><td>Powder</td><td>High-sodium oral rehydration ratio</td><td>$</td><td><span class="pill" style="background:var(--e-strong)">Strong</span></td></tr>
+      <tr><td>Cure Hydration</td><td>Powder</td><td>Coconut-water electrolytes, no added sugar</td><td>$</td><td><span class="pill" style="background:var(--e-moderate)">Moderate</span></td></tr>
+      <tr><td>Nectar Hydration</td><td>Powder</td><td>Sugar-free, low-sodium electrolytes</td><td>$</td><td><span class="pill" style="background:var(--e-moderate)">Moderate</span></td></tr>
+      <tr><td>Skratch Labs</td><td>Powder</td><td>Electrolytes + real-sugar carbs</td><td>$</td><td><span class="pill" style="background:var(--e-moderate)">Moderate</span></td></tr>
+      <tr><td>Transparent Labs Hydrate</td><td>Powder</td><td>Sodium/potassium/magnesium, stevia</td><td>$$</td><td><span class="pill" style="background:var(--e-moderate)">Moderate</span></td></tr>
+      <tr><td>Ultima Replenisher</td><td>Powder</td><td>Zero sugar, stevia-sweetened</td><td>$</td><td><span class="pill" style="background:var(--e-moderate)">Moderate</span></td></tr>
+      <tr><td>Osmo Active Hydration</td><td>Powder</td><td>Tuned to menstrual-cycle sodium loss</td><td>$$</td><td><span class="pill" style="background:var(--e-emerging)">Emerging</span></td></tr>
+      <tr><td>Essentia Water</td><td>Bottled water</td><td>Electrolytes, elevated pH</td><td>$</td><td><span class="pill" style="background:var(--e-weak)">Weak</span></td></tr>
+      <tr><td>Liquid Death</td><td>Canned water</td><td>Still / sparkling water</td><td>$</td><td><span class="pill" style="background:var(--e-na)">N/A</span></td></tr>
+      <tr><td>Core Hydration</td><td>Bottled water</td><td>Electrolytes + minerals</td><td>$</td><td><span class="pill" style="background:var(--e-weak)">Weak-Mod</span></td></tr>
+      <tr><td>Boxed Water</td><td>Paperboard water</td><td>Plain water</td><td>$</td><td><span class="pill" style="background:var(--e-na)">N/A</span></td></tr>
+      <tr><td>Mas+ (Messi)</td><td>RTD drink</td><td>Electrolytes</td><td>$</td><td><span class="pill" style="background:var(--e-moderate)">Moderate</span></td></tr>
+      <tr><td>Alex Cooper Hydration</td><td>RTD drink</td><td>Electrolytes</td><td>$</td><td><span class="pill" style="background:var(--e-moderate)">Moderate</span></td></tr>
+      <tr><td>Gatorade Hydration Booster</td><td>Sachet</td><td>Electrolytes</td><td>$</td><td><span class="pill" style="background:var(--e-moderate)">Moderate</span></td></tr>
+    </table>
+  </details>
+</section>
+
+<!-- ================= FUNCTIONAL & ADAPTOGENIC ================= -->
+<section class="category" id="functional" style="--cat-color:var(--c-functional)">
+  <div class="cat-head"><span class="cat-num">02</span><h2>Functional &amp; Adaptogenic Drinks</h2></div>
+  <p class="cat-sub">Mushroom coffees, non-alcoholic apéritifs, and prebiotic sodas — the fastest-moving shelf in the store.</p>
+
+  <div class="featured-grid">
+    <a class="pcard" href="https://us.foursigmatic.com/products/original-mushroom-coffee" target="_blank" rel="noopener">
+      <div class="imgwrap"><span class="tag" style="background:var(--e-weak)">Weak-Mod</span><img src="https://us.foursigmatic.com/cdn/shop/files/ogm-instant-ms-1bag-2026.jpg?crop=center&height=700&v=1777676911&width=700" alt="Four Sigmatic Original Mushroom Coffee bag"></div>
+      <div class="body">
+        <div class="brand">Four Sigmatic</div>
+        <h3>Original Mushroom Coffee</h3>
+        <p class="meta">Instant powder · lion's mane, chaga, cordyceps, reishi, turkey tail</p>
+        <div class="foot"><span>Price: $</span><span class="view">View product →</span></div>
+      </div>
+    </a>
+  </div>
+
+  <details class="more-list">
+    <summary>+ 16 more Functional &amp; Adaptogenic products cataloged (no photo sourced)</summary>
+    <table class="more-table">
+      <tr><th>Product</th><th>Format</th><th>Key actives</th><th>Price</th><th>Evidence</th></tr>
+      <tr><td>MUD\WTR</td><td>Powder coffee alt.</td><td>Chaga, cordyceps, reishi, cacao</td><td>$</td><td><span class="pill" style="background:var(--e-weak)">Weak-Mod</span></td></tr>
+      <tr><td>De Soi</td><td>Sparkling RTD</td><td>Reishi, L-theanine, lion's mane</td><td>$$</td><td><span class="pill" style="background:var(--e-weak)">Weak</span></td></tr>
+      <tr><td>Kin Euphorics</td><td>Bottled tonic</td><td>Rhodiola, GABA, botanicals</td><td>$$</td><td><span class="pill" style="background:var(--e-weak)">Weak</span></td></tr>
+      <tr><td>Curious Elixirs</td><td>Bottled mocktail</td><td>Adaptogenic botanicals</td><td>$$</td><td><span class="pill" style="background:var(--e-weak)">Weak</span></td></tr>
+      <tr><td>Three Spirit</td><td>Spirit alternative</td><td>Adaptogens, nootropics</td><td>$$</td><td><span class="pill" style="background:var(--e-weak)">Weak</span></td></tr>
+      <tr><td>Aplós</td><td>RTD</td><td>THC/CBD + adaptogens</td><td>$$</td><td><span class="pill" style="background:var(--e-weak)">Weak</span></td></tr>
+      <tr><td>Little Saints</td><td>Bottled aperitif</td><td>Adaptogenic botanicals</td><td>$$</td><td><span class="pill" style="background:var(--e-weak)">Weak</span></td></tr>
+      <tr><td>TRIP</td><td>Sparkling can</td><td>CBD, ashwagandha, L-theanine</td><td>$</td><td><span class="pill" style="background:var(--e-weak)">Weak-Mod</span></td></tr>
+      <tr><td>Recess Mood</td><td>Sparkling can</td><td>L-theanine, magnesium, ashwagandha</td><td>$</td><td><span class="pill" style="background:var(--e-weak)">Weak-Mod</span></td></tr>
+      <tr><td>BRĒZ</td><td>THC seltzer</td><td>THC + adaptogens</td><td>$$</td><td><span class="pill" style="background:var(--e-weak)">Weak</span></td></tr>
+      <tr><td>REBBL</td><td>RTD shot</td><td>Reishi + adaptogens</td><td>$</td><td><span class="pill" style="background:var(--e-weak)">Weak</span></td></tr>
+      <tr><td>Moon Juice</td><td>Shot/powder</td><td>Ashwagandha + adaptogens</td><td>$$</td><td><span class="pill" style="background:var(--e-weak)">Weak-Mod</span></td></tr>
+      <tr><td>Magic Mind</td><td>Bottled shot</td><td>Matcha, adaptogens, nootropics</td><td>$$</td><td><span class="pill" style="background:var(--e-weak)">Weak</span></td></tr>
+      <tr><td>PolkaDot</td><td>RTD</td><td>Adaptogenic mushrooms</td><td>$</td><td><span class="pill" style="background:var(--e-weak)">Weak-Mod</span></td></tr>
+      <tr><td>Olipop</td><td>Sparkling soda</td><td>Prebiotic fiber, botanicals</td><td>$</td><td><span class="pill" style="background:var(--e-weak)">Weak-Mod</span></td></tr>
+      <tr><td>Poppi</td><td>Sparkling soda</td><td>Prebiotic fiber, ACV</td><td>$</td><td><span class="pill" style="background:var(--e-weak)">Weak-Mod</span></td></tr>
+    </table>
+  </details>
+</section>
+
+<!-- ================= ORAL CARE ================= -->
+<section class="category" id="oral" style="--cat-color:var(--c-oral)">
+  <div class="cat-head"><span class="cat-num">03</span><h2>Remineralizing Gum &amp; Dental Pouches</h2></div>
+  <p class="cat-sub">A genuinely new micro-category riding the smokeless-pouch format, swapping nicotine for nano-hydroxyapatite.</p>
+
+  <div class="featured-grid">
+    <a class="pcard" href="https://getsmileplus.com/products/smile-daily-whitening-pouches" target="_blank" rel="noopener">
+      <div class="imgwrap"><span class="tag" style="background:var(--e-emerging)">Emerging</span><img src="https://getsmileplus.com/cdn/shop/files/DailyWhitening-New-5TIN-v2.png?v=1783363359&width=2000" alt="Smile+ Daily Whitening pouches tin"></div>
+      <div class="body">
+        <div class="brand">Smile+</div>
+        <h3>Daily Whitening Pouches</h3>
+        <p class="meta">Cheek/gum pouch · 55mg nano-hydroxyapatite, xylitol, zinc citrate</p>
+        <div class="foot"><span>Price: $</span><span class="view">View product →</span></div>
+      </div>
+    </a>
+  </div>
+
+  <details class="more-list">
+    <summary>+ 5 more Oral Care products cataloged (no photo sourced)</summary>
+    <table class="more-table">
+      <tr><th>Product</th><th>Format</th><th>Key actives</th><th>Price</th><th>Evidence</th></tr>
+      <tr><td>Dentagum</td><td>Chewing gum</td><td>Nano-hydroxyapatite, xylitol</td><td>$</td><td><span class="pill" style="background:var(--e-emerging)">Emerging</span></td></tr>
+      <tr><td>LarineCo</td><td>Chewing gum</td><td>nHAp, xylitol, mastic, myrrh</td><td>$</td><td><span class="pill" style="background:var(--e-emerging)">Emerging</span></td></tr>
+      <tr><td>Underbrush</td><td>Chewing gum</td><td>Nano-hydroxyapatite, xylitol</td><td>$</td><td><span class="pill" style="background:var(--e-emerging)">Emerging</span></td></tr>
+      <tr><td>Mouthology nHA Toothpaste</td><td>Toothpaste</td><td>10% nano-hydroxyapatite</td><td>$</td><td><span class="pill" style="background:var(--e-moderate)">Moderate</span></td></tr>
+      <tr><td>Casein/Xylitol Dentifrice</td><td>Toothpaste/mouthwash</td><td>Xylitol + casein glycomacropeptide</td><td>$</td><td><span class="pill" style="background:var(--e-moderate)">Moderate</span></td></tr>
+    </table>
+  </details>
+</section>
+
+<!-- ================= OTHER FUNCTIONAL / TINCTURES ================= -->
+<section class="category" id="tinctures" style="--cat-color:var(--c-tinctures)">
+  <div class="cat-head"><span class="cat-num">04</span><h2>Other Functional Drinks &amp; Tinctures</h2></div>
+  <p class="cat-sub">From viral DIY "cocktails" with no clinical support to some of the best-evidenced supplements on the market — this category spans the widest evidence range.</p>
+
+  <div class="featured-grid">
+    <a class="pcard" href="https://ancientnutrition.com/products/collagen-protein" target="_blank" rel="noopener">
+      <div class="imgwrap"><span class="tag" style="background:var(--e-moderate)">Moderate</span><img src="https://cdn.shopify.com/s/files/1/0053/9952/files/MultiCollagenProtein_Unflavored_45srv_TopofPage_Lifestyle_DTCPDP-3_1450x1450.jpg?v=1777492328" alt="Ancient Nutrition Multi Collagen Protein bottle"></div>
+      <div class="body">
+        <div class="brand">Ancient Nutrition</div>
+        <h3>Multi Collagen Protein</h3>
+        <p class="meta">Powder · 10 types of hydrolyzed collagen peptides + Vitamin C</p>
+        <div class="foot"><span>Price: $</span><span class="view">View product →</span></div>
+      </div>
+    </a>
+  </div>
+
+  <details class="more-list">
+    <summary>+ 7 more products cataloged (no photo sourced)</summary>
+    <table class="more-table">
+      <tr><th>Product</th><th>Format</th><th>Key actives</th><th>Price</th><th>Evidence</th></tr>
+      <tr><td>Cortisol / Adrenal Cocktail (DIY)</td><td>Homemade mix</td><td>OJ, coconut water, sea salt, magnesium</td><td>$</td><td><span class="pill" style="background:var(--e-caution)">Unproven</span></td></tr>
+      <tr><td>Nootropics Depot</td><td>Capsule/powder</td><td>Various nootropics</td><td>$-$$</td><td><span class="pill" style="background:var(--e-mixed)">Mixed</span></td></tr>
+      <tr><td>Creatine Gummies</td><td>Gummy</td><td>Creatine monohydrate</td><td>$</td><td><span class="pill" style="background:var(--e-strong)">Strong</span></td></tr>
+      <tr><td>Creatine for Women</td><td>Powder/gummy</td><td>Creatine monohydrate</td><td>$</td><td><span class="pill" style="background:var(--e-strong)">Strong</span></td></tr>
+      <tr><td>Ancient Nutrition Cortisol Line</td><td>Capsule/powder</td><td>Ashwagandha, adaptogens</td><td>$</td><td><span class="pill" style="background:var(--e-weak)">Weak-Mod</span></td></tr>
+      <tr><td>Hims / Hers / Ro</td><td>Telehealth + products</td><td>Hormone, libido, hair, weight mgmt</td><td>$$</td><td><span class="pill" style="background:var(--e-mixed)">Mixed</span></td></tr>
+      <tr><td>Libido-Support Gummies</td><td>Gummy</td><td>Maca, horny goat weed, L-arginine</td><td>$</td><td><span class="pill" style="background:var(--e-weak)">Weak</span></td></tr>
+    </table>
+  </details>
+</section>
+
+<!-- ================= INFRARED ================= -->
+<section class="category" id="infrared" style="--cat-color:var(--c-infrared)">
+  <div class="cat-head"><span class="cat-num">05</span><h2>Infrared Glasses &amp; Light Therapy</h2></div>
+  <p class="cat-sub">Protective eyewear that blocks red/near-infrared light during panel or sauna sessions, plus the panels and light-emitting glasses themselves.</p>
+
+  <div class="featured-grid">
+    <a class="pcard" href="https://mitoredlight.com/products/mito-red-ir3-glasses-dark" target="_blank" rel="noopener">
+      <div class="imgwrap"><span class="tag" style="background:var(--e-strong)">Strong</span><img src="https://mitoredlight.com/cdn/shop/files/mito-red-light-red-light-therapy-glasses-ir3-dark-7137756.jpg?v=1775839346" alt="Mito Red Light IR3 protective glasses"></div>
+      <div class="body">
+        <div class="brand">Mito Red Light</div>
+        <h3>IR3 Protective Glasses</h3>
+        <p class="meta">Light-blocking eyewear · attenuates 600–900nm red/NIR light</p>
+        <div class="foot"><span>Price: $$</span><span class="view">View product →</span></div>
+      </div>
+    </a>
+  </div>
+
+  <details class="more-list">
+    <summary>+ 4 more products cataloged (no photo sourced)</summary>
+    <table class="more-table">
+      <tr><th>Product</th><th>Format</th><th>Key actives</th><th>Price</th><th>Evidence</th></tr>
+      <tr><td>Hooga Protective Glasses</td><td>Light-blocking eyewear</td><td>Blocks 200–1000nm</td><td>$</td><td><span class="pill" style="background:var(--e-strong)">Strong</span></td></tr>
+      <tr><td>Lukirch Wellness Glasses</td><td>LED-emitting eyewear</td><td>670nm red LED</td><td>$$</td><td><span class="pill" style="background:var(--e-emerging)">Weak-Emerg</span></td></tr>
+      <tr><td>Red/NIR Light Panels (e.g. Joovv)</td><td>Standalone panel</td><td>Red + near-infrared LED array</td><td>$$$</td><td><span class="pill" style="background:var(--e-moderate)">Moderate</span></td></tr>
+      <tr><td>PEMF Mats</td><td>Mat device</td><td>Pulsed electromagnetic field</td><td>$$$</td><td><span class="pill" style="background:var(--e-weak)">Weak</span></td></tr>
+    </table>
+  </details>
+</section>
+
+<!-- ================= PARASITE / DETOX ================= -->
+<section class="category" id="detox" style="--cat-color:var(--c-detox)">
+  <div class="cat-head"><span class="cat-num">06</span><h2>Parasite Cleanses &amp; Detox</h2></div>
+  <p class="cat-sub">The most medically-contested category here — doctors report little evidence of efficacy and real safety concerns with the more aggressive versions of this trend.</p>
+
+  <div class="featured-grid">
+    <a class="pcard" href="https://yogi-life.com/en-US/product/detox-076950450080" target="_blank" rel="noopener">
+      <div class="imgwrap"><span class="tag" style="background:var(--e-caution)">Caution</span><img src="https://us-east-1-shared-usea1-02.graphassets.com/A2lCPH6tTelhrsostvMQpz/auto_image/resize=fit:max,width:1080/quality=value:75/X8ZbjFxyQb2Uq0r2xG2V" alt="Yogi DeTox herbal tea box"></div>
+      <div class="body">
+        <div class="brand">Yogi Tea</div>
+        <h3>DeTox Herbal Tea</h3>
+        <p class="meta">Tea · burdock, dandelion, juniper, ginger, black pepper</p>
+        <div class="foot"><span>Price: $</span><span class="view">View product →</span></div>
+      </div>
+    </a>
+  </div>
+  <p class="legend-note" style="margin-top:-1rem;margin-bottom:2rem;">Note: this Yogi tea is a mainstream grocery product marketed for gentle "cleansing"; it's a milder example of the category than the influencer-sold herbal cleanse kits below, which carry the strongest caution flags in this whole catalogue.</p>
+
+  <details class="more-list">
+    <summary>+ 3 more products cataloged (no photo sourced)</summary>
+    <table class="more-table">
+      <tr><th>Product</th><th>Format</th><th>Key actives</th><th>Price</th><th>Evidence</th></tr>
+      <tr><td>Influencer-Branded Parasite Cleanse Kits</td><td>Herbal supplement kit</td><td>Wormwood, black walnut, clove</td><td>$</td><td><span class="pill" style="background:var(--e-caution)">Caution</span></td></tr>
+      <tr><td>Pumpkin-Seed "Cleanse" Recipe</td><td>DIY drink</td><td>Pumpkin seed, turmeric, ginger</td><td>$</td><td><span class="pill" style="background:var(--e-caution)">Caution</span></td></tr>
+      <tr><td>Castor Oil Cleanse Regimens</td><td>Ingested oil</td><td>Castor oil</td><td>$</td><td><span class="pill" style="background:var(--e-caution)">Caution</span></td></tr>
+    </table>
+  </details>
+</section>
+
+<!-- ================= LONGEVITY ================= -->
+<section class="category" id="longevity" style="--cat-color:var(--c-longevity)">
+  <div class="cat-head"><span class="cat-num">07</span><h2>Longevity &amp; Biohacking</h2></div>
+  <p class="cat-sub">NAD+ precursors, urolithin A, and peptides — a category where mechanism and marketing enthusiasm are running well ahead of long-term human data.</p>
+
+  <div class="featured-grid">
+    <a class="pcard" href="https://www.timeline.com/products/mitopure-softgels-vegan" target="_blank" rel="noopener">
+      <div class="imgwrap"><span class="tag" style="background:var(--e-moderate)">Moderate</span><img src="https://cdn.sanity.io/images/bxsu76x0/timeline-nutrition/d576a998715d39c70e9f6c02538a77a00a5e262c-1600x2000.png?rect=0,200,1600,1600&w=1200&h=1200" alt="Timeline Mitopure Urolithin A softgels"></div>
+      <div class="body">
+        <div class="brand">Timeline</div>
+        <h3>Mitopure Softgels</h3>
+        <p class="meta">Capsule · 500mg Urolithin A per daily dose</p>
+        <div class="foot"><span>Price: $$$</span><span class="view">View product →</span></div>
+      </div>
+    </a>
+  </div>
+
+  <details class="more-list">
+    <summary>+ 6 more products cataloged (no photo sourced)</summary>
+    <table class="more-table">
+      <tr><th>Product</th><th>Format</th><th>Key actives</th><th>Price</th><th>Evidence</th></tr>
+      <tr><td>NMN/NR Supplements (e.g. NOVOS Boost)</td><td>Capsule</td><td>NMN or NR (NAD+ precursors)</td><td>$$-$$$</td><td><span class="pill" style="background:var(--e-emerging)">Emerging</span></td></tr>
+      <tr><td>Spermidine Supplements</td><td>Capsule</td><td>Spermidine</td><td>$$</td><td><span class="pill" style="background:var(--e-emerging)">Emerging</span></td></tr>
+      <tr><td>Fisetin Supplements</td><td>Capsule</td><td>Fisetin (senolytic)</td><td>$$</td><td><span class="pill" style="background:var(--e-weak)">Weak-Emerg</span></td></tr>
+      <tr><td>Longevity Peptides</td><td>Injectable/capsule</td><td>BPC-157, MOTS-c, 5-Amino-1MQ</td><td>$$$</td><td><span class="pill" style="background:var(--e-weak)">Weak</span></td></tr>
+      <tr><td>NAD+ IV Infusions</td><td>Clinic IV</td><td>NAD+</td><td>$$$</td><td><span class="pill" style="background:var(--e-weak)">Weak-Mod</span></td></tr>
+      <tr><td>Omega-3 (Nordic Naturals)</td><td>Capsule/liquid</td><td>EPA/DHA</td><td>$</td><td><span class="pill" style="background:var(--e-strong)">Strong</span></td></tr>
+    </table>
+  </details>
+</section>
+
+<!-- ================= RECOVERY / THERMAL ================= -->
+<section class="category" id="recovery" style="--cat-color:var(--c-recovery)">
+  <div class="cat-head"><span class="cat-num">08</span><h2>Recovery &amp; Thermal Wellness</h2></div>
+  <p class="cat-sub">Cold plunges, infrared saunas, and hydrogen water — the at-home recovery-room build-out.</p>
+
+  <div class="featured-grid">
+    <a class="pcard" href="https://plunge.com/products/plunge" target="_blank" rel="noopener">
+      <div class="imgwrap"><span class="tag" style="background:var(--e-moderate)">Moderate</span><img src="https://plunge.com/cdn/shop/files/The_Plunge_Pro_Chiller_af334e0a-0cf8-4a16-8a25-296e45866bec.jpg?v=1774982298" alt="The Plunge cold plunge tub with Pro Chiller"></div>
+      <div class="body">
+        <div class="brand">Plunge</div>
+        <h3>The Plunge (Original Tub)</h3>
+        <p class="meta">Home device · cold water immersion, app-guided, down to 37°F</p>
+        <div class="foot"><span>Price: $$-$$$</span><span class="view">View product →</span></div>
+      </div>
+    </a>
+  </div>
+
+  <details class="more-list">
+    <summary>+ 3 more products cataloged (no photo sourced)</summary>
+    <table class="more-table">
+      <tr><th>Product</th><th>Format</th><th>Key actives</th><th>Price</th><th>Evidence</th></tr>
+      <tr><td>Home Infrared Saunas (e.g. Sunlighten)</td><td>Home device</td><td>Infrared heat exposure</td><td>$$$</td><td><span class="pill" style="background:var(--e-moderate)">Moderate</span></td></tr>
+      <tr><td>Hydrogen Water Flask</td><td>Portable device</td><td>Molecular hydrogen infusion</td><td>$$</td><td><span class="pill" style="background:var(--e-weak)">Weak-Emerg</span></td></tr>
+      <tr><td>Hydrogen Cold Plunge (spa/clinic)</td><td>Spa/clinic device</td><td>Molecular hydrogen + cold water</td><td>$$$</td><td><span class="pill" style="background:var(--e-weak)">Weak</span></td></tr>
+    </table>
+  </details>
+</section>
+
+<!-- ================= SLEEP / WEARABLES ================= -->
+<section class="category" id="sleep" style="--cat-color:var(--c-sleep)">
+  <div class="cat-head"><span class="cat-num">09</span><h2>Sleep Tech &amp; Wearables</h2></div>
+  <p class="cat-sub">Continuous glucose monitors, smart rings, and cooling mattresses — the quantified-sleep stack.</p>
+
+  <div class="featured-grid">
+    <a class="pcard" href="https://ouraring.com/store/rings/oura-ring-5/silver" target="_blank" rel="noopener">
+      <div class="imgwrap"><span class="tag" style="background:var(--e-moderate)">Moderate</span><img src="https://ourahealth.imgix.net/cooper-pdp/silver-close-up-2.png?ixlib=js-3.8.0&auto=format&fit=crop&fm=png&ar=6%3A5&crop=focalpoint&fp-x=0.5&fp-y=0.5&fp-z=1&q=70&w=1200&s=4fa994b88b136a621494897d93cd9b94" alt="Oura Ring 5 in silver finish"></div>
+      <div class="body">
+        <div class="brand">Oura</div>
+        <h3>Oura Ring 5</h3>
+        <p class="meta">Wearable ring · sleep, HRV, temperature, activity tracking</p>
+        <div class="foot"><span>Price: $$</span><span class="view">View product →</span></div>
+      </div>
+    </a>
+  </div>
+
+  <details class="more-list">
+    <summary>+ 5 more products cataloged (no photo sourced)</summary>
+    <table class="more-table">
+      <tr><th>Product</th><th>Format</th><th>Key actives</th><th>Price</th><th>Evidence</th></tr>
+      <tr><td>CGMs (e.g. Levels, Signos)</td><td>Wearable sensor</td><td>Real-time glucose tracking</td><td>$$</td><td><span class="pill" style="background:var(--e-moderate)">Moderate</span></td></tr>
+      <tr><td>Whoop</td><td>Wearable band</td><td>Sleep, strain, recovery tracking</td><td>$$</td><td><span class="pill" style="background:var(--e-moderate)">Moderate</span></td></tr>
+      <tr><td>Magnesium Glycinate/Citrate Gummies</td><td>Gummy</td><td>Magnesium</td><td>$</td><td><span class="pill" style="background:var(--e-moderate)">Moderate</span></td></tr>
+      <tr><td>Cooling Mattress Tech</td><td>Mattress/topper</td><td>Phase-change cooling materials</td><td>$$$</td><td><span class="pill" style="background:var(--e-moderate)">Moderate</span></td></tr>
+      <tr><td>Mouth Tape for Sleep</td><td>Adhesive tape</td><td>Mechanical nasal-breathing prompt</td><td>$</td><td><span class="pill" style="background:var(--e-weak)">Weak-Emerg</span></td></tr>
+    </table>
+  </details>
+</section>
+
+<!-- ================= GUT HEALTH ================= -->
+<section class="category" id="gut" style="--cat-color:var(--c-gut)">
+  <div class="cat-head"><span class="cat-num">10</span><h2>Gut Health</h2></div>
+  <p class="cat-sub">Fiber, fermented drinks, and probiotic capsules — one of the best-evidenced pockets of the whole catalogue.</p>
+
+  <div class="featured-grid">
+    <a class="pcard" href="https://gtslivingfoods.com/products/gts-classic-kombucha-original" target="_blank" rel="noopener">
+      <div class="imgwrap"><span class="tag" style="background:var(--e-moderate)">Moderate</span><img src="https://gtslivingfoods.com/cdn/shop/files/2_b801f2a0-d758-432c-ab1a-f6bd04d17f91.png?v=1780950141&width=1050" alt="GT's Living Foods Classic Original Kombucha bottle"></div>
+      <div class="body">
+        <div class="brand">GT's Living Foods</div>
+        <h3>Classic Original Kombucha</h3>
+        <p class="meta">RTD fermented tea · live probiotic cultures, kombucha culture since 1995</p>
+        <div class="foot"><span>Price: $</span><span class="view">View product →</span></div>
+      </div>
+    </a>
+  </div>
+
+  <details class="more-list">
+    <summary>+ 2 more products cataloged (no photo sourced)</summary>
+    <table class="more-table">
+      <tr><th>Product</th><th>Format</th><th>Key actives</th><th>Price</th><th>Evidence</th></tr>
+      <tr><td>Psyllium Husk (e.g. NOW Foods)</td><td>Powder/capsule</td><td>Psyllium husk fiber</td><td>$</td><td><span class="pill" style="background:var(--e-strong)">Strong</span></td></tr>
+      <tr><td>Probiotic Capsules</td><td>Capsule</td><td>Various probiotic strains</td><td>$-$$</td><td><span class="pill" style="background:var(--e-moderate)">Moderate</span></td></tr>
+    </table>
+  </details>
+</section>
+
+<!-- ================= WOMEN'S HEALTH ================= -->
+<section class="category" id="women" style="--cat-color:var(--c-women)">
+  <div class="cat-head"><span class="cat-num">11</span><h2>Women's Health</h2></div>
+  <p class="cat-sub">A fast-growing, historically under-marketed category — perimenopause and menopause support supplements.</p>
+
+  <div class="featured-grid">
+    <a class="pcard" href="https://womaness.com/products/me-no-pause" target="_blank" rel="noopener">
+      <div class="imgwrap"><span class="tag" style="background:var(--e-mixed)">Mixed</span><img src="https://womaness.com/cdn/shop/files/MNP-front.jpg?v=1773928360&width=1024" alt="Womaness Me.No.Pause supplement bottle"></div>
+      <div class="body">
+        <div class="brand">Womaness</div>
+        <h3>Me.No.Pause. Supplement</h3>
+        <p class="meta">Capsule · Pycnogenol®, Bacognize®, ashwagandha — hormone-free</p>
+        <div class="foot"><span>Price: $$</span><span class="view">View product →</span></div>
+      </div>
+    </a>
+  </div>
+</section>
+
+<footer class="sans">
+  <p>Built for reference and sourcing use — not medical or purchasing advice. Product photography and links are pulled directly from each brand's own product page; nothing here is hosted, altered, or re-sold. Evidence ratings reflect how well clinical research supports the <em>specific claim</em> a product makes, not its safety, popularity, or legality.</p>
+  <p>© 2026 Apotek · US Nutrition &amp; Wellness Catalogue</p>
+</footer>
+
+<script>
+  document.querySelectorAll('.pcard .imgwrap img').forEach(function(img){
+    var fallback = document.createElement('div');
+    fallback.className = 'fallback';
+    fallback.textContent = img.alt + ' — photo unavailable, click through to view on the brand site';
+    img.insertAdjacentElement('afterend', fallback);
+    img.addEventListener('error', function(){
+      img.classList.add('broken');
+    });
+  });
+</script>
+</body>
+</html>
