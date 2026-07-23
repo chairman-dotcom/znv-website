@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AFSB — Risk Monitoring &amp; Hedging</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<link rel="stylesheet" href="afsb-shared.css">
+<style>
+  .chart-wrap{background:var(--panel); border:1px solid var(--hair); border-radius:10px; padding:20px 22px; margin-bottom:18px;}
+  canvas{max-height:260px;}
+  .coverage-track{height:14px; background:var(--panel-2); border-radius:7px; overflow:hidden; margin-top:8px;}
+  .coverage-fill{height:100%; background:var(--amber); border-radius:7px; width:0%; transition:width .5s ease;}
+  .mtm{font-family:'IBM Plex Mono',monospace; font-size:22px;}
+  .mtm.pos{color:var(--teal);} .mtm.neg{color:var(--rust);} .mtm.zero{color:var(--sand-dim);}
+
+  /* ---- why we hedge ---- */
+  .why-panel{display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:22px;}
+
+  /* ---- instrument toolkit ---- */
+  .instrument-grid{display:grid; grid-template-columns:repeat(5,1fr); gap:10px; margin-bottom:24px;}
+  .instrument-card{
+    background:var(--panel); border:1px solid var(--hair); border-radius:8px; padding:13px 12px;
+    transition:border-color .3s, background .3s;
+  }
+  .instrument-card.active{border-color:var(--amber); background:var(--amber-dim);}
+  .instrument-card .itag{font-size:9.5px; color:var(--sand-dim); text-transform:uppercase; letter-spacing:.04em;}
+  .instrument-card.active .itag{color:var(--amber); font-weight:600;}
+  .instrument-card .iname{font-family:'Space Grotesk',sans-serif; font-size:12.5px; font-weight:600; margin:4px 0 6px 0;}
+  .instrument-card .idesc{font-size:10.5px; color:var(--sand-dim); line-height:1.5;}
+
+  /* ---- global risk monitor (war room) ---- */
+  .monitor-shell{
+    background:#0F1416; border:1px solid var(--hair-strong); border-radius:12px; padding:22px 24px; margin-bottom:22px;
+  }
+  .monitor-head{display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; flex-wrap:wrap; gap:12px;}
+  .monitor-title{font-family:'Space Grotesk',sans-serif; font-size:14.5px; font-weight:600; display:flex; align-items:center; gap:8px;}
+  .live-dot{width:7px; height:7px; border-radius:50%; background:var(--teal); animation:pulse 1.4s ease infinite; flex-shrink:0;}
+  .risk-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:10px;}
+  .risk-card{
+    background:var(--panel); border:1px solid var(--hair); border-radius:8px; padding:12px 14px; position:relative;
+  }
+  .risk-card .rcat{font-size:11px; font-weight:600; margin-bottom:5px; padding-right:14px;}
+  .risk-card .rline{font-size:10.5px; color:var(--sand-dim); line-height:1.5;}
+  .status-dot{width:8px; height:8px; border-radius:50%; position:absolute; top:14px; right:12px;}
+  .status-dot.normal{background:var(--teal);}
+  .status-dot.elevated{background:var(--amber);}
+  .status-dot.critical{background:var(--rust); box-shadow:0 0 0 3px rgba(193,90,52,0.25);}
+  .risk-card.critical{border-color:rgba(193,90,52,.5);}
+  .risk-card.elevated{border-color:rgba(226,164,56,.4);}
+
+  /* ---- AI recommendation ---- */
+  .rec-panel{
+    background:var(--panel); border:1px solid rgba(79,166,149,.4); border-radius:10px; padding:20px 22px; margin-bottom:18px;
+  }
+  .rec-panel.hold{border-color:var(--hair-strong);}
+  .rec-score-row{display:flex; align-items:center; gap:18px; margin-bottom:14px; flex-wrap:wrap;}
+  .rec-score{font-family:'IBM Plex Mono',monospace; font-size:32px; color:var(--amber);}
+  .rec-score-label{font-size:11px; color:var(--sand-dim); text-transform:uppercase; letter-spacing:.05em;}
+  .rec-level{
+    display:inline-block; font-family:'IBM Plex Mono',monospace; font-size:11px; padding:4px 11px; border-radius:10px;
+  }
+  .rec-level.elevated{background:var(--amber-dim); color:var(--amber);}
+  .rec-level.normal{background:var(--teal-dim); color:var(--teal);}
+  .rec-drivers{font-size:12px; color:var(--sand-dim); margin-bottom:14px; line-height:1.6;}
+  .rec-drivers b{color:var(--sand);}
+  .rec-action-row{display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;}
+  .rec-text{font-size:13px; color:var(--sand);}
+  .status-chip{
+    display:inline-block; font-family:'IBM Plex Mono',monospace; font-size:10px; padding:3px 10px; border-radius:10px;
+    background:var(--panel-2); color:var(--sand-dim); border:1px solid var(--hair);
+  }
+  .status-chip.live{background:var(--teal-dim); color:var(--teal); border-color:rgba(79,166,149,.4);}
+</style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="topbar-left">
+      <a class="hub-link" href="AFSB_Demo_Hub.html">← Suite</a>
+      <div class="topbar-title">Risk Monitoring &amp; Hedging</div>
+    </div>
+    <div class="topbar-right">
+      <span class="zeron-badge"><img class="zeron-logo" src="https://zero-n.com/wp-content/uploads/2024/08/ZeroN_logo-Wtrans.png" alt="Zero.N" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-block';"><span class="zeron-fallback">Zero.N</span>Powered by Zero.N Ventures</span>
+      <span class="ai-badge">AI-monitored, human-executed</span>
+    </div>
+  </div>
+
+  <main>
+    <div class="eyebrow">Module 04</div>
+    <h1>Global risk, watched continuously. Hedges, executed deliberately.</h1>
+    <p class="lede">The reserve acquires commodities continuously, but prices move between the decision to acquire and the purchase settling. Hedging isn't speculation — it removes that timing risk so the reserve's cost basis stays predictable. AI watches seven global risk categories and recommends coverage changes as they shift; the desk decides when to act.</p>
+
+    <div class="why-panel">
+      <div class="panel" style="margin-bottom:0;">
+        <h3>Objective</h3>
+        <div class="sub">Why the AFSB hedges at all</div>
+        <p style="font-size:12.5px;color:var(--sand-dim);line-height:1.7;margin:0;">Lock in an acquisition price before the market moves against it — protecting the reserve's cost basis, not betting on price direction. A hedge that "loses" money when spot falls is still doing its job: it bought certainty.</p>
+      </div>
+      <div class="panel" style="margin-bottom:0;">
+        <h3>How AI changes the mechanics</h3>
+        <div class="sub">From periodic review to continuous monitoring</div>
+        <p style="font-size:12.5px;color:var(--sand-dim);line-height:1.7;margin:0;">Instead of a quarterly risk review, seven global feeds are watched continuously. When conditions shift, the desk sees it and can act within hours — not at the next scheduled meeting.</p>
+      </div>
+    </div>
+
+    <h3 style="margin-bottom:4px;">Instruments in use</h3>
+    <div class="sub" style="margin-bottom:14px;">Which tool depends on what's being protected against</div>
+    <div class="instrument-grid" id="instrumentGrid"></div>
+
+    <div class="monitor-shell">
+      <div class="monitor-head">
+        <div class="monitor-title"><span class="live-dot"></span>Global Risk Monitor — all categories, all commodities</div>
+        <span class="status-chip live">7 feeds active</span>
+      </div>
+      <div class="risk-grid" id="riskGrid"></div>
+    </div>
+
+    <div class="tabs" id="commodityTabs">
+      <button class="tab-btn active" data-c="wheat">Wheat</button>
+      <button class="tab-btn" data-c="corn">Corn</button>
+      <button class="tab-btn" data-c="oliveoil">Olive oil</button>
+    </div>
+
+    <div class="rec-panel" id="recPanel">
+      <div class="rec-score-row">
+        <div><div class="rec-score" id="recScore">62</div><div class="rec-score-label">Composite risk score</div></div>
+        <span class="rec-level elevated" id="recLevel">Elevated</span>
+      </div>
+      <div class="rec-drivers" id="recDrivers">Primary drivers: <b>Shipping &amp; Logistics</b> (critical), <b>Weather &amp; Climate</b> (elevated).</div>
+      <div class="rec-action-row">
+        <div class="rec-text" id="recText">AI recommends increasing wheat coverage from 45% to 65%.</div>
+        <button class="btn" id="execBtn">Execute recommended hedge</button>
+      </div>
+    </div>
+
+    <div class="chart-wrap">
+      <canvas id="priceChart"></canvas>
+    </div>
+
+    <div class="grid grid-4" style="margin-bottom:18px;">
+      <div class="stat"><div class="num" id="statExposure">42,000t</div><div class="lbl">Open exposure</div></div>
+      <div class="stat"><div class="num" id="statSpot">$268</div><div class="lbl">Current spot, $/tonne</div></div>
+      <div class="stat"><div class="num" id="statLocked">—</div><div class="lbl">Locked price, $/tonne</div></div>
+      <div class="stat"><div class="num" id="statCoverage">0%</div><div class="lbl">Coverage hedged</div></div>
+    </div>
+
+    <div class="panel">
+      <h3>Coverage</h3>
+      <div class="sub">Reflects the last executed hedge for the selected commodity</div>
+      <div class="coverage-track"><div class="coverage-fill" id="coverageFill"></div></div>
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-top:18px;">
+        <div>
+          <div style="font-size:11px; color:var(--sand-dim); text-transform:uppercase; letter-spacing:.05em;">Mark-to-market on hedged position</div>
+          <div class="mtm zero" id="mtmValue">$0</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h3>Adjustment log</h3>
+      <div class="sub">How coverage has moved as global risk conditions changed</div>
+      <div class="ledger" id="adjLog"></div>
+    </div>
+
+    <p class="footnote">Illustrative risk feeds, scores, price series, and positions for discussion — not live market data, real intelligence feeds, or an actual hedge execution.</p>
+  </main>
+
+<script>
+  // ============ INSTRUMENTS ============
+  const instruments = [
+    { key: 'forward', name: 'Forward contracts', desc: 'Lock a fixed price for a future purchase — the primary tool for staples.' },
+    { key: 'options', name: 'Options', desc: 'Pay a premium for the right, not obligation, to buy at a set price.' },
+    { key: 'futures', name: 'Futures', desc: 'Exchange-traded, standardized, liquid — for larger positions in deep markets.' },
+    { key: 'parametric', name: 'Parametric weather cover', desc: 'Payout on a verified rainfall/drought index — a production hedge, not a price hedge.' },
+    { key: 'fx', name: 'FX forwards', desc: 'Locks the exchange rate between acquisition and reserve base currency.' }
+  ];
+  const instrumentGrid = document.getElementById('instrumentGrid');
+  instruments.forEach(ins => {
+    const el = document.createElement('div');
+    el.className = 'instrument-card';
+    el.id = 'ins-' + ins.key;
+    el.innerHTML = '<div class="itag">Instrument</div><div class="iname">' + ins.name + '</div><div class="idesc">' + ins.desc + '</div>';
+    instrumentGrid.appendChild(el);
+  });
+
+  // ============ GLOBAL RISK MONITOR (shared across all commodities) ============
+  const riskCategories = [
+    { key: 'weather', name: 'Weather &amp; Climate', status: 'elevated', line: 'Drought index rising, Anatolia; East Africa rainfall below seasonal average.' },
+    { key: 'geo', name: 'Geopolitical &amp; Trade Policy', status: 'normal', line: 'No active export restrictions on monitored staples.' },
+    { key: 'shipping', name: 'Shipping &amp; Logistics', status: 'critical', line: 'Red Sea / Bab-el-Mandeb disruption; reroutes adding 12–14 days.' },
+    { key: 'fx', name: 'Currency &amp; FX', status: 'normal', line: 'USD stable against basket of sourcing-region currencies.' },
+    { key: 'energy', name: 'Energy &amp; Input Costs', status: 'elevated', line: 'Fertilizer prices up 8% QoQ; fuel surcharges affecting freight.' },
+    { key: 'pest', name: 'Pest &amp; Disease', status: 'normal', line: 'No active outbreak alerts in monitored growing regions.' },
+    { key: 'conflict', name: 'Conflict &amp; Security', status: 'elevated', line: 'Security incidents reported near two sourcing corridors.' }
+  ];
+  const riskGrid = document.getElementById('riskGrid');
+  riskCategories.forEach(r => {
+    const el = document.createElement('div');
+    el.className = 'risk-card ' + r.status;
+    el.innerHTML = '<div class="status-dot ' + r.status + '"></div><div class="rcat">' + r.name + '</div><div class="rline">' + r.line + '</div>';
+    riskGrid.appendChild(el);
+  });
+
+  // ============ PER-COMMODITY AI RECOMMENDATION ============
+  // Deterministic illustrative price series per commodity (30 points)
+  function series(base, wave, drift){
+    const out = [];
+    for (let i = 0; i < 30; i++){
+      const v = base + Math.sin(i/3.2) * wave + (i * drift) + (Math.sin(i*1.7) * wave * 0.35);
+      out.push(Math.round(v));
+    }
+    return out;
+  }
+
+  const commodities = {
+    wheat: {
+      label: 'Wheat', unit: '$/tonne', data: series(252, 9, 0.55), exposure: 42000,
+      score: 62, level: 'elevated', primaryInstrument: 'forward',
+      drivers: 'Primary drivers: <b>Shipping &amp; Logistics</b> (critical), <b>Weather &amp; Climate</b> (elevated).',
+      recommend: true, fromPct: 45, toPct: 65,
+      recText: 'AI recommends increasing wheat coverage from 45% to 65%.'
+    },
+    corn: {
+      label: 'Corn', unit: '$/tonne', data: series(198, 6, 0.25), exposure: 31000,
+      score: 34, level: 'normal', primaryInstrument: 'forward',
+      drivers: 'Primary drivers: none at critical level; <b>Energy &amp; Input Costs</b> elevated but limited pass-through so far.',
+      recommend: false, fromPct: 20, toPct: 20,
+      recText: 'No action recommended — holding current 20% coverage.'
+    },
+    oliveoil: {
+      label: 'Olive oil', unit: '$/L', data: series(6.8, 0.6, 0.03), exposure: 4200,
+      score: 71, level: 'elevated', primaryInstrument: 'parametric',
+      drivers: 'Primary drivers: <b>Weather &amp; Climate</b> (elevated, direct harvest impact), <b>Conflict &amp; Security</b> (elevated).',
+      recommend: true, fromPct: 50, toPct: 75,
+      recText: 'AI recommends increasing olive oil coverage from 50% to 75%, and evaluating parametric weather cover alongside the forward.'
+    }
+  };
+
+  const adjLogSeed = [
+    'day.01  baseline — composite risk 35 (Normal) across monitored commodities',
+    'day.08  <span class="amt">Shipping &amp; Logistics</span> escalated Normal → Critical (Red Sea disruption) — wheat composite 38 → 62 — AI recommended 45% → 65% — <span class="ok">✓ desk executed</span>',
+    'day.14  <span class="amt">Weather &amp; Climate</span> escalated Normal → Elevated (Anatolia drought signal) — olive oil composite 48 → 71 — AI recommended 50% → 75% — <span class="ok">✓ desk executed</span>',
+    'today   corn composite steady at 34 (Normal) — no action recommended'
+  ];
+  document.getElementById('adjLog').innerHTML = adjLogSeed.map(l => '<div class="lg-line" style="opacity:1;">' + l + '</div>').join('');
+
+  let current = 'wheat';
+  let hedgeActive = { wheat: false, corn: false, oliveoil: false };
+  let hedgeData = { wheat: {}, corn: {}, oliveoil: {} };
+
+  const ctx = document.getElementById('priceChart');
+  Chart.defaults.color = '#9B9788';
+  Chart.defaults.font.family = 'IBM Plex Mono';
+  Chart.defaults.font.size = 10.5;
+
+  const chart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: Array.from({length:30}, (_,i) => 'D' + (i+1)),
+      datasets: [
+        { label: 'Spot price', data: commodities.wheat.data, borderColor: '#E2A438', backgroundColor: 'rgba(226,164,56,0.08)', fill: true, tension: 0.3, pointRadius: 0, borderWidth: 2 },
+        { label: 'Locked price', data: [], borderColor: '#4FA695', borderDash: [5,4], pointRadius: 0, borderWidth: 2, fill: false }
+      ]
+    },
+    options: {
+      plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, padding: 14 } } },
+      scales: {
+        x: { grid: { display: false } },
+        y: { grid: { color: 'rgba(231,223,203,0.08)' } }
+      }
+    }
+  });
+
+  function fmtMoney(n, decimals){
+    return '$' + n.toLocaleString('en-US', { minimumFractionDigits: decimals || 0, maximumFractionDigits: decimals || 0 });
+  }
+
+  function renderInstruments(){
+    const c = commodities[current];
+    document.querySelectorAll('.instrument-card').forEach(el => el.classList.remove('active'));
+    document.getElementById('ins-' + c.primaryInstrument).classList.add('active');
+    if (current === 'oliveoil') document.getElementById('ins-forward').classList.add('active');
+  }
+
+  function renderRec(){
+    const c = commodities[current];
+    const active = hedgeActive[current];
+    document.getElementById('recScore').textContent = c.score;
+    document.getElementById('recLevel').textContent = c.level === 'elevated' ? 'Elevated' : 'Normal';
+    document.getElementById('recLevel').className = 'rec-level ' + c.level;
+    document.getElementById('recDrivers').innerHTML = c.drivers;
+    document.getElementById('recPanel').classList.toggle('hold', !c.recommend);
+
+    const execBtn = document.getElementById('execBtn');
+    if (!c.recommend){
+      document.getElementById('recText').textContent = c.recText;
+      execBtn.style.display = 'none';
+    } else {
+      execBtn.style.display = 'inline-block';
+      document.getElementById('recText').textContent = active
+        ? 'Hedge executed at ' + c.toPct + '% coverage.'
+        : c.recText;
+      execBtn.textContent = active ? 'Release hedge' : 'Execute recommended hedge';
+    }
+  }
+
+  function render(){
+    const c = commodities[current];
+    const active = hedgeActive[current];
+    const hd = hedgeData[current];
+    chart.data.datasets[0].data = c.data;
+    chart.data.datasets[0].label = c.label + ' spot (' + c.unit + ')';
+    chart.data.datasets[1].data = active ? c.data.map((v,i) => i >= hd.hedgePoint ? hd.lockedPrice : null) : [];
+    chart.update();
+
+    document.getElementById('statExposure').textContent = c.exposure.toLocaleString('en-US') + (current === 'oliveoil' ? 'L' : 't');
+    const spot = c.data[c.data.length - 1];
+    document.getElementById('statSpot').textContent = current === 'oliveoil' ? fmtMoney(spot, 2) : fmtMoney(spot);
+
+    const coveragePct = active ? c.toPct : c.fromPct;
+    if (active){
+      document.getElementById('statLocked').textContent = current === 'oliveoil' ? fmtMoney(hd.lockedPrice, 2) : fmtMoney(hd.lockedPrice);
+      document.getElementById('statCoverage').textContent = coveragePct + '%';
+      document.getElementById('coverageFill').style.width = coveragePct + '%';
+      const hedgedUnits = c.exposure * (coveragePct/100);
+      const mtm = (spot - hd.lockedPrice) * hedgedUnits * -1;
+      const mtmEl = document.getElementById('mtmValue');
+      mtmEl.textContent = (mtm >= 0 ? '+' : '') + fmtMoney(Math.round(mtm));
+      mtmEl.className = 'mtm ' + (mtm > 0 ? 'pos' : mtm < 0 ? 'neg' : 'zero');
+    } else {
+      document.getElementById('statLocked').textContent = '—';
+      document.getElementById('statCoverage').textContent = c.fromPct + '%';
+      document.getElementById('coverageFill').style.width = c.fromPct + '%';
+      document.getElementById('mtmValue').textContent = '$0';
+      document.getElementById('mtmValue').className = 'mtm zero';
+    }
+
+    renderRec();
+    renderInstruments();
+  }
+
+  document.querySelectorAll('#commodityTabs .tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('#commodityTabs .tab-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      current = btn.dataset.c;
+      render();
+    });
+  });
+
+  document.getElementById('execBtn').addEventListener('click', () => {
+    const c = commodities[current];
+    if (!c.recommend) return;
+    if (!hedgeActive[current]){
+      hedgeActive[current] = true;
+      hedgeData[current].hedgePoint = c.data.length - 1;
+      hedgeData[current].lockedPrice = c.data[c.data.length - 1];
+    } else {
+      hedgeActive[current] = false;
+    }
+    render();
+  });
+
+  render();
+</script>
+</body>
+</html>

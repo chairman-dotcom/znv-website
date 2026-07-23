@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AFSB — Food Rescue &amp; Value Capture</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="afsb-shared.css">
+<style>
+  /* ---- global stat strip ---- */
+  .waste-stat{background:var(--panel); border:1px solid var(--hair); border-radius:8px; padding:16px 15px;}
+  .waste-stat .wnum{font-family:'IBM Plex Mono',monospace; font-size:22px; color:var(--rust);}
+  .waste-stat .wlbl{font-size:10.5px; color:var(--sand-dim); margin-top:5px; line-height:1.4;}
+
+  /* ---- lot picker ---- */
+  .lot-grid{display:grid; grid-template-columns:repeat(5,1fr); gap:10px; margin-bottom:22px;}
+  .lot-card{
+    background:var(--panel); border:1px solid var(--hair); border-radius:8px; padding:13px 12px; cursor:pointer;
+    transition:border-color .15s, background .15s; text-align:left; position:relative;
+  }
+  .lot-card:hover{border-color:var(--hair-strong);}
+  .lot-card.selected{border-color:var(--teal); background:var(--teal-dim);}
+  .lot-card .lname{font-family:'Space Grotesk',sans-serif; font-size:12.5px; font-weight:600; margin-bottom:5px;}
+  .lot-card .ldesc{font-size:10px; color:var(--sand-dim); line-height:1.45; margin-bottom:8px;}
+  .urgency{
+    display:inline-block; font-family:'IBM Plex Mono',monospace; font-size:9px; padding:2px 7px; border-radius:8px;
+    background:rgba(193,90,52,0.18); color:var(--rust);
+  }
+
+  /* ---- lot detail / pricing ---- */
+  .price-row{display:grid; grid-template-columns:1fr 1fr 1fr; gap:14px; margin-bottom:18px;}
+  .price-box{background:var(--panel); border:1px solid var(--hair); border-radius:8px; padding:14px 16px; text-align:center;}
+  .price-box .plbl{font-size:10px; color:var(--sand-dim); text-transform:uppercase; letter-spacing:.04em;}
+  .price-box .pval{font-family:'IBM Plex Mono',monospace; font-size:19px; margin-top:5px;}
+  .price-box.standard .pval{color:var(--sand-dim); text-decoration:line-through; text-decoration-color:rgba(155,151,136,.5);}
+  .price-box.discount .pval{color:var(--teal);}
+  .price-box.savings .pval{color:var(--amber);}
+
+  /* ---- impact strip ---- */
+  .impact-strip{
+    display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:18px;
+    opacity:0; transform:translateY(6px); transition:opacity .4s, transform .4s;
+  }
+  .impact-strip.show{opacity:1; transform:translateY(0);}
+  .impact-box{background:var(--panel); border:1px solid rgba(79,166,149,.4); border-radius:8px; padding:14px 13px; text-align:center;}
+  .impact-box .inum{font-family:'IBM Plex Mono',monospace; font-size:19px; color:var(--teal);}
+  .impact-box .ilbl{font-size:10px; color:var(--sand-dim); margin-top:4px; line-height:1.4;}
+
+  /* ---- cumulative ticker ---- */
+  .ticker-shell{
+    background:#0F1416; border:1px solid var(--hair-strong); border-radius:12px; padding:20px 24px; margin-bottom:22px;
+  }
+  .ticker-head{display:flex; align-items:center; gap:8px; margin-bottom:14px;}
+  .ticker-title{font-family:'Space Grotesk',sans-serif; font-size:13.5px; font-weight:600;}
+  .ticker-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:12px;}
+  .ticker-box .tnum{font-family:'IBM Plex Mono',monospace; font-size:24px; color:var(--amber); transition:color .2s;}
+  .ticker-box .tlbl{font-size:10.5px; color:var(--sand-dim); margin-top:4px;}
+  .tnum.bump{color:var(--teal) !important;}
+  @keyframes pulse{0%,100%{opacity:.4;}50%{opacity:1;}}
+</style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="topbar-left">
+      <a class="hub-link" href="AFSB_Demo_Hub.html">← Suite</a>
+      <div class="topbar-title">Food Rescue &amp; Value Capture</div>
+    </div>
+    <div class="topbar-right">
+      <span class="zeron-badge"><img class="zeron-logo" src="https://zero-n.com/wp-content/uploads/2024/08/ZeroN_logo-Wtrans.png" alt="Zero.N" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-block';"><span class="zeron-fallback">Zero.N</span>Powered by Zero.N Ventures</span>
+      <span class="ai-badge">Waste diverted, value captured</span>
+    </div>
+  </div>
+
+  <main>
+    <div class="eyebrow">Module 08</div>
+    <h1>What would otherwise be wasted becomes reserve value.</h1>
+    <p class="lede">Roughly a third of food produced globally is lost or wasted before it reaches anyone — much of it sold at a steep discount in the hours before landfill, simply because it's imperfect, short-dated, or surplus to one buyer's needs. The AFSB can acquire exactly that stock, at exactly that discount, and preservation turns the same "about to be wasted" cost basis into decades of reserve value. Pick a lot below and run the rescue.</p>
+
+    <div class="grid grid-4" style="margin-bottom:26px;">
+      <div class="waste-stat"><div class="wnum">~1/3</div><div class="wlbl">Of food produced globally is lost or wasted</div></div>
+      <div class="waste-stat"><div class="wnum">~$1T</div><div class="wlbl">Estimated annual value lost to waste</div></div>
+      <div class="waste-stat"><div class="wnum">~8–10%</div><div class="wlbl">Share of global GHG emissions tied to food waste</div></div>
+      <div class="waste-stat"><div class="wnum">1.3Bt</div><div class="wlbl">Wasted annually — widely-cited estimate</div></div>
+    </div>
+
+    <h3 style="margin-bottom:4px;">Surplus lots available now</h3>
+    <div class="sub" style="margin-bottom:14px;">Illustrative — each priced at a discount because it would otherwise be wasted within days</div>
+    <div class="lot-grid" id="lotGrid"></div>
+
+    <div class="price-row" id="priceRow"></div>
+
+    <div style="text-align:center; margin-bottom:22px;">
+      <button class="btn" id="rescueBtn">Rescue this lot</button>
+    </div>
+
+    <div class="cascade" id="cascade">
+      <div class="cnode"><div class="nlbl">Acquired</div><div class="nval">—</div></div>
+      <div class="cconn"></div>
+      <div class="cnode"><div class="nlbl">Quality graded</div><div class="nval">—</div></div>
+      <div class="cconn"></div>
+      <div class="cnode"><div class="nlbl">Preserved</div><div class="nval">—</div></div>
+      <div class="cconn"></div>
+      <div class="cnode"><div class="nlbl">Value routed</div><div class="nval">—</div></div>
+    </div>
+
+    <div class="impact-strip" id="impactStrip">
+      <div class="impact-box"><div class="inum" id="imp1">—</div><div class="ilbl">Value created after preservation</div></div>
+      <div class="impact-box"><div class="inum" id="imp2">—</div><div class="ilbl">Water footprint saved</div></div>
+      <div class="impact-box"><div class="inum" id="imp3">—</div><div class="ilbl">CO&#8322;e avoided</div></div>
+      <div class="impact-box"><div class="inum" id="imp4">—</div><div class="ilbl">Meals rescued</div></div>
+    </div>
+
+    <div class="panel">
+      <h3>Rescue ledger</h3>
+      <div class="sub">Every rescue traced from discount acquisition to routed value</div>
+      <div class="ledger" id="ledger"><span style="opacity:.5;">select a lot and click "Rescue this lot"…</span></div>
+    </div>
+
+    <div class="ticker-shell">
+      <div class="ticker-head"><span class="live-dot" style="width:7px;height:7px;border-radius:50%;background:var(--teal);animation:pulse 1.4s ease infinite;"></span><div class="ticker-title">Session impact — cumulative across all rescues run</div></div>
+      <div class="ticker-grid">
+        <div class="ticker-box"><div class="tnum" id="cumValue">$0</div><div class="tlbl">Total value created</div></div>
+        <div class="ticker-box"><div class="tnum" id="cumWater">0L</div><div class="tlbl">Water saved</div></div>
+        <div class="ticker-box"><div class="tnum" id="cumCO2">0kg</div><div class="tlbl">CO&#8322;e avoided</div></div>
+        <div class="ticker-box"><div class="tnum" id="cumMeals">0</div><div class="tlbl">Meals rescued</div></div>
+      </div>
+    </div>
+
+    <p class="footnote">Illustrative lots, prices, and impact figures for discussion — not real suppliers, transactions, or verified environmental accounting. Global waste statistics are widely-cited estimates (FAO / UNEP), not independently verified here.</p>
+  </main>
+
+<script>
+  const lots = [
+    {
+      key: 'tomatoes', name: 'Surplus tomatoes', grade: 'Grade B, cosmetic surplus', urgency: '48h to landfill',
+      standard: 620, discount: 195, unit: 't', qty: 40, method: 'Spray-dried', route: 'Everstock',
+      valueMult: 3.4, waterPerT: 214000, co2PerT: 2100, mealsPerT: 2800
+    },
+    {
+      key: 'dairy', name: 'Near-date dairy powder', grade: '30 days to expiry, surplus run', urgency: '30d to expiry', 
+      standard: 3100, discount: 1550, unit: 't', qty: 18, method: 'Hermetic re-seal', route: 'Apotek',
+      valueMult: 2.6, waterPerT: 1020000, co2PerT: 3200, mealsPerT: 4100
+    },
+    {
+      key: 'wheat', name: 'Off-spec wheat', grade: 'Moisture variance, still food-grade', urgency: '10d to discount expiry',
+      standard: 265, discount: 165, unit: 't', qty: 90, method: 'Hermetic dry storage', route: 'Reserve',
+      valueMult: 1.9, waterPerT: 1827000, co2PerT: 550, mealsPerT: 2000
+    },
+    {
+      key: 'fruit', name: 'Bruised stone fruit', grade: 'Cosmetic-only defect', urgency: '24h to landfill',
+      standard: 540, discount: 140, unit: 't', qty: 22, method: 'Freeze-dried', route: 'Everstock',
+      valueMult: 4.1, waterPerT: 190000, co2PerT: 1400, mealsPerT: 2600
+    },
+    {
+      key: 'olive', name: 'Excess olive harvest', grade: 'Above cooperative capacity', urgency: '5d, spoilage risk',
+      standard: 4200, discount: 2730, unit: 't', qty: 12, method: 'Cold-press &amp; seal', route: 'Terra Sancta',
+      valueMult: 2.2, waterPerT: 590000, co2PerT: 980, mealsPerT: 3400
+    }
+  ];
+
+  let current = 0;
+  let cumulative = { value: 0, water: 0, co2: 0, meals: 0 };
+
+  const lotGrid = document.getElementById('lotGrid');
+  lots.forEach((lot, i) => {
+    const el = document.createElement('div');
+    el.className = 'lot-card' + (i === 0 ? ' selected' : '');
+    el.innerHTML = '<div class="lname">' + lot.name + '</div><div class="ldesc">' + lot.grade + '</div><span class="urgency">' + lot.urgency + '</span>';
+    el.addEventListener('click', () => { current = i; renderLot(); });
+    lotGrid.appendChild(el);
+  });
+
+  function fmtMoney(n){ return '$' + Math.round(n).toLocaleString('en-US'); }
+
+  function renderLot(){
+    document.querySelectorAll('.lot-card').forEach((el, i) => el.classList.toggle('selected', i === current));
+    const lot = lots[current];
+    const total = lot.discount * lot.qty;
+    const standardTotal = lot.standard * lot.qty;
+    const savings = standardTotal - total;
+    const savingsPct = Math.round((savings/standardTotal)*100);
+
+    document.getElementById('priceRow').innerHTML =
+      '<div class="price-box standard"><div class="plbl">Standard market price</div><div class="pval">' + fmtMoney(lot.standard) + '/' + lot.unit + '</div></div>' +
+      '<div class="price-box discount"><div class="plbl">Rescue price · ' + lot.qty + lot.unit + ' lot</div><div class="pval">' + fmtMoney(lot.discount) + '/' + lot.unit + '</div></div>' +
+      '<div class="price-box savings"><div class="plbl">Saved vs. standard</div><div class="pval">' + savingsPct + '%</div></div>';
+
+    // reset cascade + impact for new lot selection
+    document.querySelectorAll('#cascade .cnode').forEach(n => { n.classList.remove('lit','done'); n.querySelector('.nval').textContent = '—'; });
+    document.querySelectorAll('#cascade .cconn').forEach(c => c.classList.remove('lit'));
+    document.getElementById('impactStrip').classList.remove('show');
+  }
+
+  document.getElementById('rescueBtn').addEventListener('click', () => {
+    const lot = lots[current];
+    const nodes = document.querySelectorAll('#cascade .cnode');
+    const conns = document.querySelectorAll('#cascade .cconn');
+    nodes.forEach(n => { n.classList.remove('lit','done'); n.querySelector('.nval').textContent = '—'; });
+    conns.forEach(c => c.classList.remove('lit'));
+    document.getElementById('impactStrip').classList.remove('show');
+
+    const totalCost = lot.discount * lot.qty;
+    const valueCreated = totalCost * lot.valueMult;
+    const water = lot.waterPerT * lot.qty;
+    const co2 = lot.co2PerT * lot.qty;
+    const meals = lot.mealsPerT * lot.qty;
+
+    const ledger = document.getElementById('ledger');
+    ledger.innerHTML = '';
+    function log(html){
+      const d = document.createElement('div');
+      d.className = 'lg-line';
+      d.innerHTML = html;
+      ledger.appendChild(d);
+      ledger.scrollTop = ledger.scrollHeight;
+    }
+
+    const steps = [
+      () => { nodes[0].classList.add('lit'); nodes[0].querySelector('.nval').textContent = fmtMoney(totalCost); log('rescue.acquire  ' + lot.qty + lot.unit + ' ' + lot.name.toLowerCase() + ' — <span class="amt">' + fmtMoney(totalCost) + '</span> at rescue price'); },
+      () => { conns[0].classList.add('lit'); nodes[1].classList.add('lit'); nodes[1].querySelector('.nval').textContent = 'passed'; log('qc.grade  ' + lot.grade.toLowerCase() + ' — <span class="ok">✓ food-grade confirmed</span>'); },
+      () => { conns[1].classList.add('lit'); nodes[2].classList.add('lit'); nodes[2].querySelector('.nval').textContent = lot.method; log('preserve.process  ' + lot.method.toLowerCase() + ' applied — shelf life extended'); },
+      () => { conns[2].classList.add('lit'); nodes[3].classList.add('lit'); nodes[3].querySelector('.nval').textContent = lot.route; log('value.route  ' + fmtMoney(valueCreated) + ' created → routed to <span class="amt">' + lot.route + '</span> — <span class="ok">✓ on-chain</span>'); },
+      () => {
+        document.getElementById('imp1').textContent = fmtMoney(valueCreated);
+        document.getElementById('imp2').textContent = water >= 1e6 ? (water/1e6).toFixed(1)+'M L' : Math.round(water/1000)+'k L';
+        document.getElementById('imp3').textContent = (co2/1000).toFixed(1) + 't';
+        document.getElementById('imp4').textContent = meals.toLocaleString('en-US');
+        document.getElementById('impactStrip').classList.add('show');
+
+        cumulative.value += valueCreated;
+        cumulative.water += water;
+        cumulative.co2 += co2;
+        cumulative.meals += meals;
+        updateTicker();
+      }
+    ];
+    let delay = 200;
+    steps.forEach(fn => { setTimeout(fn, delay); delay += 550; });
+    setTimeout(() => { nodes.forEach(n => { n.classList.remove('lit'); n.classList.add('done'); }); }, delay);
+  });
+
+  function bump(el){
+    el.classList.add('bump');
+    setTimeout(() => el.classList.remove('bump'), 700);
+  }
+
+  function updateTicker(){
+    const vEl = document.getElementById('cumValue');
+    const wEl = document.getElementById('cumWater');
+    const cEl = document.getElementById('cumCO2');
+    const mEl = document.getElementById('cumMeals');
+    vEl.textContent = fmtMoney(cumulative.value);
+    wEl.textContent = cumulative.water >= 1e6 ? (cumulative.water/1e6).toFixed(1)+'M L' : Math.round(cumulative.water/1000)+'k L';
+    cEl.textContent = (cumulative.co2/1000).toFixed(1) + 't';
+    mEl.textContent = Math.round(cumulative.meals).toLocaleString('en-US');
+    [vEl, wEl, cEl, mEl].forEach(bump);
+  }
+
+  renderLot();
+</script>
+</body>
+</html>

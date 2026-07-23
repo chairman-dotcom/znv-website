@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AFSB — Z.AI Audit Portal</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="afsb-shared.css">
+<style>
+  .role-row{display:flex; gap:10px; margin-bottom:22px; flex-wrap:wrap;}
+  .role-btn{
+    background:var(--panel); border:1px solid var(--hair); border-radius:8px; padding:12px 18px; cursor:pointer;
+    transition:border-color .15s, background .15s; text-align:left; flex:1; min-width:180px;
+  }
+  .role-btn:hover{border-color:var(--hair-strong);}
+  .role-btn.active{border-color:var(--amber); background:var(--amber-dim);}
+  .role-btn .rtitle{font-family:'Space Grotesk',sans-serif; font-size:13.5px; font-weight:600;}
+  .role-btn .rdesc{font-size:10.5px; color:var(--sand-dim); margin-top:3px; line-height:1.5;}
+
+  .matrix{width:100%; border-collapse:collapse; font-size:12px; margin-bottom:26px;}
+  .matrix th, .matrix td{padding:9px 12px; border-bottom:1px solid var(--hair); text-align:center;}
+  .matrix th{font-size:10.5px; text-transform:uppercase; letter-spacing:.04em; color:var(--sand-dim); background:var(--panel-2);}
+  .matrix td:first-child, .matrix th:first-child{text-align:left; color:var(--sand);}
+  .matrix .yes{color:var(--teal); font-size:14px;}
+  .matrix .no{color:var(--sand-dim); opacity:.5; font-size:14px;}
+  .matrix .col-active{background:var(--amber-dim);}
+
+  .dash-panel{background:var(--panel); border:1px solid var(--hair); border-radius:10px; padding:20px 22px; margin-bottom:14px; position:relative;}
+  .dash-panel.locked{opacity:.4;}
+  .dash-panel .locktag{
+    position:absolute; top:16px; right:18px; font-family:'IBM Plex Mono',monospace; font-size:9.5px; color:var(--sand-dim);
+    background:var(--panel-2); padding:3px 8px; border-radius:8px;
+  }
+  .dash-title{font-family:'Space Grotesk',sans-serif; font-size:13.5px; font-weight:600; margin-bottom:12px;}
+  .redact{
+    display:inline-block; background:var(--panel-2); color:transparent; border-radius:3px; user-select:none;
+  }
+
+  /* ---- chat ---- */
+  .chat-shell{background:var(--panel); border:1px solid var(--hair); border-radius:12px; overflow:hidden;}
+  .chat-head{
+    display:flex; align-items:center; justify-content:space-between; padding:14px 20px; border-bottom:1px solid var(--hair);
+    background:var(--panel-2);
+  }
+  .chat-head-left{display:flex; align-items:center; gap:10px;}
+  .chat-dot{width:8px;height:8px;border-radius:50%;background:var(--teal); box-shadow:0 0 0 3px var(--teal-dim);}
+  .chat-title{font-family:'Space Grotesk',sans-serif; font-size:13px; font-weight:600;}
+  .chat-role-badge{
+    font-family:'IBM Plex Mono',monospace; font-size:10px; color:var(--amber); background:var(--amber-dim);
+    padding:3px 10px; border-radius:10px;
+  }
+  .chat-window{height:380px; overflow-y:auto; padding:20px 22px; display:flex; flex-direction:column; gap:14px;}
+  .msg{max-width:78%; font-size:12.5px; line-height:1.65;}
+  .msg.user{align-self:flex-end; text-align:right;}
+  .msg.ai{align-self:flex-start;}
+  .msg-bubble{
+    display:inline-block; padding:11px 15px; border-radius:12px; text-align:left;
+  }
+  .msg.user .msg-bubble{background:var(--amber-dim); color:var(--sand); border-bottom-right-radius:3px;}
+  .msg.ai .msg-bubble{background:var(--panel-2); color:var(--sand); border-bottom-left-radius:3px; border:1px solid var(--hair);}
+  .msg-source{font-size:10px; color:var(--sand-dim); margin-top:6px; font-family:'IBM Plex Mono',monospace;}
+  .msg-source .ok{color:var(--teal);}
+  .thinking{align-self:flex-start; display:flex; flex-direction:column; gap:5px; max-width:78%;}
+  .think-line{
+    font-family:'IBM Plex Mono',monospace; font-size:10.5px; color:var(--sand-dim); opacity:0; animation:thinkIn .3s ease forwards;
+    display:flex; align-items:center; gap:7px;
+  }
+  .think-line::before{content:''; width:5px; height:5px; border-radius:50%; background:var(--teal); flex-shrink:0; animation:pulse 1s ease infinite;}
+  @keyframes thinkIn{to{opacity:1;}}
+  @keyframes pulse{0%,100%{opacity:.4;}50%{opacity:1;}}
+  .cursor{display:inline-block; width:6px; height:12px; background:var(--amber); margin-left:2px; animation:blink 0.9s step-end infinite; vertical-align:middle;}
+  @keyframes blink{50%{opacity:0;}}
+  .mini-stats{display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-top:10px;}
+  .mini-stat{background:var(--panel); border:1px solid var(--hair); border-radius:6px; padding:8px 10px;}
+  .mini-stat .mnum{font-family:'IBM Plex Mono',monospace; font-size:14px; color:var(--amber);}
+  .mini-stat .mlbl{font-size:9.5px; color:var(--sand-dim); margin-top:2px;}
+  .mini-table{width:100%; border-collapse:collapse; font-size:11px; margin-top:10px;}
+  .mini-table th{text-align:left; color:var(--sand-dim); font-size:9.5px; text-transform:uppercase; padding:5px 8px; border-bottom:1px solid var(--hair-strong);}
+  .mini-table td{padding:6px 8px; border-bottom:1px solid var(--hair); color:var(--sand);}
+  .chip-row{display:flex; gap:8px; flex-wrap:wrap; padding:14px 20px; border-top:1px solid var(--hair);}
+  .chip{
+    background:var(--panel-2); border:1px solid var(--hair); border-radius:14px; padding:7px 14px; font-size:11px;
+    color:var(--sand-dim); cursor:pointer; transition:border-color .15s, color .15s;
+  }
+  .chip:hover{border-color:var(--amber); color:var(--amber);}
+  .chat-input-row{display:flex; gap:10px; padding:14px 20px; border-top:1px solid var(--hair); align-items:center;}
+  .chat-input{
+    flex:1; background:var(--panel-2); border:1px solid var(--hair); border-radius:8px; color:var(--sand);
+    font-family:'Inter',sans-serif; font-size:12.5px; padding:11px 14px; outline:none;
+  }
+  .chat-input:focus{border-color:var(--amber);}
+  .chat-send{
+    background:var(--amber); color:var(--ink); border:none; border-radius:8px; padding:11px 18px; cursor:pointer;
+    font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:12.5px;
+  }
+  .deny .msg-bubble{border-color:rgba(193,90,52,.5) !important;}
+</style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="topbar-left">
+      <a class="hub-link" href="AFSB_Demo_Hub.html">← Suite</a>
+      <div class="topbar-title">Z.AI Audit Portal</div>
+    </div>
+    <div class="topbar-right">
+      <span class="zeron-badge"><img class="zeron-logo" src="https://zero-n.com/wp-content/uploads/2024/08/ZeroN_logo-Wtrans.png" alt="Zero.N" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-block';"><span class="zeron-fallback">Zero.N</span>Powered by Zero.N Ventures</span>
+      <span class="ai-badge">Full visibility · role-scoped</span>
+    </div>
+  </div>
+
+  <main>
+    <div class="eyebrow">Module 05</div>
+    <h1>Full visibility, granular by role.</h1>
+    <p class="lede">The AFSB's digital architecture runs through Z.AI. Every stakeholder sees a live, auditable view of the institution — scoped to what their role actually needs. Switch roles below, then ask Z.AI directly.</p>
+
+    <div class="role-row" id="roleRow"></div>
+
+    <table class="matrix" id="matrixTable"></table>
+
+    <div class="tabs" id="viewTabs">
+      <button class="tab-btn active" data-view="dashboard">Dashboard view</button>
+      <button class="tab-btn" data-view="chat">Ask Z.AI</button>
+    </div>
+
+    <div class="tabpanel active" id="panel-dashboard">
+      <div id="dashArea"></div>
+    </div>
+
+    <div class="tabpanel" id="panel-chat">
+      <div class="chat-shell">
+        <div class="chat-head">
+          <div class="chat-head-left">
+            <div class="chat-dot"></div>
+            <div class="chat-title">Z.AI — reserve assistant</div>
+          </div>
+          <div class="chat-role-badge" id="chatRoleBadge">Founding Partner</div>
+        </div>
+        <div class="chat-window" id="chatWindow">
+          <div class="msg ai">
+            <div class="msg-bubble">Ask me about reserve status, settlements, hedging, or the audit trail. I'll pull live from the ledger — scoped to what your role can see.</div>
+          </div>
+        </div>
+        <div class="chip-row" id="chipRow"></div>
+        <div class="chat-input-row">
+          <input type="text" class="chat-input" id="chatInput" placeholder="Ask Z.AI a question…">
+          <button class="chat-send" id="chatSend">Send</button>
+        </div>
+      </div>
+    </div>
+
+    <p class="footnote">Illustrative interface and data for discussion — not a live system, real portfolio, or real financial figures.</p>
+  </main>
+
+<script>
+  const roles = {
+    founder: {
+      title: 'Founding Partner', desc: 'Erth Zayed — full mission and financial view',
+      access: { reserve:1, impact:1, financial:1, ledger:1, governance:1, beneficiary:1 }
+    },
+    investor: {
+      title: 'Fixed-Income Investor', desc: 'Private capital — servicing and coverage view',
+      access: { reserve:1, impact:1, financial:1, ledger:1, governance:0, beneficiary:0 }
+    },
+    auditor: {
+      title: 'Independent Auditor', desc: 'Full raw ledger and verification access',
+      access: { reserve:1, impact:0, financial:1, ledger:1, governance:1, beneficiary:1 }
+    }
+  };
+  const categories = [
+    ['reserve', 'Reserve levels & composition'],
+    ['impact', 'Mission impact storytelling'],
+    ['financial', 'Financial servicing & coverage'],
+    ['ledger', 'Full raw audit ledger'],
+    ['governance', 'Governance documents'],
+    ['beneficiary', 'Beneficiary-level deployment data']
+  ];
+
+  let currentRole = 'founder';
+
+  function renderRoleRow(){
+    const el = document.getElementById('roleRow');
+    el.innerHTML = '';
+    Object.keys(roles).forEach(key => {
+      const r = roles[key];
+      const btn = document.createElement('div');
+      btn.className = 'role-btn' + (key === currentRole ? ' active' : '');
+      btn.innerHTML = '<div class="rtitle">' + r.title + '</div><div class="rdesc">' + r.desc + '</div>';
+      btn.addEventListener('click', () => { currentRole = key; renderAll(); });
+      el.appendChild(btn);
+    });
+  }
+
+  function renderMatrix(){
+    const table = document.getElementById('matrixTable');
+    let html = '<tr><th>Data category</th>';
+    Object.keys(roles).forEach(key => {
+      html += '<th class="' + (key === currentRole ? 'col-active' : '') + '">' + roles[key].title + '</th>';
+    });
+    html += '</tr>';
+    categories.forEach(([key, label]) => {
+      html += '<tr><td>' + label + '</td>';
+      Object.keys(roles).forEach(rk => {
+        const has = roles[rk].access[key];
+        html += '<td class="' + (rk === currentRole ? 'col-active' : '') + '"><span class="' + (has ? 'yes' : 'no') + '">' + (has ? '✓' : '—') + '</span></td>';
+      });
+      html += '</tr>';
+    });
+    table.innerHTML = html;
+  }
+
+  function panel(title, key, contentHtml){
+    const has = roles[currentRole].access[key];
+    return '<div class="dash-panel' + (has ? '' : ' locked') + '">' +
+      (has ? '' : '<div class="locktag">not in scope</div>') +
+      '<div class="dash-title">' + title + '</div>' +
+      (has ? contentHtml : '<div style="font-size:12px;color:var(--sand-dim);">This role does not have access to this data category.</div>') +
+      '</div>';
+  }
+
+  function renderDash(){
+    const area = document.getElementById('dashArea');
+    let html = '';
+
+    html += panel('Reserve levels & composition', 'reserve',
+      '<div class="grid grid-4">' +
+      '<div class="stat"><div class="num">1.3M</div><div class="lbl">People coverable, 90-day</div></div>' +
+      '<div class="stat"><div class="num">6</div><div class="lbl">Commodities held</div></div>' +
+      '<div class="stat"><div class="num">4</div><div class="lbl">Preservation methods</div></div>' +
+      '<div class="stat"><div class="num">340d</div><div class="lbl">Regional coverage</div></div></div>');
+
+    html += panel('Mission impact', 'impact',
+      '<div style="font-size:12.5px;color:var(--sand-dim);line-height:1.7;">Crisis deployments this quarter: <b style="color:var(--sand)">3</b> · Populations reached: <b style="color:var(--sand)">Horn of Africa, South Asia coast</b> · Response time avg: <b style="color:var(--sand)">4h 12m</b></div>');
+
+    html += panel('Financial servicing & coverage', 'financial',
+      '<table class="dtable"><tr><th>Metric</th><th>Value</th></tr>' +
+      '<tr><td>Fixed-income coverage ratio</td><td class="hl">2.4×</td></tr>' +
+      '<tr><td>Contracted revenue, TTM</td><td class="hl">$186M</td></tr>' +
+      '<tr><td>Debt service (fixed-income)</td><td class="hl">$62M</td></tr>' +
+      '<tr><td>Reserve mark-to-market</td><td class="hl">+4.1%</td></tr></table>');
+
+    const beneficiaryOn = roles[currentRole].access.beneficiary;
+    html += panel('Full raw audit ledger', 'ledger',
+      '<table class="dtable"><tr><th>Timestamp</th><th>Event</th><th>Verification</th><th>Beneficiary detail</th></tr>' +
+      '<tr><td>2026-07-18 14:02</td><td>Reserve intake, wheat 8.4t</td><td class="hl">sensor-attested</td><td>' + (beneficiaryOn ? 'Lot #EV-114' : '<span class="redact">██████</span>') + '</td></tr>' +
+      '<tr><td>2026-07-19 09:41</td><td>Crisis deployment, Horn of Africa</td><td class="hl">automation-verified</td><td>' + (beneficiaryOn ? 'Region cluster #HA-07' : '<span class="redact">██████</span>') + '</td></tr>' +
+      '<tr><td>2026-07-19 22:15</td><td>Fixed-income coupon paid</td><td class="hl">on-chain</td><td>' + (beneficiaryOn ? 'n/a' : '<span class="redact">██████</span>') + '</td></tr></table>');
+
+    html += panel('Governance documents', 'governance',
+      '<div style="font-size:12.5px;color:var(--sand-dim);line-height:1.9;">Entity charter · Board minutes (latest) · ADGM filing status · Related-party policy</div>');
+
+    html += panel('Beneficiary-level deployment data', 'beneficiary',
+      '<div style="font-size:12.5px;color:var(--sand-dim);line-height:1.9;">Region-level cluster IDs, deployment timestamps, and quantities — available for independent verification against agency records.</div>');
+
+    area.innerHTML = html;
+  }
+
+  function renderAll(){
+    renderRoleRow(); renderMatrix(); renderDash();
+    document.getElementById('chatRoleBadge').textContent = roles[currentRole].title;
+  }
+  renderAll();
+
+  // ---- view tabs (Dashboard / Ask Z.AI) ----
+  document.querySelectorAll('#viewTabs .tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('#viewTabs .tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tabpanel').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('panel-' + btn.dataset.view).classList.add('active');
+    });
+  });
+
+  // ============ CHAT ENGINE ============
+  const qa = [
+    {
+      q: "What's our current reserve coverage?", key: 'reserve',
+      a: "The reserve currently covers an estimated 1.3M people on a 90-day full ration, holding 6 commodities across 4 preservation methods. Regional staple coverage stands at 340 days.",
+      extra: '<div class="mini-stats"><div class="mini-stat"><div class="mnum">1.3M</div><div class="mlbl">People coverable</div></div><div class="mini-stat"><div class="mnum">340d</div><div class="mlbl">Staple coverage</div></div><div class="mini-stat"><div class="mnum">6</div><div class="mlbl">Commodities held</div></div></div>',
+      source: 'Source: reserve ledger · updated 2 min ago'
+    },
+    {
+      q: 'Show me the last settlement event.', key: 'ledger',
+      a: 'The most recent settlement closed on shipment AFSB-BL-20260714 — 8,400t of wheat from the US Gulf, cleared through Khalifa Port. Payment released automatically once quality was verified in spec.',
+      extra: '<table class="mini-table"><tr><th>Field</th><th>Value</th></tr><tr><td>Shipment</td><td>AFSB-BL-20260714</td></tr><tr><td>Cargo</td><td>Wheat, 8,400t</td></tr><tr><td>Released</td><td>$2,940,000</td></tr><tr><td>Tx</td><td>0x4a91f3b8...e2c7</td></tr></table>',
+      source: 'Source: settlement contract · on-chain verified'
+    },
+    {
+      q: "What's our wheat hedge coverage?", key: 'financial',
+      a: "60% of open wheat exposure is currently locked via forward contract. Spot has moved modestly since the lock — mark-to-market on the hedged position is positive. The remaining 40% stays unhedged by design, in line with the diversification policy.",
+      extra: '<div class="mini-stats"><div class="mini-stat"><div class="mnum">60%</div><div class="mlbl">Coverage hedged</div></div><div class="mini-stat"><div class="mnum">42,000t</div><div class="mlbl">Open exposure</div></div><div class="mini-stat"><div class="mnum">+$0.3M</div><div class="mlbl">Mark-to-market</div></div></div>',
+      source: 'Source: risk desk · updated 4 min ago'
+    },
+    {
+      q: 'Who approved the last fund release?', key: 'governance',
+      a: 'The last release ($2.94M, settlement AFSB-BL-20260714) was executed by the smart contract automatically on verified delivery — no manual approval required below the standing authorization threshold. Releases above threshold require dual sign-off from the entity\'s finance committee, logged to the governance record.',
+      extra: '',
+      source: 'Source: governance charter · entity board record'
+    },
+    {
+      q: 'Show beneficiary-level deployment data for the Horn of Africa.', key: 'beneficiary',
+      a: 'Deployment to the Horn of Africa cluster (#HA-07) is logged with region-level timestamps and quantities, cross-referenced against partner agency records for independent verification.',
+      extra: '<table class="mini-table"><tr><th>Cluster</th><th>Deployed</th><th>Quantity</th></tr><tr><td>HA-07</td><td>2026-07-19</td><td>1,120t</td></tr></table>',
+      source: 'Source: deployment ledger · agency cross-verified'
+    },
+    {
+      q: "What's the fixed-income coverage ratio?", key: 'financial',
+      a: 'The fixed-income coverage ratio stands at 2.4× — contracted revenue comfortably exceeds the debt service obligation on the instrument. Servicing draws only from reserve services and premium-line revenue, never from philanthropic capital.',
+      extra: '<div class="mini-stats"><div class="mini-stat"><div class="mnum">2.4×</div><div class="mlbl">Coverage ratio</div></div><div class="mini-stat"><div class="mnum">$186M</div><div class="mlbl">Contracted revenue, TTM</div></div><div class="mini-stat"><div class="mnum">$62M</div><div class="mlbl">Debt service</div></div></div>',
+      source: 'Source: financial servicing report'
+    }
+  ];
+
+  const denialByKey = {
+    beneficiary: "That's beneficiary-level deployment data, which sits outside a fixed-income investor's access scope — it's reserved for the founding partner and independent auditors under the entity's data-governance policy. I can share aggregate deployment volumes instead, if useful.",
+    governance: "Governance documents aren't in scope for this role. I can share what's servicing-relevant — coverage ratios, contracted revenue, and payment history — but board records and the entity charter are reserved for the founding partner and auditors.",
+    impact: "Impact narrative reporting isn't part of an auditor's standard view — that channel is scoped to partners tracking mission outcomes. I can give you the raw, verifiable deployment and settlement data behind it instead."
+  };
+
+  const chatWindow = document.getElementById('chatWindow');
+  const chipRow = document.getElementById('chipRow');
+  const chatInput = document.getElementById('chatInput');
+  const chatSend = document.getElementById('chatSend');
+
+  function renderChips(){
+    chipRow.innerHTML = '';
+    qa.forEach(item => {
+      const c = document.createElement('div');
+      c.className = 'chip';
+      c.textContent = item.q;
+      c.addEventListener('click', () => askQuestion(item.q));
+      chipRow.appendChild(c);
+    });
+  }
+
+  function addUserMsg(text){
+    const m = document.createElement('div');
+    m.className = 'msg user';
+    m.innerHTML = '<div class="msg-bubble">' + text + '</div>';
+    chatWindow.appendChild(m);
+    chatWindow.scrollTop = chatWindow.scrollHeight;
+  }
+
+  function findMatch(text){
+    const t = text.toLowerCase();
+    return qa.find(item => t.includes(item.q.toLowerCase().slice(0, 12)) || item.q.toLowerCase() === t)
+        || qa.find(item => item.q.toLowerCase().split(' ').filter(w => w.length > 4).some(w => t.includes(w)));
+  }
+
+  function askQuestion(text){
+    addUserMsg(text);
+    chatInput.value = '';
+    const match = findMatch(text);
+
+    const thinkEl = document.createElement('div');
+    thinkEl.className = 'thinking';
+    chatWindow.appendChild(thinkEl);
+    chatWindow.scrollTop = chatWindow.scrollHeight;
+
+    const steps = match
+      ? ['Querying reserve ledger…', 'Checking role access scope…', 'Compiling response…']
+      : ['Querying reserve ledger…', 'No direct match found…', 'Preparing guidance…'];
+
+    let delay = 300;
+    steps.forEach((s, i) => {
+      setTimeout(() => {
+        const line = document.createElement('div');
+        line.className = 'think-line';
+        line.textContent = s;
+        thinkEl.appendChild(line);
+      }, delay);
+      delay += 480;
+    });
+
+    setTimeout(() => {
+      thinkEl.remove();
+      const hasAccess = match ? roles[currentRole].access[match.key] : true;
+      const aiMsg = document.createElement('div');
+      aiMsg.className = 'msg ai' + (match && !hasAccess ? ' deny' : '');
+      chatWindow.appendChild(aiMsg);
+
+      let fullText, extraHtml, sourceHtml;
+      if (!match){
+        fullText = "I don't have a prepared answer for that in this demo. Try one of the suggested questions below — reserve status, settlements, hedging, approvals, deployment data, or coverage ratios.";
+        extraHtml = ''; sourceHtml = '';
+      } else if (!hasAccess){
+        fullText = denialByKey[match.key] || "That data sits outside this role's access scope.";
+        extraHtml = ''; sourceHtml = '';
+      } else {
+        fullText = match.a;
+        extraHtml = match.extra;
+        sourceHtml = '<div class="msg-source"><span class="ok">✓</span> ' + match.source + '</div>';
+      }
+
+      const bubble = document.createElement('div');
+      bubble.className = 'msg-bubble';
+      aiMsg.appendChild(bubble);
+
+      let i = 0;
+      const cursor = document.createElement('span');
+      cursor.className = 'cursor';
+      bubble.appendChild(document.createTextNode(''));
+      bubble.appendChild(cursor);
+
+      const typer = setInterval(() => {
+        i += 3;
+        bubble.childNodes[0].textContent = fullText.slice(0, i);
+        chatWindow.scrollTop = chatWindow.scrollHeight;
+        if (i >= fullText.length){
+          clearInterval(typer);
+          cursor.remove();
+          if (extraHtml) bubble.insertAdjacentHTML('beforeend', extraHtml);
+          if (sourceHtml) aiMsg.insertAdjacentHTML('beforeend', sourceHtml);
+          chatWindow.scrollTop = chatWindow.scrollHeight;
+        }
+      }, 12);
+    }, delay + 150);
+  }
+
+  chatSend.addEventListener('click', () => { if (chatInput.value.trim()) askQuestion(chatInput.value.trim()); });
+  chatInput.addEventListener('keydown', (e) => { if (e.key === 'Enter' && chatInput.value.trim()) askQuestion(chatInput.value.trim()); });
+
+  renderChips();
+</script>
+</body>
+</html>

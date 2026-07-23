@@ -1,0 +1,887 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AFSB — Reserve Console</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/topojson-client@3/dist/topojson-client.min.js"></script>
+<style>
+  :root{
+    --ink:#12181B;
+    --panel:#1A2125;
+    --panel-2:#222B30;
+    --sand:#E7DFCB;
+    --sand-dim:#9B9788;
+    --amber:#E2A438;
+    --amber-dim:rgba(226,164,56,0.18);
+    --teal:#4FA695;
+    --teal-dim:rgba(79,166,149,0.16);
+    --rust:#C15A34;
+    --hair:rgba(231,223,203,0.12);
+    --hair-strong:rgba(231,223,203,0.22);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--ink);
+    color:var(--sand);
+    font-family:'Inter',sans-serif;
+    min-height:100vh;
+    display:flex;
+  }
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:0.001ms !important; transition-duration:0.001ms !important;}
+  }
+  .mono{font-family:'IBM Plex Mono',monospace;}
+
+  /* ---------- Sidebar ---------- */
+  .sidebar{
+    width:256px;min-width:256px;background:var(--panel);border-right:1px solid var(--hair);
+    display:flex;flex-direction:column;padding:26px 20px;height:100vh;position:sticky;top:0;overflow-y:auto;
+  }
+  .wordmark-row{display:flex;align-items:center;gap:10px;}
+  .vault-mark{
+    width:30px;height:30px;border:1.5px solid var(--amber);border-radius:3px;
+    display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  }
+  .vault-mark::after{content:'';width:8px;height:8px;border-radius:50%;background:var(--amber);}
+  .wordmark{font-size:20px;font-weight:600;letter-spacing:0.02em;font-family:'Space Grotesk',sans-serif;}
+  .subwordmark{font-size:10.5px;color:var(--sand-dim);letter-spacing:0.06em;text-transform:uppercase;margin:6px 0 18px 0;line-height:1.5;}
+
+  .mode-toggle{
+    display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid var(--hair-strong);
+    border-radius:6px;overflow:hidden;margin-bottom:22px;
+  }
+  .mode-btn{
+    background:transparent;border:none;color:var(--sand-dim);font-family:'Inter',sans-serif;
+    font-size:11px;letter-spacing:0.04em;padding:9px 4px;cursor:pointer;transition:background .15s, color .15s;
+  }
+  .mode-btn.active{background:var(--amber-dim);color:var(--amber);font-weight:600;}
+  .mode-hint{font-size:10px;color:var(--sand-dim);margin:-14px 0 20px 0;line-height:1.5;}
+
+  .nav{display:flex;flex-direction:column;gap:2px;flex:1;}
+  .nav-item{
+    display:flex;align-items:center;gap:11px;padding:11px 11px;border-radius:6px;cursor:pointer;
+    font-size:13px;color:var(--sand-dim);border:1px solid transparent;
+    transition:background .15s, color .15s, border-color .15s;user-select:none;
+  }
+  .nav-item .idx{font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:var(--sand-dim);width:16px;}
+  .nav-item:hover{background:var(--panel-2);color:var(--sand);}
+  .nav-item.active{background:var(--amber-dim);color:var(--sand);border-color:rgba(226,164,56,0.35);}
+  .nav-item.active .idx{color:var(--amber);}
+
+  .sidebar-foot{
+    margin-top:18px;padding-top:14px;border-top:1px solid var(--hair);
+    font-size:10px;color:var(--sand-dim);letter-spacing:0.03em;line-height:1.6;
+  }
+  .sidebar-foot b{color:var(--amber);font-weight:500;}
+
+  /* ---------- Main ---------- */
+  main{flex:1;padding:44px 52px;max-width:1010px;}
+  .module{display:none;animation:rise .5s ease both;}
+  .module.active{display:block;}
+  @keyframes rise{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+
+  .eyebrow{font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--amber);margin-bottom:10px;font-weight:500;}
+  h1{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:32px;line-height:1.25;margin:0 0 13px 0;letter-spacing:-0.01em;max-width:660px;}
+  .lede{font-size:14.5px;color:var(--sand-dim);max-width:620px;line-height:1.65;margin-bottom:32px;}
+
+  .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:30px;}
+  .stat{background:var(--panel);border:1px solid var(--hair);border-radius:8px;padding:17px 15px;}
+  .stat .num{font-family:'IBM Plex Mono',monospace;font-size:23px;color:var(--amber);font-weight:500;}
+  .stat .lbl{font-size:11.5px;color:var(--sand-dim);margin-top:6px;}
+
+  .panel{background:var(--panel);border:1px solid var(--hair);border-radius:10px;padding:22px 24px;margin-bottom:18px;}
+  .panel h3{font-family:'Space Grotesk',sans-serif;font-size:14.5px;font-weight:500;margin:0 0 4px 0;}
+  .panel .sub{font-size:12px;color:var(--sand-dim);margin-bottom:16px;}
+  .two-col{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+  canvas{max-height:210px;}
+
+  /* ---------- Shock simulator ---------- */
+  .shock-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:26px;}
+  .shock-card{
+    background:var(--panel);border:1px solid var(--hair);border-radius:8px;padding:15px 13px;
+    cursor:pointer;transition:border-color .15s, background .15s;text-align:left;
+  }
+  .shock-card:hover{border-color:var(--hair-strong);}
+  .shock-card.selected{border-color:var(--rust);background:rgba(193,90,52,0.10);}
+  .shock-card .stitle{font-size:13px;font-weight:600;margin-bottom:6px;}
+  .shock-card .sdesc{font-size:11px;color:var(--sand-dim);line-height:1.5;}
+
+  .cascade{display:flex;align-items:center;margin:8px 0 26px 0;}
+  .node{
+    flex:1;background:var(--panel);border:1px solid var(--hair);border-radius:8px;
+    padding:14px 12px;text-align:center;transition:border-color .3s, background .3s;
+  }
+  .node .nlbl{font-size:10.5px;color:var(--sand-dim);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px;}
+  .node .nval{font-family:'IBM Plex Mono',monospace;font-size:12.5px;color:var(--sand-dim);}
+  .node.lit{border-color:var(--amber);background:var(--amber-dim);}
+  .node.lit .nval{color:var(--amber);}
+  .connector{width:30px;height:1.5px;background:var(--hair);margin:0 -1px;position:relative;top:-13px;transition:background .3s;}
+  .connector.lit{background:var(--amber);}
+
+  .impact-strip{
+    display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:18px;
+    opacity:0;transform:translateY(6px);transition:opacity .4s, transform .4s;
+  }
+  .impact-strip.show{opacity:1;transform:translateY(0);}
+  .impact-box{background:var(--panel);border:1px solid rgba(79,166,149,0.4);border-radius:8px;padding:16px 15px;text-align:center;}
+  .impact-box .inum{font-family:'IBM Plex Mono',monospace;font-size:24px;color:var(--teal);font-weight:500;}
+  .impact-box .ilbl{font-size:11px;color:var(--sand-dim);margin-top:5px;line-height:1.5;}
+
+  .result-panel{
+    background:var(--panel);border:1px solid var(--hair-strong);border-radius:10px;padding:22px 24px;
+    opacity:0;transform:translateY(6px);transition:opacity .4s, transform .4s;
+  }
+  .result-panel.show{opacity:1;transform:translateY(0);}
+  .result-row{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--hair);font-size:13px;gap:20px;}
+  .result-row:last-child{border-bottom:none;}
+  .result-row .rlbl{color:var(--sand-dim);flex-shrink:0;}
+  .result-row .rval{font-family:'IBM Plex Mono',monospace;color:var(--amber);text-align:right;}
+  .placeholder-msg{color:var(--sand-dim);font-size:13px;padding:16px 0;text-align:center;}
+
+  /* ---------- Sponsor / who's building ---------- */
+  .org-row{display:grid;grid-template-columns:1fr auto 1fr;gap:0;align-items:center;margin-bottom:26px;}
+  .org-card{background:var(--panel);border:1px solid var(--hair);border-radius:10px;padding:18px 20px;}
+  .org-card.sponsor{border-color:rgba(226,164,56,0.4);}
+  .org-card.operator{border-color:rgba(79,166,149,0.5);background:var(--teal-dim);}
+  .org-tag{font-size:10.5px;letter-spacing:0.08em;text-transform:uppercase;color:var(--sand-dim);margin-bottom:4px;}
+  .org-name{font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:600;}
+  .org-desc{font-size:11.5px;color:var(--sand-dim);margin-top:6px;line-height:1.6;}
+  .org-arrow{color:var(--sand-dim);font-size:20px;padding:0 16px;}
+  .partner-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  .partner-card{background:var(--panel);border:1px solid var(--hair);border-radius:10px;padding:18px 20px;}
+  .partner-tag{font-size:10.5px;letter-spacing:0.08em;text-transform:uppercase;color:var(--amber);margin-bottom:4px;}
+  .partner-name{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;}
+  .partner-desc{font-size:12px;color:var(--sand-dim);margin-top:8px;line-height:1.6;}
+  .contract-tag{
+    display:inline-block;margin-top:10px;font-family:'IBM Plex Mono',monospace;font-size:10.5px;
+    color:var(--teal);background:var(--teal-dim);border-radius:4px;padding:3px 8px;
+  }
+  .vc-select{display:flex;gap:10px;margin-bottom:24px;flex-wrap:wrap;}
+  .vc-btn{
+    background:var(--panel);border:1px solid var(--hair);border-radius:6px;color:var(--sand-dim);
+    font-family:'Inter',sans-serif;font-size:12.5px;padding:9px 16px;cursor:pointer;
+    transition:border-color .15s, color .15s, background .15s;
+  }
+  .vc-btn:hover{border-color:var(--hair-strong);color:var(--sand);}
+  .vc-btn.selected{border-color:var(--amber);background:var(--amber-dim);color:var(--amber);font-weight:600;}
+
+  .vc-ladder{display:flex;flex-direction:column;gap:12px;}
+  .vc-stage{
+    background:var(--panel);border:1px solid var(--hair);border-radius:8px;padding:15px 18px;
+    display:grid;grid-template-columns:190px 1fr 110px;gap:16px;align-items:center;
+  }
+  .vc-stage .vst{font-size:13px;font-weight:600;}
+  .vc-stage .vsc{font-size:10.5px;color:var(--sand-dim);margin-top:3px;line-height:1.5;}
+  .vc-bar-track{height:14px;background:var(--panel-2);border-radius:7px;overflow:hidden;}
+  .vc-bar-fill{height:100%;border-radius:7px;transition:width .5s ease;width:0;}
+  .vc-val{font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:var(--amber);text-align:right;}
+  .vc-stage.na{opacity:0.45;}
+  .vc-stage.na .vc-val{color:var(--sand-dim);}
+  .vc-uplift{
+    background:var(--panel);border:1px solid rgba(79,166,149,0.4);border-radius:8px;padding:15px 18px;
+    margin-top:14px;display:flex;justify-content:space-between;align-items:center;font-size:13px;color:var(--sand-dim);
+  }
+  .vc-uplift b{font-family:'IBM Plex Mono',monospace;color:var(--teal);font-size:19px;font-weight:500;}
+
+  /* ---------- Map ---------- */
+  .map-wrap{background:var(--panel);border:1px solid var(--hair);border-radius:10px;padding:18px;}
+  .map-svg{width:100%;height:auto;display:block;}
+  .map-legend{display:flex;gap:22px;margin-top:12px;font-size:11.5px;color:var(--sand-dim);flex-wrap:wrap;}
+  .lg-item{display:flex;align-items:center;gap:7px;}
+  .lg-swatch{width:18px;height:3px;border-radius:2px;}
+  .map-note{font-size:11px;color:var(--sand-dim);margin-top:10px;}
+  .map-detail{
+    background:var(--panel);border:1px solid var(--hair);border-radius:10px;padding:16px 20px;margin-top:14px;
+    font-size:13px;color:var(--sand-dim);min-height:52px;display:flex;align-items:center;
+  }
+  .map-detail b{color:var(--sand);font-family:'Space Grotesk',sans-serif;margin-right:8px;}
+  .mnode{cursor:pointer;}
+  .mnode circle{transition:r .15s;}
+  .mnode:hover circle.core{r:7;}
+  .flow{stroke-dasharray:6 7;animation:flowmove 1.6s linear infinite;fill:none;stroke-width:1.6;opacity:0.85;}
+  @keyframes flowmove{to{stroke-dashoffset:-13;}}
+  .maplabel{font-family:'IBM Plex Mono',monospace;font-size:10px;fill:#9B9788;}
+  .maplabel-hub{font-family:'Space Grotesk',sans-serif;font-size:11.5px;font-weight:600;fill:#E7DFCB;}
+
+  /* ---------- Capital reach ---------- */
+  .slider-row{margin-bottom:24px;}
+  .slider-row label{font-size:12.5px;color:var(--sand-dim);display:block;margin-bottom:10px;}
+  input[type="range"]{-webkit-appearance:none;width:100%;height:3px;background:var(--hair-strong);border-radius:2px;outline:none;}
+  input[type="range"]::-webkit-slider-thumb{
+    -webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--amber);cursor:pointer;border:2px solid var(--ink);
+  }
+  .cap-readout{font-family:'IBM Plex Mono',monospace;font-size:27px;margin-top:8px;}
+  .cap-readout span{color:var(--amber);}
+  .bars{display:flex;flex-direction:column;gap:15px;margin:20px 0;}
+  .bar-row .bar-label{display:flex;justify-content:space-between;font-size:12.5px;color:var(--sand-dim);margin-bottom:6px;}
+  .bar-row .bar-label b{color:var(--sand);font-family:'IBM Plex Mono',monospace;font-weight:500;}
+  .bar-track{height:10px;background:var(--panel-2);border-radius:5px;overflow:hidden;}
+  .bar-fill{height:100%;border-radius:5px;transition:width .3s;}
+  .fill-committed{background:var(--sand-dim);}
+  .fill-gsm{background:var(--teal);}
+  .fill-fgp{background:var(--amber);}
+  .fill-fi{background:#8B7FD1;}
+  .becomes{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:6px;}
+  .becomes .bc{background:var(--panel-2);border-radius:8px;padding:14px;text-align:center;}
+  .becomes .bnum{font-family:'IBM Plex Mono',monospace;font-size:19px;color:var(--teal);}
+  .becomes .blbl{font-size:10.5px;color:var(--sand-dim);margin-top:4px;line-height:1.5;}
+  .footnote{font-size:11px;color:var(--sand-dim);line-height:1.6;margin-top:12px;}
+
+  /* ---------- Architecture ---------- */
+  .arch-card{background:var(--panel);border:1px solid var(--hair);border-radius:10px;padding:18px 22px;margin-bottom:13px;cursor:pointer;}
+  .arch-head{display:flex;justify-content:space-between;align-items:center;}
+  .arch-head .atitle{font-size:14.5px;font-weight:600;font-family:'Space Grotesk',sans-serif;}
+  .arch-body{max-height:0;overflow:hidden;transition:max-height .3s;}
+  .arch-card.open .arch-body{max-height:220px;}
+  .arch-body p{font-size:12.5px;color:var(--sand-dim);line-height:1.65;margin:13px 0 2px 0;}
+  .chevron{transition:transform .2s;color:var(--sand-dim);}
+  .arch-card.open .chevron{transform:rotate(180deg);}
+
+  /* ---------- Engagement ---------- */
+  .timeline{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:6px;}
+  .phase-card{background:var(--panel);border:1px solid var(--hair);border-radius:10px;padding:20px 22px;}
+  .phase-card.p1{border-top:2.5px solid var(--sand-dim);}
+  .phase-card.p2{border-top:2.5px solid var(--amber);}
+  .phase-tag{font-size:10.5px;letter-spacing:0.08em;text-transform:uppercase;color:var(--sand-dim);margin-bottom:6px;}
+  .phase-card.p2 .phase-tag{color:var(--amber);}
+  .phase-title{font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:600;margin-bottom:12px;}
+  .phase-card ul{margin:0;padding-left:18px;font-size:12px;color:var(--sand-dim);line-height:1.85;}
+  .phase-gate{margin-top:14px;padding-top:12px;border-top:1px solid var(--hair);font-size:11.5px;}
+  .phase-gate b{color:var(--amber);}
+</style>
+</head>
+<body>
+
+  <div class="sidebar">
+    <a href="AFSB_Demo_Hub.html" style="display:inline-flex;align-items:center;gap:6px;color:var(--sand-dim);text-decoration:none;font-size:11px;border:1px solid var(--hair-strong);border-radius:6px;padding:6px 10px;margin-bottom:16px;width:fit-content;transition:border-color .15s,color .15s;" onmouseover="this.style.borderColor='var(--amber)';this.style.color='var(--amber)';" onmouseout="this.style.borderColor='var(--hair-strong)';this.style.color='var(--sand-dim)';">← Suite</a>
+    <div class="wordmark-row">
+      <div class="vault-mark"></div>
+      <div class="wordmark">AFSB</div>
+    </div>
+    <div class="subwordmark">Advanced Food Security Bank<br>Reserve console — demo build</div>
+    <div style="display:inline-flex;align-items:center;gap:5px;font-family:'IBM Plex Mono',monospace;font-size:9.5px;color:var(--teal);background:rgba(79,166,149,0.16);border-radius:10px;padding:3px 9px;letter-spacing:.03em;margin-bottom:10px;width:fit-content;">● AI &amp; automation throughout</div>
+    <div style="display:flex;align-items:center;gap:6px;margin-bottom:18px;">
+      <img src="https://zero-n.com/wp-content/uploads/2024/08/ZeroN_logo-Wtrans.png" alt="Zero.N" style="height:13px;width:auto;opacity:.85;" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-block';">
+      <span style="display:none;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:11px;color:var(--sand);">Zero.N</span>
+      <span style="font-size:9.5px;color:var(--sand-dim);">Powered by Zero.N Ventures</span>
+    </div>
+
+    <div class="mode-toggle">
+      <button class="mode-btn" data-mode="inst" id="btnInst">Institutional</button>
+      <button class="mode-btn active" data-mode="phil" id="btnPhil">Philanthropic</button>
+    </div>
+    <div class="mode-hint" id="modeHint">Framed for a founding humanitarian partner.</div>
+
+    <div class="nav">
+      <div class="nav-item active" data-target="overview"><span class="idx">01</span>Overview</div>
+      <div class="nav-item" data-target="sponsor"><span class="idx">02</span>Who's building this</div>
+      <div class="nav-item" data-target="shock"><span class="idx">03</span>Shock response</div>
+      <div class="nav-item" data-target="valuechain"><span class="idx">04</span>Value chain</div>
+      <div class="nav-item" data-target="reach"><span class="idx">05</span>Reach</div>
+      <div class="nav-item" data-target="capital"><span class="idx">06</span>Capital reach</div>
+    </div>
+
+    <div class="sidebar-foot">
+      <b>Illustrative demo.</b> All figures, names, and locations are representative, for discussion — not reported holdings, commitments, or persons.
+    </div>
+  </div>
+
+  <main>
+
+    <!-- 01 OVERVIEW -->
+    <section class="module active" id="overview">
+      <div class="eyebrow" id="ovEyebrow">Reserve status — illustrative</div>
+      <h1 id="ovH1">A reserve that doesn't need to know which crisis comes next.</h1>
+      <p class="lede" id="ovLede">Only that one will. Long shelf life and low-cost sourcing do the work a forecast would otherwise have to do — so this console tracks depth, diversification, and readiness, not predictions.</p>
+
+      <div class="grid">
+        <div class="stat"><div class="num" id="st1n">1.3M</div><div class="lbl" id="st1l">People coverable, 90-day ration</div></div>
+        <div class="stat"><div class="num">30yr</div><div class="lbl">Max preservation horizon</div></div>
+        <div class="stat"><div class="num">6</div><div class="lbl">Commodities held</div></div>
+        <div class="stat"><div class="num" id="st4n">2.6&#215;</div><div class="lbl" id="st4l">Avg value uplift once preserved</div></div>
+      </div>
+
+      <div class="two-col">
+        <div class="panel">
+          <h3>Reserve by preservation method</h3>
+          <div class="sub">Method matched to commodity, not applied uniformly</div>
+          <canvas id="chartMethod"></canvas>
+        </div>
+        <div class="panel">
+          <h3>Reserve by commodity</h3>
+          <div class="sub">Tonnage share, illustrative portfolio</div>
+          <canvas id="chartCommodity"></canvas>
+        </div>
+      </div>
+    </section>
+
+    <!-- 02 SPONSOR -->
+    <section class="module" id="sponsor">
+      <div class="eyebrow">Structure</div>
+      <h1>One accountable institution — not a fund, not a syndicate.</h1>
+      <p class="lede">A sponsor forms it, the AFSB itself operates it, and named partners deliver the two premium lines under commercial contract. Every stakeholder knows exactly who is accountable for what.</p>
+
+      <div class="org-row">
+        <div class="org-card sponsor">
+          <div class="org-tag">Sponsor</div>
+          <img src="https://zero-n.com/wp-content/uploads/2024/08/ZeroN_logo-Wtrans.png" alt="Zero.N" style="height:22px;width:auto;margin:6px 0 8px 0;opacity:.95;" onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
+          <div class="org-name" style="display:none;">Zero.N</div>
+          <div class="org-name" style="font-size:13px;color:var(--sand-dim);font-weight:500;">Zero N Ventures</div>
+          <div class="org-desc">Forms and sponsors the AFSB; assembles delivery partners against the capabilities the model requires.</div>
+        </div>
+        <div class="org-arrow">→</div>
+        <div class="org-card operator">
+          <div class="org-tag">Operator</div>
+          <div class="org-name">The AFSB itself</div>
+          <div class="org-desc">The entity the founding partner capitalizes — holds the reserve, the licenses, and the mandate. Single point of accountability.</div>
+        </div>
+      </div>
+
+      <div class="panel" style="margin-bottom:16px;">
+        <h3>Delivery partners</h3>
+        <div class="sub">Named capability owners, under commercial contract with the AFSB — not internal departments</div>
+        <div class="partner-grid">
+          <div class="partner-card">
+            <div class="partner-tag">Emergency premium line</div>
+            <div class="partner-name">Everstock</div>
+            <div class="partner-desc">Formulation, packaging, and production of long-life emergency food — including no-water-needed formats.</div>
+            <div class="contract-tag">commercial contract · AFSB</div>
+          </div>
+          <div class="partner-card">
+            <div class="partner-tag">Personalized line</div>
+            <div class="partner-name">Apotek</div>
+            <div class="partner-desc">AI-personalized nutrition and natural cosmetics, drawing on the AFSB's preserved raw-material base.</div>
+            <div class="contract-tag">commercial contract · AFSB</div>
+          </div>
+        </div>
+      </div>
+
+      <p class="footnote">Illustrative structure for discussion. Related-party governance between the sponsor and its delivery partners is a Phase 1 design item, including arm's-length pricing and conflict-of-interest policy.</p>
+    </section>
+    <section class="module" id="shock">
+      <div class="eyebrow">Simulator</div>
+      <h1 id="shH1">Choose a crisis. Watch the reserve answer.</h1>
+      <div style="display:inline-flex;align-items:center;gap:5px;font-family:'IBM Plex Mono',monospace;font-size:9.5px;color:var(--teal);background:var(--teal-dim);border-radius:10px;padding:3px 9px;margin-bottom:10px;">● AI triages and routes this cascade</div>
+      <p class="lede" id="shLede">The system was never asked to predict this scenario. It only had to already be holding something diversified, affordable, and ready.</p>
+
+      <div class="shock-grid" id="shockGrid"></div>
+
+      <div class="cascade" id="cascade">
+        <div class="node"><div class="nlbl">Crisis verified</div><div class="nval">—</div></div>
+        <div class="connector"></div>
+        <div class="node"><div class="nlbl">Reserve checked</div><div class="nval">—</div></div>
+        <div class="connector"></div>
+        <div class="node"><div class="nlbl">Channel routed</div><div class="nval">—</div></div>
+        <div class="connector"></div>
+        <div class="node"><div class="nlbl" id="node4lbl">Relief moving</div><div class="nval">—</div></div>
+      </div>
+
+      <div class="impact-strip" id="impactStrip">
+        <div class="impact-box"><div class="inum" id="imp1">—</div><div class="ilbl">Tonnes deployed from reserve</div></div>
+        <div class="impact-box"><div class="inum" id="imp2">—</div><div class="ilbl">People covered, 90-day full ration</div></div>
+        <div class="impact-box"><div class="inum" id="imp3">—</div><div class="ilbl">First delivery vs. traditional procurement</div></div>
+      </div>
+
+      <div class="result-panel" id="resultPanel">
+        <div class="placeholder-msg" id="resultPlaceholder">Select a crisis above to run the response.</div>
+        <div id="resultRows" style="display:none;"></div>
+      </div>
+    </section>
+
+    <!-- 03 VALUE CHAIN -->
+    <section class="module" id="valuechain">
+      <div class="eyebrow">From market stock to mission-grade value</div>
+      <h1 id="vcH1">Every layer serves the mission — and pays for the next.</h1>
+      <div style="display:inline-flex;align-items:center;gap:5px;font-family:'IBM Plex Mono',monospace;font-size:9.5px;color:var(--teal);background:var(--teal-dim);border-radius:10px;padding:3px 9px;margin-bottom:10px;">● AI times acquisitions and personalizes tier 4</div>
+      <p class="lede" id="vcLede">Core stock is acquired on the open market — liquid, fast, no production risk. Preservation to a 30-year horizon is the first value step: the reserve is worth more than it cost the day it enters the vault. Two processing layers then convert a managed share into higher-margin products whose proceeds grow the reserve. Pick a commodity.</p>
+
+      <div class="vc-select" id="vcSelect"></div>
+
+      <div class="vc-ladder">
+        <div class="vc-stage" id="vs0">
+          <div><div class="vst">1 · Open-market stock</div><div class="vsc">Acquired liquid, at market — GSM-102-backed where U.S.-sourced</div></div>
+          <div class="vc-bar-track"><div class="vc-bar-fill" id="vb0" style="background:#5A6469;"></div></div>
+          <div class="vc-val" id="vv0">—</div>
+        </div>
+        <div class="vc-stage" id="vs1">
+          <div><div class="vst">2 · Preserved, 30-yr horizon</div><div class="vsc">Reserve-grade: verified storage, attested provenance, decades of optionality</div></div>
+          <div class="vc-bar-track"><div class="vc-bar-fill" id="vb1" style="background:#4FA695;"></div></div>
+          <div class="vc-val" id="vv1">—</div>
+        </div>
+        <div class="vc-stage" id="vs2">
+          <div><div class="vst">3 · Emergency premium line</div><div class="vsc">Delivered by Everstock — packaged long-life emergency food, incl. no-water-needed formats</div></div>
+          <div class="vc-bar-track"><div class="vc-bar-fill" id="vb2" style="background:#E2A438;"></div></div>
+          <div class="vc-val" id="vv2">—</div>
+        </div>
+        <div class="vc-stage" id="vs3">
+          <div><div class="vst">4 · Personalized line</div><div class="vsc">Delivered by Apotek — AI-personalized nutrition & natural cosmetics from the same raw-material base</div></div>
+          <div class="vc-bar-track"><div class="vc-bar-fill" id="vb3" style="background:#C15A34;"></div></div>
+          <div class="vc-val" id="vv3">—</div>
+        </div>
+      </div>
+
+      <div class="vc-uplift">
+        <span id="vcUpliftLbl">Value uplift, market stock → preserved reserve</span>
+        <b id="vcUpliftVal">—</b>
+      </div>
+
+      <p class="footnote">Illustrative $/tonne values. Bulk tonnage stays in reserve; only a managed share flows to the premium tiers — allocation policy is mission-first, and preservation-cost netting is sized in the design engagement. Grow-on-contract farming remains available as a later-phase program funded from processing margins, not a day-one dependency.</p>
+    </section>
+
+    <!-- 04 REACH -->
+    <section class="module" id="reach">
+      <div class="eyebrow">Global network — live projection</div>
+      <h1 id="rcH1">Sourced widely. Held at the hub. Deployed in hours.</h1>
+      <p class="lede" id="rcLede">Diversified sourcing flows into preservation and vault capacity at the UAE's logistics hub — pre-positioned within reach of the regions where food crises concentrate. Click any node.</p>
+
+      <div class="map-wrap">
+        <svg class="map-svg" viewBox="0 0 900 470" xmlns="http://www.w3.org/2000/svg" id="mapSvg">
+          <rect width="900" height="470" fill="#141A1D"/>
+          <text id="mapLoading" x="450" y="235" text-anchor="middle" class="maplabel" style="font-size:12px;">loading world map...</text>
+        </svg>
+
+        <div class="map-legend">
+          <div class="lg-item"><div class="lg-swatch" style="background:#4FA695;"></div>Sourcing flows in</div>
+          <div class="lg-item"><div class="lg-swatch" style="background:#E2A438;"></div>Deployment reach out</div>
+          <div class="lg-item"><div class="lg-swatch" style="background:transparent;border:1px solid #E2A438;height:10px;width:10px;border-radius:2px;"></div>Vault + preservation hub</div>
+        </div>
+        <div class="map-note" id="mapNote">Node positions are true-projected coordinates; flows illustrative.</div>
+      </div>
+
+      <div class="map-detail" id="mapDetail"><span>Click a node to see its role in the network.</span></div>
+    </section>
+
+    <!-- 05 CAPITAL REACH -->
+    <section class="module" id="capital">
+      <div class="eyebrow">Amplifying every founding dirham</div>
+      <h1 id="cpH1">The same founding commitment, reaching further.</h1>
+      <p class="lede" id="cpLede">GSM-102 and the Facility Guarantee Program shift counterparty and vendor-financing risk to Washington. Tokenized SPVs add a second lever — a fixed-income instrument that invites private capital alongside the founding commitment. Illustrative, not a projection.</p>
+
+      <div class="panel">
+        <div class="slider-row">
+          <label id="capLabel">Founding commitment</label>
+          <input type="range" id="capSlider" min="250" max="3000" step="50" value="1000">
+          <div class="cap-readout">$<span id="capValue">1,000</span>M</div>
+        </div>
+
+        <div class="bars">
+          <div class="bar-row">
+            <div class="bar-label"><span id="lblCommittedTxt">Commitment</span><b id="lblCommitted">$1,000M</b></div>
+            <div class="bar-track"><div class="bar-fill fill-committed" id="fillCommitted"></div></div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-label"><span>Reserve sourcing enabled — GSM-102</span><b id="lblGsm">$4,200M</b></div>
+            <div class="bar-track"><div class="bar-fill fill-gsm" id="fillGsm"></div></div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-label"><span>Preservation infrastructure — FGP (~15% down)</span><b id="lblFgp">$6,670M</b></div>
+            <div class="bar-track"><div class="bar-fill fill-fgp" id="fillFgp"></div></div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-label"><span>Private capital unlocked — fixed-income SPV tokenization</span><b id="lblFi">$1,500M</b></div>
+            <div class="bar-track"><div class="bar-fill fill-fi" id="fillFi"></div></div>
+          </div>
+        </div>
+
+        <div class="becomes" id="becomesStrip">
+          <div class="bc"><div class="bnum" id="bc1">—</div><div class="blbl">People coverable, 90-day ration</div></div>
+          <div class="bc"><div class="bnum" id="bc2">—</div><div class="blbl">Tonnes acquired & preserved</div></div>
+          <div class="bc"><div class="bnum" id="bc3">—</div><div class="blbl">Preservation & processing facilities</div></div>
+        </div>
+
+        <p class="footnote">Illustrative multipliers and conversion rates only. Fixed-income capital is serviced from contracted revenues — reserve services and the premium lines — never from philanthropic capital; philanthropy is senior in mission, junior in claim. Actual reach depends on program terms, CCC/EXIM bank eligibility, commodity prices, and facility costs — sized properly during the design engagement, not assumed here.</p>
+      </div>
+    </section>
+
+    <!-- 06 ARCHITECTURE -->
+  </main>
+
+<script>
+  // ============ MODE ============
+  let mode = 'phil';
+
+  const MODE_TEXT = {
+    phil: {
+      hint: 'Framed for a founding humanitarian partner.',
+      ovH1: "A reserve that doesn't need to know which crisis comes next.",
+      ovLede: "Only that one will. Long shelf life and open-market sourcing do the work a forecast would otherwise have to do — so this console tracks depth, diversification, and readiness, not predictions.",
+      st1n: '1.3M', st1l: 'People coverable, 90-day ration',
+      st4n: '2.6\u00d7', st4l: 'Avg value uplift once preserved',
+      shH1: 'Choose a crisis. Watch the reserve answer.',
+      node4lbl: 'Relief moving',
+      vcH1: 'Every layer serves the mission — and pays for the next.',
+      vcLede: "Core stock is acquired on the open market — liquid, fast, no production risk. Preservation to a 30-year horizon is the first value step: the reserve is worth more than it cost the day it enters the vault. Premium processing margins then grow humanitarian capacity instead of returning to donors. Pick a commodity.",
+      cpH1: 'The same founding commitment, reaching further.',
+      capLabel: 'Founding commitment', lblCommittedTxt: 'Commitment',
+      enH1: 'Three months to a blueprint. Then a founding commitment.',
+      p2Title: 'Founding commitment',
+      arch2p: "Procurement smart contracts settle open-market acquisitions with attested provenance from intake onward, and a co-funding structure gives the founding partner — and every partner it invites — an auditable record of exactly where each dirham went."
+    },
+    inst: {
+      hint: 'Framed for a strategic capital partner.',
+      ovH1: "A reserve that doesn't need to know which shock comes next.",
+      ovLede: "Only that one will. Long shelf life and a low cost basis do the work a forecast would otherwise have to do — so this console tracks depth and diversification, not predictions.",
+      st1n: '340d', st1l: 'Regional staple coverage',
+      st4n: '5', st4l: 'Monetization channels',
+      shH1: 'Choose a shock. Watch the reserve answer.',
+      node4lbl: 'Value captured',
+      vcH1: 'An asset that appreciates the day it enters the vault.',
+      vcLede: "Core stock is acquired liquid on the open market — no production risk, no seasonal lag. Preservation converts commodity into reserve-grade asset at an immediate uplift, and two processing tiers capture successively higher margins from the same raw-material base. Pick a commodity.",
+      cpH1: 'The same committed capital, reaching further.',
+      capLabel: 'Committed capital', lblCommittedTxt: 'Capital committed',
+      enH1: 'Three months to a term sheet. Then capital.',
+      p2Title: 'Capitalization',
+      arch2p: "Procurement smart contracts settle acquisitions with attested provenance from intake onward. A tokenized SPV lets institutional capital co-invest in the reserve and processing lines with a fully auditable record."
+    }
+  };
+
+  function applyMode(){
+    const t = MODE_TEXT[mode];
+    document.getElementById('modeHint').textContent = t.hint;
+    document.getElementById('ovH1').textContent = t.ovH1;
+    document.getElementById('ovLede').textContent = t.ovLede;
+    document.getElementById('st1n').textContent = t.st1n;
+    document.getElementById('st1l').textContent = t.st1l;
+    document.getElementById('st4n').textContent = t.st4n;
+    document.getElementById('st4l').textContent = t.st4l;
+    document.getElementById('shH1').textContent = t.shH1;
+    document.getElementById('node4lbl').textContent = t.node4lbl;
+    document.getElementById('vcH1').textContent = t.vcH1;
+    document.getElementById('vcLede').textContent = t.vcLede;
+    document.getElementById('cpH1').textContent = t.cpH1;
+    document.getElementById('capLabel').textContent = t.capLabel;
+    document.getElementById('lblCommittedTxt').textContent = t.lblCommittedTxt;
+    document.getElementById('btnInst').classList.toggle('active', mode==='inst');
+    document.getElementById('btnPhil').classList.toggle('active', mode==='phil');
+    resetShock();
+    updateCapital();
+  }
+  document.getElementById('btnInst').addEventListener('click', ()=>{ mode='inst'; applyMode(); });
+  document.getElementById('btnPhil').addEventListener('click', ()=>{ mode='phil'; applyMode(); });
+
+  // ============ NAV ============
+  const navItems = document.querySelectorAll('.nav-item');
+  const modules = document.querySelectorAll('.module');
+  navItems.forEach(item => {
+    item.addEventListener('click', () => {
+      navItems.forEach(n => n.classList.remove('active'));
+      modules.forEach(m => m.classList.remove('active'));
+      item.classList.add('active');
+      document.getElementById(item.dataset.target).classList.add('active');
+    });
+  });
+
+  // ============ CHARTS ============
+  const inkPanel = '#1A2125';
+  Chart.defaults.color = '#9B9788';
+  Chart.defaults.font.family = 'IBM Plex Mono';
+  Chart.defaults.font.size = 11;
+
+  new Chart(document.getElementById('chartMethod'), {
+    type: 'doughnut',
+    data: {
+      labels: ['Hermetic dry storage', 'Freeze-dried', 'Canned / retort', 'Spray-dried'],
+      datasets: [{ data: [68, 14, 10, 8],
+        backgroundColor: ['#4FA695', '#E2A438', '#C15A34', '#5A6469'],
+        borderColor: inkPanel, borderWidth: 3 }]
+    },
+    options: { plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, padding: 12 } } }, cutout: '62%' }
+  });
+
+  new Chart(document.getElementById('chartCommodity'), {
+    type: 'bar',
+    data: {
+      labels: ['Wheat', 'Rice', 'Corn', 'Legumes', 'Dairy', 'Produce'],
+      datasets: [{ data: [420, 310, 260, 180, 90, 60], backgroundColor: '#E2A438', borderRadius: 4, barThickness: 20 }]
+    },
+    options: { plugins: { legend: { display: false } },
+      scales: { x: { grid: { display: false } }, y: { grid: { color: 'rgba(231,223,203,0.08)' } } } }
+  });
+
+  // ============ SHOCK SIMULATOR ============
+  // 1 tonne ≈ 2,000 person-days at ~0.5 kg/person/day full ration
+  const shocks = [
+    { title: 'Chokepoint disruption', desc: 'A major shipping lane is blocked without warning.',
+      channel: 'Reserve services — regional government', tonnes: 45000, response: '3h 40m', compare: 'vs. 45–60 day import lead', spread: '+$210 / tonne' },
+    { title: 'Regional drought', desc: 'A verified deficit emerges across a growing region.',
+      channel: 'Crisis deployment — humanitarian', tonnes: 62000, response: '6h 10m', compare: 'vs. 8–12 week procurement', spread: '+$165 / tonne' },
+    { title: 'Export restriction', desc: 'A major exporter halts shipments of a staple grain.',
+      channel: 'Stabilization sale — open market', tonnes: 38000, response: '2h 55m', compare: 'vs. weeks of spot scramble', spread: '+$340 / tonne' },
+    { title: 'Import capacity shock', desc: 'Currency or credit conditions cut import capacity.',
+      channel: 'Crisis deployment — no-water-needed', tonnes: 21000, response: '4h 20m', compare: 'vs. 30+ day letters of credit', spread: '+$95 / tonne' }
+  ];
+
+  const shockGrid = document.getElementById('shockGrid');
+  shocks.forEach((s, i) => {
+    const card = document.createElement('div');
+    card.className = 'shock-card';
+    card.innerHTML = '<div class="stitle">' + s.title + '</div><div class="sdesc">' + s.desc + '</div>';
+    card.addEventListener('click', () => runCascade(i, card));
+    shockGrid.appendChild(card);
+  });
+
+  const nodes = document.querySelectorAll('.node');
+  const connectors = document.querySelectorAll('.connector');
+  const resultPlaceholder = document.getElementById('resultPlaceholder');
+  const resultRows = document.getElementById('resultRows');
+  const resultPanel = document.getElementById('resultPanel');
+  const impactStrip = document.getElementById('impactStrip');
+  let cascadeTimers = [];
+
+  function resetShock(){
+    cascadeTimers.forEach(t => clearTimeout(t)); cascadeTimers = [];
+    document.querySelectorAll('.shock-card').forEach(c => c.classList.remove('selected'));
+    nodes.forEach(n => { n.classList.remove('lit'); n.querySelector('.nval').textContent = '—'; });
+    connectors.forEach(c => c.classList.remove('lit'));
+    impactStrip.classList.remove('show');
+    resultPanel.classList.remove('show');
+    resultPlaceholder.style.display = 'block';
+    resultRows.style.display = 'none';
+  }
+
+  function fmtInt(n){ return Math.round(n).toLocaleString('en-US'); }
+
+  function runCascade(i, card) {
+    resetShock();
+    card.classList.add('selected');
+    const s = shocks[i];
+    const people90 = s.tonnes * 2000 / 90;
+
+    const finalVal = mode === 'phil' ? fmtInt(people90) + ' covered' : s.spread;
+
+    const steps = [
+      () => { nodes[0].classList.add('lit'); nodes[0].querySelector('.nval').textContent = 'confirmed'; },
+      () => { connectors[0].classList.add('lit'); nodes[1].classList.add('lit'); nodes[1].querySelector('.nval').textContent = 'in spec'; },
+      () => { connectors[1].classList.add('lit'); nodes[2].classList.add('lit'); nodes[2].querySelector('.nval').textContent = s.channel.split(' — ')[0]; },
+      () => { connectors[2].classList.add('lit'); nodes[3].classList.add('lit'); nodes[3].querySelector('.nval').textContent = finalVal; },
+      () => {
+        document.getElementById('imp1').textContent = fmtInt(s.tonnes);
+        document.getElementById('imp2').textContent = fmtInt(people90);
+        document.getElementById('imp3').textContent = s.response;
+        impactStrip.classList.add('show');
+
+        resultPlaceholder.style.display = 'none';
+        resultRows.style.display = 'block';
+        let rows =
+          '<div class="result-row"><span class="rlbl">Scenario</span><span class="rval">' + s.title + '</span></div>' +
+          '<div class="result-row"><span class="rlbl">Channel routed</span><span class="rval">' + s.channel + '</span></div>' +
+          '<div class="result-row"><span class="rlbl">Response time</span><span class="rval">' + s.response + ' (' + s.compare + ')</span></div>';
+        if (mode === 'inst') {
+          rows += '<div class="result-row"><span class="rlbl">Spread captured</span><span class="rval">' + s.spread + '</span></div>';
+        } else {
+          rows += '<div class="result-row"><span class="rlbl">Proceeds (where sold)</span><span class="rval">recycled into reserve growth</span></div>';
+        }
+        resultRows.innerHTML = rows;
+        resultPanel.classList.add('show');
+      }
+    ];
+    steps.forEach((fn, idx) => { cascadeTimers.push(setTimeout(fn, idx * 420)); });
+  }
+
+  // ============ VALUE CHAIN ============
+  // Illustrative $/tonne at each stage. null = not routed to that tier.
+  const vcData = {
+    'Wheat':      { vals: [250, 420, 1800, null] },
+    'Rice':       { vals: [420, 640, 2100, null] },
+    'Legumes':    { vals: [520, 820, 2600, 5200] },
+    'Dairy':      { vals: [2600, 3400, 6800, 12000] },
+    'Botanicals': { vals: [600, 2400, 4800, 9600] }
+  };
+
+  const vcSelect = document.getElementById('vcSelect');
+  Object.keys(vcData).forEach((name, i) => {
+    const b = document.createElement('button');
+    b.className = 'vc-btn' + (i === 0 ? ' selected' : '');
+    b.textContent = name;
+    b.addEventListener('click', () => {
+      document.querySelectorAll('.vc-btn').forEach(x => x.classList.remove('selected'));
+      b.classList.add('selected');
+      renderVC(name);
+    });
+    vcSelect.appendChild(b);
+  });
+
+  function renderVC(name){
+    const vals = vcData[name].vals;
+    const max = Math.max(...vals.filter(v => v !== null));
+    vals.forEach((v, i) => {
+      const stage = document.getElementById('vs' + i);
+      const bar = document.getElementById('vb' + i);
+      const lbl = document.getElementById('vv' + i);
+      if (v === null) {
+        stage.classList.add('na');
+        bar.style.width = '0%';
+        lbl.textContent = 'not routed';
+      } else {
+        stage.classList.remove('na');
+        bar.style.width = (v / max * 100) + '%';
+        lbl.textContent = '$' + fmtInt(v) + '/t';
+      }
+    });
+    const uplift = (vals[1] / vals[0]);
+    document.getElementById('vcUpliftVal').textContent = uplift.toFixed(1) + '\u00d7';
+  }
+
+  // ============ MAP (real world projection, war-room view) ============
+  const mapInfo = {
+    hub: '<b>Abu Dhabi hub</b> Preservation and two premium processing lines at Khalifa Port / KEZAD — FGP-backed facilities; stock pre-positioned within hours of deployment zones.',
+    us: '<b>US Gulf sourcing</b> Bulk grain and processed commodities acquired on the open market under GSM-102 guarantee — counterparty risk carried by Washington, not the reserve.',
+    anatolia: '<b>Anatolia sourcing</b> Open-market grain lane — one of several origins so no single supplier, route, or harvest can compromise the reserve.',
+    punjab: '<b>Punjab sourcing</b> Wheat and rice procurement lane — liquid regional markets, multi-origin diversification.',
+    eafrica: '<b>East Africa sourcing</b> Pulses and botanicals procurement lane — with grow-on-contract available as a later-phase development program funded from processing margins.',
+    horn: '<b>Horn of Africa reach</b> Priority deployment zone — recurring drought exposure; pre-positioned stock cuts response from months to hours.',
+    sasia: '<b>South Asia coast reach</b> Cyclone and flood exposure — no-water-needed reserve formats deploy where infrastructure is down.',
+    levant: '<b>Levant reach</b> Conflict-driven food insecurity — reserve services maintained on behalf of agencies operating in the region.'
+  };
+
+  // [lon, lat] — real approximate coordinates
+  const mapNodes = [
+    { id: 'us', type: 'source', lon: -95.4, lat: 29.7, label: 'US GULF · GSM-102' },
+    { id: 'anatolia', type: 'source', lon: 32.5, lat: 38.0, label: 'ANATOLIA · GRAIN' },
+    { id: 'punjab', type: 'source', lon: 74.5, lat: 31.0, label: 'PUNJAB · WHEAT/RICE' },
+    { id: 'eafrica', type: 'source', lon: 38.5, lat: 8.5, label: 'E. AFRICA · PULSES' },
+    { id: 'horn', type: 'dest', lon: 46.5, lat: 6.5, label: 'HORN OF AFRICA' },
+    { id: 'sasia', type: 'dest', lon: 91.8, lat: 22.3, label: 'S. ASIA COAST' },
+    { id: 'levant', type: 'dest', lon: 36.5, lat: 34.5, label: 'LEVANT' },
+    { id: 'hub', type: 'hub', lon: 54.4, lat: 24.45, label: 'ABU DHABI HUB' }
+  ];
+
+  const svg = d3.select('#mapSvg');
+  const mapDetail = document.getElementById('mapDetail');
+  const W = 900, H = 470;
+
+  function curvePath(x1, y1, x2, y2){
+    const mx = (x1 + x2) / 2, my = (y1 + y2) / 2;
+    const dx = x2 - x1, dy = y2 - y1;
+    const cx = mx - dy * 0.18, cy = my + dx * 0.18;
+    return 'M ' + x1 + ' ' + y1 + ' Q ' + cx + ' ' + cy + ' ' + x2 + ' ' + y2;
+  }
+
+  function drawNetwork(project){
+    const byId = {};
+    mapNodes.forEach(n => {
+      const p = project([n.lon, n.lat]);
+      byId[n.id] = { x: p[0], y: p[1] };
+    });
+    const hub = byId.hub;
+    const g = svg.append('g').attr('id', 'networkLayer');
+
+    // flows: sources -> hub, hub -> destinations
+    mapNodes.filter(n => n.type === 'source').forEach(n => {
+      const p = byId[n.id];
+      g.append('path').attr('class', 'flow').attr('stroke', '#4FA695')
+        .attr('d', curvePath(p.x, p.y, hub.x, hub.y));
+    });
+    mapNodes.filter(n => n.type === 'dest').forEach(n => {
+      const p = byId[n.id];
+      g.append('path').attr('class', 'flow').attr('stroke', '#E2A438')
+        .attr('d', curvePath(hub.x, hub.y, p.x, p.y));
+    });
+
+    // nodes
+    mapNodes.forEach(n => {
+      const p = byId[n.id];
+      const color = n.type === 'source' ? '#4FA695' : n.type === 'dest' ? '#E2A438' : '#E2A438';
+      const gn = g.append('g').attr('class', 'mnode').attr('data-node', n.id).style('cursor', 'pointer');
+
+      if (n.type === 'hub'){
+        gn.append('rect').attr('x', p.x - 15).attr('y', p.y - 15).attr('width', 30).attr('height', 30)
+          .attr('rx', 4).attr('fill', 'none').attr('stroke', color).attr('stroke-width', 1.8);
+        gn.append('circle').attr('cx', p.x).attr('cy', p.y).attr('r', 5).attr('fill', color);
+        gn.append('text').attr('class', 'maplabel-hub').attr('x', p.x).attr('y', p.y + 34).attr('text-anchor', 'middle').text(n.label);
+        gn.append('text').attr('class', 'maplabel').attr('x', p.x).attr('y', p.y + 48).attr('text-anchor', 'middle').text('KHALIFA PORT · KEZAD');
+      } else {
+        gn.append('circle').attr('class', 'core').attr('cx', p.x).attr('cy', p.y).attr('r', 5.5).attr('fill', color);
+        gn.append('circle').attr('cx', p.x).attr('cy', p.y).attr('r', 10).attr('fill', 'none').attr('stroke', color).attr('stroke-opacity', 0.4).attr('stroke-width', 1);
+        const labelY = n.type === 'source' ? p.y - 14 : p.y + 22;
+        gn.append('text').attr('class', 'maplabel').attr('x', p.x).attr('y', labelY).attr('text-anchor', 'middle').text(n.label);
+      }
+
+      gn.on('click', () => { mapDetail.innerHTML = '<span>' + mapInfo[n.id] + '</span>'; });
+    });
+  }
+
+  function drawFallback(){
+    // offline-safe schematic fallback if the world-map data can't be fetched
+    svg.selectAll('*').remove();
+    svg.append('rect').attr('width', W).attr('height', H).attr('fill', '#141A1D');
+    const defs = svg.append('defs');
+    const pat = defs.append('pattern').attr('id', 'dotgrid').attr('width', 26).attr('height', 26).attr('patternUnits', 'userSpaceOnUse');
+    pat.append('circle').attr('cx', 1.5).attr('cy', 1.5).attr('r', 1.1).attr('fill', 'rgba(231,223,203,0.07)');
+    svg.append('rect').attr('width', W).attr('height', H).attr('fill', 'url(#dotgrid)');
+    document.getElementById('mapNote').textContent = 'Offline fallback — schematic layout, world map data unavailable.';
+
+    const fallbackProject = ([lon, lat]) => {
+      const x = ((lon + 100) / 200) * (W - 120) + 60;
+      const y = ((45 - lat) / 90) * (H - 100) + 50;
+      return [x, y];
+    };
+    drawNetwork(fallbackProject);
+  }
+
+  fetch('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json')
+    .then(res => { if (!res.ok) throw new Error('fetch failed'); return res.json(); })
+    .then(world => {
+      svg.selectAll('*').remove();
+      svg.append('rect').attr('width', W).attr('height', H).attr('fill', '#141A1D');
+
+      const land = topojson.feature(world, world.objects.countries);
+      const projection = d3.geoNaturalEarth1().fitSize([W - 20, H - 20], land);
+      projection.translate([projection.translate()[0] + 10, projection.translate()[1] + 10]);
+      const path = d3.geoPath(projection);
+
+      svg.append('g').selectAll('path').data(land.features).enter().append('path')
+        .attr('d', path)
+        .attr('fill', '#1E2529')
+        .attr('stroke', 'rgba(231,223,203,0.16)')
+        .attr('stroke-width', 0.6);
+
+      drawNetwork((lonlat) => projection(lonlat));
+    })
+    .catch(() => { drawFallback(); });
+
+  // ============ CAPITAL ============
+  const capSlider = document.getElementById('capSlider');
+
+  function updateCapital() {
+    const committed = Number(capSlider.value);
+    const gsm = committed * 4.2;
+    const fgp = committed / 0.15;
+    const fixedIncome = committed * 1.5;
+    const maxScale = 3000 / 0.15;
+
+    document.getElementById('capValue').textContent = fmtInt(committed);
+    document.getElementById('lblCommitted').textContent = '$' + fmtInt(committed) + 'M';
+    document.getElementById('lblGsm').textContent = '$' + fmtInt(gsm) + 'M';
+    document.getElementById('lblFgp').textContent = '$' + fmtInt(fgp) + 'M';
+    document.getElementById('lblFi').textContent = '$' + fmtInt(fixedIncome) + 'M';
+    document.getElementById('fillCommitted').style.width = (committed / maxScale * 100) + '%';
+    document.getElementById('fillGsm').style.width = (gsm / maxScale * 100) + '%';
+    document.getElementById('fillFgp').style.width = (fgp / maxScale * 100) + '%';
+    document.getElementById('fillFi').style.width = (fixedIncome / maxScale * 100) + '%';
+
+    // Illustrative conversions: $420/t acquired via GSM-enabled trade → tonnes; 2,000 person-days/t / 90d;
+    // $45M per facility at 15% down. Fixed-income sized as a conservative multiple of founding capital,
+    // serviced from contracted revenues — not philanthropic capital.
+    const tonnes = gsm * 1e6 / 420;
+    const people = tonnes * 2000 / 90;
+    const facilities = fgp / 45;
+
+    document.getElementById('bc1').textContent = people >= 1e6 ? (people/1e6).toFixed(1) + 'M' : fmtInt(people);
+    document.getElementById('bc2').textContent = tonnes >= 1e6 ? (tonnes/1e6).toFixed(1) + 'M' : fmtInt(tonnes);
+    document.getElementById('bc3').textContent = fmtInt(facilities);
+  }
+  capSlider.addEventListener('input', updateCapital);
+
+  // init
+  applyMode();
+  renderVC('Wheat');
+</script>
+</body>
+</html>
