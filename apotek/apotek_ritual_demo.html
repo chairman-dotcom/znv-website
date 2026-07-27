@@ -589,11 +589,11 @@ function editTurn(index){
 
 function renderGoalsTurn(turn){
   turn.innerHTML = `
-    ${aiRow("Hi, I'm Apotek AI. Let's build your ritual — what are you optimizing for? Pick up to three.")}
+    ${aiRow("Hi, I'm Apotek AI. Let's build your ritual — what are you optimizing for? Pick as many as apply.")}
     <div class="turn-controls">
       <div class="goal-grid" id="goalGridLive"></div>
       <div class="turn-actions">
-        <span class="goal-hint" id="goalHintLive">${state.goals.size} of 3 selected</span>
+        <span class="goal-hint" id="goalHintLive">${state.goals.size===0 ? 'None selected yet' : state.goals.size+' selected'}</span>
         <button class="primary sm" id="goalsContinue" ${state.goals.size===0?'disabled':''}>Continue →</button>
       </div>
     </div>`;
@@ -610,9 +610,9 @@ function renderGoalsTurn(turn){
       <h3>${g.label}</h3><p>${g.desc}</p>`;
     card.addEventListener('click', ()=>{
       if(state.goals.has(g.id)) state.goals.delete(g.id);
-      else { if(state.goals.size>=3) return; state.goals.add(g.id); }
+      else { state.goals.add(g.id); }
       card.classList.toggle('selected', state.goals.has(g.id));
-      turn.querySelector('#goalHintLive').textContent = `${state.goals.size} of 3 selected`;
+      turn.querySelector('#goalHintLive').textContent = state.goals.size===0 ? 'None selected yet' : `${state.goals.size} selected`;
       turn.querySelector('#goalsContinue').disabled = state.goals.size===0;
     });
     grid.appendChild(card);
