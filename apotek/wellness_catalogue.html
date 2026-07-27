@@ -33,6 +33,7 @@
     --c-sleep:#3F5EFB;
     --c-gut:#4CAF50;
     --c-women:#E91E63;
+    --c-skincare:#C97064;
 
     --e-strong:#22B573;
     --e-moderate:#00BFA5;
@@ -305,6 +306,11 @@
     object-fit:contain;
     mix-blend-mode:multiply;
   }
+  .pcard .imgwrap svg{
+    height:88%;
+    width:auto;
+    max-width:100%;
+  }
   .pcard .imgwrap .fallback{
     display:none;
     font-family: "Plus Jakarta Sans", sans-serif;
@@ -468,11 +474,11 @@
 <header class="hero">
   <p class="eyebrow sans">Apotek · Field Catalogue · United States · 2026</p>
   <h1 class="title">Innovative Nutrition &amp; Wellness <span class="accent-word">Specimens</span></h1>
-  <p class="dek">A photographed reference of the products defining hydration, functional beverages, oral care, biohacking, and recovery on the US market right now — sourced directly from each brand's own product page.</p>
+  <p class="dek">A photographed reference of the products defining skincare, hydration, functional beverages, oral care, biohacking, and recovery on the US market right now — sourced directly from each brand's own product page.</p>
   <div class="specimen-count">
-    <div><b style="--num-color:var(--accent)">78</b><span>Products catalogued</span></div>
-    <div><b style="--num-color:var(--accent2)">11</b><span>Categories</span></div>
-    <div><b style="--num-color:var(--accent3-deep)">13</b><span>Photographed in full</span></div>
+    <div><b style="--num-color:var(--accent)">90</b><span>Products catalogued</span></div>
+    <div><b style="--num-color:var(--accent2)">12</b><span>Categories</span></div>
+    <div><b style="--num-color:var(--accent3-deep)">16</b><span>Photographed in full</span></div>
   </div>
 </header>
 
@@ -489,6 +495,7 @@
 </section>
 
 <nav class="toc sans">
+  <a href="#skincare" style="--tag-color:var(--c-skincare)">Skincare</a>
   <a href="#hydration" style="--tag-color:var(--c-hydration)">Hydration</a>
   <a href="#functional" style="--tag-color:var(--c-functional)">Functional &amp; Adaptogenic</a>
   <a href="#oral" style="--tag-color:var(--c-oral)">Oral Care</a>
@@ -502,9 +509,66 @@
   <a href="#women" style="--tag-color:var(--c-women)">Women's Health</a>
 </nav>
 
+<!-- ================= SKINCARE ================= -->
+<section class="category" id="skincare" style="--cat-color:var(--c-skincare)">
+  <div class="cat-head"><span class="cat-num">01</span><h2>Skincare</h2></div>
+  <p class="cat-sub">Topical actives from the same clean-label, ingredient-forward vertical as the rest of the catalogue — spanning an FDA-approved OTC retinoid to Apotek's own Skin Manna line.</p>
+
+  <div class="featured-grid">
+    <a class="pcard" href="https://differin.com/shop/differin-gel/3029949.html" target="_blank" rel="noopener">
+      <div class="imgwrap"><span class="tag" style="background:var(--e-strong)">Strong</span><img src="https://differin.com/on/demandware.static/-/Sites-differin-us-m-catalog/default/dwb3e66e60/3029949/GEL15GTube-Carton.png" alt="Differin Adapalene Gel Retinoid tube and carton"></div>
+      <div class="body">
+        <div class="brand">Differin</div>
+        <h3>Adapalene Gel 0.1%</h3>
+        <p class="meta">Topical gel · adapalene retinoid, the first OTC retinoid FDA-approved for acne</p>
+        <div class="foot"><span>Price: $</span><span class="view">View product →</span></div>
+      </div>
+    </a>
+    <div class="pcard" style="cursor:default;">
+      <div class="imgwrap"><span class="tag" style="background:var(--e-moderate)">Moderate</span>
+        <img src="apotek_vitamin_c_serum.png" alt="Apotek Skin Manna Vitamin C Radiance Serum bottle">
+      </div>
+      <div class="body">
+        <div class="brand">Apotek — Skin Manna</div>
+        <h3>Vitamin C Radiance Serum</h3>
+        <p class="meta">Glass pump bottle · stabilized vitamin C, antioxidant complex</p>
+        <div class="foot"><span>Price: $$</span><span class="view">Apotek in-house formulation</span></div>
+      </div>
+    </div>
+    <div class="pcard" style="cursor:default;">
+      <div class="imgwrap"><span class="tag" style="background:var(--e-emerging)">Emerging</span>
+        <img src="apotek_skin_manna_lotion.png" alt="Apotek Skin Manna Nourishing All-Purpose Lotion bottle">
+      </div>
+      <div class="body">
+        <div class="brand">Apotek — Skin Manna</div>
+        <h3>Nourishing All-Purpose Lotion</h3>
+        <p class="meta">Airless pump bottle · fermented botanical actives, Scandinavian-inspired formula</p>
+        <div class="foot"><span>Price: $</span><span class="view">Apotek in-house formulation</span></div>
+      </div>
+    </div>
+  </div>
+  <p class="legend-note" style="margin-top:-1rem;margin-bottom:2rem;">Differin sits apart from the rest of this category: it's an FDA-approved OTC drug (not a cosmetic), and the AAD recommends topical retinoids like adapalene as first-line therapy for mild-to-moderate acne — the strongest evidence base of any product in this section. Skin Manna is Apotek's in-house skincare line: the Vitamin C serum's core actives are reasonably well-studied (Moderate), while "fermented botanical actives" and general barrier-support claims on the all-purpose lotion are newer and less standardized (Emerging).</p>
+
+  <details class="more-list">
+    <summary>+ 9 more Skincare products cataloged (no photo sourced)</summary>
+    <table class="more-table">
+      <tr><th>Product</th><th>Format</th><th>Key actives</th><th>Price</th><th>Evidence</th></tr>
+      <tr><td>The Ordinary Niacinamide 10% + Zinc 1%</td><td>Serum</td><td>Niacinamide, zinc PCA</td><td>$</td><td><span class="pill" style="background:var(--e-moderate)">Moderate</span></td></tr>
+      <tr><td>The Ordinary Hyaluronic Acid 2% + B5</td><td>Serum</td><td>Hyaluronic acid, vitamin B5</td><td>$</td><td><span class="pill" style="background:var(--e-moderate)">Moderate</span></td></tr>
+      <tr><td>Naturium Vitamin C Complex Serum</td><td>Serum</td><td>Vitamin C, ferulic acid</td><td>$</td><td><span class="pill" style="background:var(--e-moderate)">Moderate</span></td></tr>
+      <tr><td>Topicals Faded Serum</td><td>Serum</td><td>Niacinamide, tranexamic + azelaic acid</td><td>$$</td><td><span class="pill" style="background:var(--e-emerging)">Emerging</span></td></tr>
+      <tr><td>Versed Doctor's Visit Serum</td><td>Serum</td><td>Bakuchiol (retinol alternative)</td><td>$</td><td><span class="pill" style="background:var(--e-emerging)">Emerging</span></td></tr>
+      <tr><td>Glow Recipe Watermelon Glow Niacinamide Dew Drops</td><td>Serum drops</td><td>Niacinamide, watermelon extract</td><td>$$</td><td><span class="pill" style="background:var(--e-weak)">Weak-Mod</span></td></tr>
+      <tr><td>Youth To The People Superfood Cleanser</td><td>Cleanser</td><td>Kale, spinach, green tea antioxidants</td><td>$$</td><td><span class="pill" style="background:var(--e-weak)">Weak-Mod</span></td></tr>
+      <tr><td>OSEA Malibu Undaria Algae Body Oil</td><td>Body oil</td><td>Undaria algae extract, squalane</td><td>$$</td><td><span class="pill" style="background:var(--e-weak)">Weak</span></td></tr>
+      <tr><td>Kate McLeod The Body Bar</td><td>Solid oil scrub bar</td><td>Shea, cocoa butter, plant oils</td><td>$$</td><td><span class="pill" style="background:var(--e-weak)">Weak</span></td></tr>
+    </table>
+  </details>
+</section>
+
 <!-- ================= HYDRATION ================= -->
 <section class="category" id="hydration" style="--cat-color:var(--c-hydration)">
-  <div class="cat-head"><span class="cat-num">01</span><h2>Hydration</h2></div>
+  <div class="cat-head"><span class="cat-num">02</span><h2>Hydration</h2></div>
   <p class="cat-sub">Electrolyte powders, tablets, and functional waters — the most crowded shelf in the store, boosted by GLP-1 users and TikTok's 363% search growth for "hydration."</p>
 
   <div class="featured-grid">
@@ -561,7 +625,7 @@
 
 <!-- ================= FUNCTIONAL & ADAPTOGENIC ================= -->
 <section class="category" id="functional" style="--cat-color:var(--c-functional)">
-  <div class="cat-head"><span class="cat-num">02</span><h2>Functional &amp; Adaptogenic Drinks</h2></div>
+  <div class="cat-head"><span class="cat-num">03</span><h2>Functional &amp; Adaptogenic Drinks</h2></div>
   <p class="cat-sub">Mushroom coffees, non-alcoholic apéritifs, and prebiotic sodas — the fastest-moving shelf in the store.</p>
 
   <div class="featured-grid">
@@ -602,7 +666,7 @@
 
 <!-- ================= ORAL CARE ================= -->
 <section class="category" id="oral" style="--cat-color:var(--c-oral)">
-  <div class="cat-head"><span class="cat-num">03</span><h2>Remineralizing Gum &amp; Dental Pouches</h2></div>
+  <div class="cat-head"><span class="cat-num">04</span><h2>Remineralizing Gum &amp; Dental Pouches</h2></div>
   <p class="cat-sub">A genuinely new micro-category riding the smokeless-pouch format, swapping nicotine for nano-hydroxyapatite.</p>
 
   <div class="featured-grid">
@@ -632,7 +696,7 @@
 
 <!-- ================= OTHER FUNCTIONAL / TINCTURES ================= -->
 <section class="category" id="tinctures" style="--cat-color:var(--c-tinctures)">
-  <div class="cat-head"><span class="cat-num">04</span><h2>Other Functional Drinks &amp; Tinctures</h2></div>
+  <div class="cat-head"><span class="cat-num">05</span><h2>Other Functional Drinks &amp; Tinctures</h2></div>
   <p class="cat-sub">From viral DIY "cocktails" with no clinical support to some of the best-evidenced supplements on the market — this category spans the widest evidence range.</p>
 
   <div class="featured-grid">
@@ -664,7 +728,7 @@
 
 <!-- ================= INFRARED ================= -->
 <section class="category" id="infrared" style="--cat-color:var(--c-infrared)">
-  <div class="cat-head"><span class="cat-num">05</span><h2>Infrared Glasses &amp; Light Therapy</h2></div>
+  <div class="cat-head"><span class="cat-num">06</span><h2>Infrared Glasses &amp; Light Therapy</h2></div>
   <p class="cat-sub">Protective eyewear that blocks red/near-infrared light during panel or sauna sessions, plus the panels and light-emitting glasses themselves.</p>
 
   <div class="featured-grid">
@@ -693,7 +757,7 @@
 
 <!-- ================= PARASITE / DETOX ================= -->
 <section class="category" id="detox" style="--cat-color:var(--c-detox)">
-  <div class="cat-head"><span class="cat-num">06</span><h2>Parasite Cleanses &amp; Detox</h2></div>
+  <div class="cat-head"><span class="cat-num">07</span><h2>Parasite Cleanses &amp; Detox</h2></div>
   <p class="cat-sub">The most medically-contested category here — doctors report little evidence of efficacy and real safety concerns with the more aggressive versions of this trend.</p>
 
   <div class="featured-grid">
@@ -722,7 +786,7 @@
 
 <!-- ================= LONGEVITY ================= -->
 <section class="category" id="longevity" style="--cat-color:var(--c-longevity)">
-  <div class="cat-head"><span class="cat-num">07</span><h2>Longevity &amp; Biohacking</h2></div>
+  <div class="cat-head"><span class="cat-num">08</span><h2>Longevity &amp; Biohacking</h2></div>
   <p class="cat-sub">NAD+ precursors, urolithin A, and peptides — a category where mechanism and marketing enthusiasm are running well ahead of long-term human data.</p>
 
   <div class="featured-grid">
@@ -753,7 +817,7 @@
 
 <!-- ================= RECOVERY / THERMAL ================= -->
 <section class="category" id="recovery" style="--cat-color:var(--c-recovery)">
-  <div class="cat-head"><span class="cat-num">08</span><h2>Recovery &amp; Thermal Wellness</h2></div>
+  <div class="cat-head"><span class="cat-num">09</span><h2>Recovery &amp; Thermal Wellness</h2></div>
   <p class="cat-sub">Cold plunges, infrared saunas, and hydrogen water — the at-home recovery-room build-out.</p>
 
   <div class="featured-grid">
@@ -781,7 +845,7 @@
 
 <!-- ================= SLEEP / WEARABLES ================= -->
 <section class="category" id="sleep" style="--cat-color:var(--c-sleep)">
-  <div class="cat-head"><span class="cat-num">09</span><h2>Sleep Tech &amp; Wearables</h2></div>
+  <div class="cat-head"><span class="cat-num">10</span><h2>Sleep Tech &amp; Wearables</h2></div>
   <p class="cat-sub">Continuous glucose monitors, smart rings, and cooling mattresses — the quantified-sleep stack.</p>
 
   <div class="featured-grid">
@@ -811,7 +875,7 @@
 
 <!-- ================= GUT HEALTH ================= -->
 <section class="category" id="gut" style="--cat-color:var(--c-gut)">
-  <div class="cat-head"><span class="cat-num">10</span><h2>Gut Health</h2></div>
+  <div class="cat-head"><span class="cat-num">11</span><h2>Gut Health</h2></div>
   <p class="cat-sub">Fiber, fermented drinks, and probiotic capsules — one of the best-evidenced pockets of the whole catalogue.</p>
 
   <div class="featured-grid">
@@ -838,7 +902,7 @@
 
 <!-- ================= WOMEN'S HEALTH ================= -->
 <section class="category" id="women" style="--cat-color:var(--c-women)">
-  <div class="cat-head"><span class="cat-num">11</span><h2>Women's Health</h2></div>
+  <div class="cat-head"><span class="cat-num">12</span><h2>Women's Health</h2></div>
   <p class="cat-sub">A fast-growing, historically under-marketed category — perimenopause and menopause support supplements.</p>
 
   <div class="featured-grid">
@@ -854,6 +918,7 @@
   </div>
 </section>
 
+<!-- ================= SKINCARE ================= -->
 <footer class="sans">
   <p>Built for reference and sourcing use — not medical or purchasing advice. Product photography and links are pulled directly from each brand's own product page; nothing here is hosted, altered, or re-sold. Evidence ratings reflect how well clinical research supports the <em>specific claim</em> a product makes, not its safety, popularity, or legality.</p>
   <p>© 2026 Apotek · US Nutrition &amp; Wellness Catalogue</p>
