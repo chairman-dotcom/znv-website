@@ -20,6 +20,8 @@
     --accent3-deep:#C98A12;
     --accent4:#6C5CE7;
     --regal:#4A2E42;
+    --gold-lux:#A8791A;
+    --gold-lux-deep:#7A5A12;
 
     --c-hydration:#1E88E5;
     --c-functional:#00B894;
@@ -59,12 +61,13 @@
   }
   .brandbar .mark{display:flex;align-items:center;gap:.65rem;text-decoration:none;}
   .brandbar .mark-icon{
-    width:34px;height:34px;flex:none;border-radius:10px;
+    width:36px;height:36px;flex:none;border-radius:50%;
     display:flex;align-items:center;justify-content:center;
-    background:var(--accent4);
+    background:var(--gold-lux);
+    box-shadow:0 4px 12px -4px rgba(122,90,18,.55);
   }
   .brandbar svg{width:19px;height:19px;color:#fff;}
-  .brandbar .wordmark{font-family:"Fraunces",Georgia,serif;font-weight:700;font-size:1.25rem;letter-spacing:-0.01em;color:var(--regal);}
+  .brandbar .wordmark{font-family:"Fraunces",Georgia,serif;font-weight:700;font-size:1.3rem;letter-spacing:.01em;color:var(--regal);}
   .brandbar .right-group{display:flex;align-items:center;gap:2rem;}
   .suite-nav{display:flex;gap:1.6rem;}
   .suite-nav a{
@@ -285,11 +288,12 @@
   <a href="index.html" class="mark">
     <div class="mark-icon">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-        <rect x="9.25" y="1.2" width="5.5" height="2.3" rx=".6"></rect>
-        <rect x="10.3" y="3.4" width="3.4" height="2.6"></rect>
-        <path d="M6.2 6.9h11.6c.6 0 1 .5 1 1.1v11.4c0 1.5-1.2 2.7-2.7 2.7H7.9c-1.5 0-2.7-1.2-2.7-2.7V8c0-.6.4-1.1 1-1.1z"></path>
-        <line x1="7.6" y1="13.6" x2="16.4" y2="13.6"></line>
-        <line x1="7.6" y1="16.4" x2="13.2" y2="16.4"></line>
+        <path d="M12 6v12"></path>
+        <path d="M12 8L7 4"></path>
+        <path d="M12 8L17 4"></path>
+        <path d="M12 16L7 20"></path>
+        <path d="M12 16L17 20"></path>
+        <circle cx="12" cy="12" r="1.4" fill="currentColor" stroke="none"></circle>
       </svg>
     </div>
     <div class="wordmark">Apotek</div>
@@ -526,9 +530,12 @@ const state = {
 
 /* ============ CHAT ENGINE ============ */
 const AVATAR_SVG = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-  <rect x="9.25" y="1.2" width="5.5" height="2.3" rx=".6"></rect>
-  <rect x="10.3" y="3.4" width="3.4" height="2.6"></rect>
-  <path d="M6.2 6.9h11.6c.6 0 1 .5 1 1.1v11.4c0 1.5-1.2 2.7-2.7 2.7H7.9c-1.5 0-2.7-1.2-2.7-2.7V8c0-.6.4-1.1 1-1.1z"></path>
+  <path d="M12 6v12"></path>
+  <path d="M12 8L7 4"></path>
+  <path d="M12 8L17 4"></path>
+  <path d="M12 16L7 20"></path>
+  <path d="M12 16L17 20"></path>
+  <circle cx="12" cy="12" r="1.4" fill="currentColor" stroke="none"></circle>
 </svg>`;
 
 const TURN_RECAPS = [
