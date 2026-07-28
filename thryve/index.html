@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;0,800;1,500;1,600&family=Karla:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<title>Everstock&trade; Demo Suite</title>
+<style>
+  :root{
+    --paper:#F5EFE2; --card:#FFFDF8; --ink:#2B2620; --ink-soft:#6B6055; --line:#DED0B4;
+    --pine:#35513F; --rust:#A8562E; --gold:#B8923D;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:"Karla",-apple-system,sans-serif;font-size:16px;line-height:1.55;}
+
+  .brandbar{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1.1rem 6vw;border-bottom:1px solid var(--line);background:var(--card);flex-wrap:wrap;}
+  .brandbar .mark{display:flex;align-items:center;gap:.65rem;text-decoration:none;}
+  .brandbar .mark-icon{width:36px;height:36px;flex:none;border-radius:8px;background:var(--pine);display:flex;align-items:center;justify-content:center;}
+  .brandbar svg{color:#fff;}
+  .brandbar .wordmark{font-family:"Playfair Display",serif;font-weight:700;font-size:1.3rem;color:var(--ink);}
+  .suite-nav{display:flex;gap:1.4rem;}
+  .suite-nav a{font-size:.82rem;font-weight:700;color:var(--ink-soft);text-decoration:none;padding:.3rem 0;border-bottom:2px solid transparent;}
+  .suite-nav a:hover{color:var(--ink);}
+  .tagline{font-size:.72rem;text-transform:uppercase;letter-spacing:.14em;color:var(--ink-soft);font-weight:700;}
+  @media (max-width:760px){ .tagline{display:none;} }
+
+  header.hero{padding:4.6rem 6vw 3.4rem;text-align:center;border-bottom:1px solid var(--line);background:#EFE7D3;}
+  .hero-icon{width:72px;height:72px;border-radius:16px;background:var(--pine);display:flex;align-items:center;justify-content:center;margin:0 auto 1.6rem;}
+  .hero-icon svg{color:#fff;}
+  .eyebrow{text-transform:uppercase;letter-spacing:.26em;font-size:.74rem;font-weight:700;color:var(--rust);margin:0 0 1.1rem;}
+  h1.title{font-family:"Playfair Display",serif;font-weight:800;font-size:clamp(2.4rem,5.5vw,3.6rem);margin:0 0 1rem;color:var(--ink);}
+  h1.title em{font-style:italic;color:var(--pine);}
+  .dek{max-width:64ch;margin:0 auto;font-size:1.08rem;color:var(--ink-soft);}
+
+  main{max-width:960px;margin:0 auto;padding:3.4rem 6vw 2rem;}
+  .section-label{text-align:center;text-transform:uppercase;letter-spacing:.18em;font-size:.76rem;font-weight:800;color:var(--ink-soft);margin:0 0 2.4rem;}
+  .suite-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:1.6rem;}
+  .suite-card{
+    display:flex;flex-direction:column;background:var(--card);border:1.5px solid var(--line);border-radius:18px;
+    padding:2rem 2rem 1.7rem;text-decoration:none;color:inherit;transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease;
+  }
+  .suite-card:hover{transform:translateY(-4px);border-color:var(--cc);box-shadow:0 22px 40px -22px rgba(43,38,32,.3);}
+  .suite-card .icon{width:50px;height:50px;border-radius:12px;background:var(--cc);color:#fff;display:flex;align-items:center;justify-content:center;margin-bottom:1.2rem;}
+  .suite-card .kicker{font-size:.72rem;text-transform:uppercase;letter-spacing:.1em;font-weight:800;color:var(--cc);margin-bottom:.4rem;}
+  .suite-card h2{font-family:"Playfair Display",serif;font-size:1.5rem;font-weight:700;margin:0 0 .6rem;color:var(--ink);}
+  .suite-card p{font-size:.92rem;color:var(--ink-soft);margin:0 0 1.3rem;flex:1;}
+  .suite-card .stats{display:flex;gap:1.3rem;margin-bottom:1.3rem;flex-wrap:wrap;}
+  .suite-card .stats div{font-size:.7rem;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.05em;font-weight:700;}
+  .suite-card .stats b{display:block;font-family:"Playfair Display",serif;font-size:1.3rem;color:var(--ink);font-weight:700;text-transform:none;letter-spacing:0;}
+  .suite-card .cta{display:inline-flex;align-items:center;gap:.4rem;font-weight:800;font-size:.88rem;color:var(--cc);}
+
+  .about{max-width:760px;margin:3rem auto 0;padding:1.8rem 2rem;background:var(--card);border:1.5px solid var(--line);border-radius:16px;}
+  .about h3{font-family:"Playfair Display",serif;font-size:1.05rem;margin:0 0 .6rem;color:var(--ink);}
+  .about p{font-size:.88rem;color:var(--ink-soft);margin:0;}
+
+  footer{padding:2.6rem 6vw 3rem;font-size:.78rem;color:var(--ink-soft);background:#EFE7D3;text-align:center;margin-top:2rem;}
+  footer p{max-width:70ch;margin:0 auto .5rem;}
+</style>
+</head>
+<body>
+
+<div class="brandbar">
+  <a href="index.html" class="mark">
+    <div class="mark-icon">
+      <svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="9" y="2" width="6" height="2.2" rx=".5"></rect>
+        <rect x="9.5" y="4.2" width="5" height="2.2"></rect>
+        <rect x="6" y="6.4" width="12" height="15.1" rx="2.2"></rect>
+        <line x1="7.4" y1="14" x2="16.6" y2="14"></line>
+      </svg>
+    </div>
+    <div class="wordmark">Everstock<sup>&trade;</sup></div>
+  </a>
+  <div class="tagline">Demo Suite &middot; 2026</div>
+</div>
+
+<header class="hero">
+  <div class="hero-icon">
+    <svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="9" y="2" width="6" height="2.2" rx=".5"></rect>
+      <rect x="9.5" y="4.2" width="5" height="2.2"></rect>
+      <rect x="6" y="6.4" width="12" height="15.1" rx="2.2"></rect>
+      <line x1="7.4" y1="14" x2="16.6" y2="14"></line>
+    </svg>
+  </div>
+  <p class="eyebrow">A Thryve Foods Company</p>
+  <h1 class="title">The Everstock<em>&trade;</em> Kitchen</h1>
+  <p class="dek">Two ways into the same 33-recipe cookbook, built entirely from the Everstock&trade; 30-Day / 1-Person Supply &mdash; a 25-year core pantry of real, freeze-dried food.</p>
+</header>
+
+<main>
+  <p class="section-label">Two demos, one cookbook</p>
+  <div class="suite-grid">
+
+    <a class="suite-card" href="recipe_library.html" style="--cc:var(--pine)">
+      <div class="icon">
+        <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+      </div>
+      <div class="kicker">01 &middot; Reference</div>
+      <h2>Recipe Library</h2>
+      <p>Browse all 33 recipes at once, organized by course. Search by name or by ingredient &mdash; type "chicken" or "oats" and see every dish that uses it.</p>
+      <div class="stats">
+        <div><b>33</b>Recipes</div>
+        <div><b>6</b>Courses</div>
+        <div><b>45</b>Pantry items</div>
+      </div>
+      <span class="cta">Browse the library &rarr;</span>
+    </a>
+
+    <a class="suite-card" href="recipe_generator.html" style="--cc:var(--rust)">
+      <div class="icon">
+        <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3.5-7.1"></path><polyline points="21 4 21 9 16 9"></polyline></svg>
+      </div>
+      <div class="kicker">02 &middot; Just for fun</div>
+      <h2>Recipe Generator</h2>
+      <p>Can't decide what's for dinner? Spin the pantry for a random recipe, optionally narrowed to one course, with a quick slot-machine reveal.</p>
+      <div class="stats">
+        <div><b>33</b>Recipes in pool</div>
+        <div><b>6</b>Filters</div>
+        <div><b>1</b>Click away</div>
+      </div>
+      <span class="cta">Spin the pantry &rarr;</span>
+    </a>
+
+  </div>
+
+  <div class="about">
+    <h3>About this suite</h3>
+    <p>Both tools pull from the same Everstock&trade; Cookbook dataset &mdash; every recipe uses only ingredients from the Everstock&trade; 30-Day / 1-Person Supply, a 25-year core pantry built around freeze-dried meat, fish, dairy, and produce. Full ingredient quantities, nutrition breakdown, and shelf-life notes live in the companion Everstock&trade; spreadsheet and printable cookbook.</p>
+  </div>
+</main>
+
+<footer>
+  <p>Everstock&trade; is a trademark of Thryve Foods. &copy; 2026 Thryve Foods. All rights reserved.</p>
+</footer>
+
+</body>
+</html>
