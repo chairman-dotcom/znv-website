@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Demo Suite — Curatorial Practice</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+
+:root{
+    --wall:#f4ede2;
+    --paper:#fffdf8;
+    --ink:#221c1a;
+    --ink-soft:#5c534c;
+    --plum:#3f2352;
+    --coral:#6e1423;
+    --gold:#a8791a;
+    --sage:#1e4d3a;
+    --line: rgba(34,28,26,0.13);
+  }
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+    margin:0;
+    background:var(--wall);
+    color:var(--ink);
+    font-family:'Inter',sans-serif;
+    line-height:1.55;
+  }
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto;}
+*{animation:none !important; transition:none !important;}}
+#view-portfolio .display{font-family:'Fraunces',serif;}
+#view-portfolio .eyebrow{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11px;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+  }
+#view-portfolio .hero{
+    position:relative;
+    padding:6.5rem 6vw 4rem;
+    max-width:1200px;
+    margin:0 auto;
+    display:grid;
+    grid-template-columns:1.1fr 0.9fr;
+    gap:3rem;
+    align-items:center;
+  }
+#view-portfolio .hero h1{
+    font-size:clamp(2.6rem, 5vw, 4.4rem);
+    font-weight:600;
+    line-height:1.02;
+    margin:0.6rem 0 1.4rem;
+    letter-spacing:-0.01em;
+  }
+#view-portfolio .hero h1 .grad{
+    font-style:italic;
+    font-weight:600;
+    color:var(--plum);
+  }
+#view-portfolio .hero p.lede{
+    font-size:1.15rem;
+    color:var(--ink-soft);
+    max-width:46ch;
+    margin:0;
+  }
+#view-portfolio .diagram-wrap{ display:flex; justify-content:center; align-items:center; }
+#view-portfolio .venn-label{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:10.5px;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    fill:var(--ink);
+  }
+#view-portfolio .venn-label.center{ fill:#fff; font-weight:500; }
+#view-portfolio section{
+    max-width:1200px;
+    margin:0 auto;
+    padding:4.5rem 6vw;
+    border-top:1px solid var(--line);
+  }
+#view-portfolio .section-head{
+    display:grid;
+    grid-template-columns:1fr 2fr;
+    gap:2rem;
+    margin-bottom:2.6rem;
+  }
+#view-portfolio .section-head h2{
+    font-size:clamp(1.7rem,2.6vw,2.3rem);
+    font-weight:600;
+    margin:0.4rem 0 0;
+  }
+#view-portfolio .section-head .support{ color:var(--ink-soft); max-width:60ch; }
+#view-portfolio .triad{ display:grid; grid-template-columns:repeat(3, 1fr); gap:1.5rem; }
+#view-portfolio .triad-card{
+    background:var(--paper);
+    border:1px solid var(--line);
+    border-top:5px solid var(--c, var(--plum));
+    padding:1.8rem 1.6rem;
+  }
+#view-portfolio .triad-card .num{ font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--c, var(--plum)); letter-spacing:0.1em; }
+#view-portfolio .triad-card h3{ font-family:'Fraunces',serif; font-weight:600; font-size:1.25rem; margin:0.5rem 0 0.6rem; }
+#view-portfolio .triad-card p{ margin:0; color:var(--ink-soft); font-size:0.95rem; }
+#view-portfolio blockquote.thesis{
+    font-family:'Fraunces',serif;
+    font-style:italic;
+    font-weight:600;
+    font-size:clamp(1.3rem,2vw,1.6rem);
+    color:var(--plum);
+    border-left:3px solid var(--coral);
+    padding-left:1.4rem;
+    margin:2.6rem 0 0;
+    max-width:58ch;
+  }
+#view-portfolio blockquote.thesis cite{
+    display:block; font-family:'IBM Plex Mono',monospace; font-style:normal;
+    font-size:11px; letter-spacing:0.06em; text-transform:uppercase;
+    color:var(--ink-soft); margin-top:0.8rem;
+  }
+#view-portfolio .labels{ display:grid; grid-template-columns:repeat(2, 1fr); gap:1.8rem; }
+#view-portfolio .label-card{
+    background:var(--paper);
+    border:1px solid var(--line);
+    position:relative;
+    cursor:pointer;
+    overflow:hidden;
+    transition:box-shadow 0.25s ease, transform 0.25s ease;
+  }
+#view-portfolio .label-card:hover{ box-shadow:0 10px 28px rgba(34,28,26,0.12); transform:translateY(-2px); }
+#view-portfolio .art-panel{ height:150px; width:100%; display:block; }
+#view-portfolio .label-inner{ padding:1.5rem 1.7rem 1.4rem; }
+#view-portfolio .label-cat{
+    font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:0.08em;
+    color:var(--ink-soft); text-transform:uppercase;
+  }
+#view-portfolio .label-title{ font-family:'Fraunces',serif; font-weight:600; font-size:1.32rem; margin:0.35rem 0 0.15rem; }
+#view-portfolio .label-role{ font-size:0.85rem; color:var(--c, var(--plum)); margin:0 0 0.8rem; font-weight:600; }
+#view-portfolio .label-body{ color:var(--ink-soft); font-size:0.95rem; margin:0; }
+#view-portfolio .label-more{ max-height:0; overflow:hidden; transition:max-height 0.4s ease; }
+#view-portfolio .label-card.open .label-more{ max-height:600px; }
+#view-portfolio .label-more-inner{
+    padding-top:0.9rem; margin-top:0.9rem; border-top:1px dashed var(--line);
+    font-size:0.92rem; color:var(--ink-soft);
+  }
+#view-portfolio .art-caption{
+    font-family:'IBM Plex Mono',monospace; font-size:9.5px; letter-spacing:0.05em;
+    color:var(--ink-soft); text-transform:uppercase; opacity:0.75; margin-top:0.3rem; display:block;
+  }
+#view-portfolio .label-toggle{
+    display:inline-block; margin-top:1rem; font-family:'IBM Plex Mono',monospace;
+    font-size:10.5px; letter-spacing:0.08em; text-transform:uppercase; color:var(--c, var(--sage));
+  }
+#view-portfolio .label-card.open .label-toggle .txt::after{ content:"— close"; }
+#view-portfolio .label-card:not(.open) .label-toggle .txt::after{ content:"— read curatorial note"; }
+#view-portfolio .engage-grid{ display:grid; grid-template-columns:repeat(3, 1fr); gap:1.4rem; }
+#view-portfolio .engage-card{
+    background:var(--paper);
+    border:1px solid var(--line);
+    border-left:5px solid var(--c, var(--plum));
+    padding:1.5rem 1.5rem;
+  }
+#view-portfolio .engage-card h4{
+    font-family:'Fraunces',serif; font-weight:600; font-size:1.1rem; margin:0 0 0.5rem; color:var(--ink);
+  }
+#view-portfolio .engage-card p{ margin:0; font-size:0.9rem; color:var(--ink-soft); }
+#view-portfolio footer{
+    max-width:1200px; margin:0 auto; padding:3rem 6vw 5rem;
+    color:var(--ink-soft); font-size:0.9rem; border-top:1px solid var(--line);
+  }
+@media (max-width: 860px){#view-portfolio .hero{ grid-template-columns:1fr; padding-top:5rem; }
+#view-portfolio .section-head{ grid-template-columns:1fr; gap:0.6rem; }
+#view-portfolio .triad{ grid-template-columns:1fr; }
+#view-portfolio .labels{ grid-template-columns:1fr; }
+#view-portfolio .engage-grid{ grid-template-columns:1fr; }}
+
+/* ===== job-demo view (globals deduped) ===== */
+#view-jobdemo .eyebrow{ font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.14em; text-transform:uppercase; color:var(--ink-soft); }
+#view-jobdemo .hero{
+    max-width:1100px; margin:0 auto; padding:6rem 6vw 3rem;
+  }
+#view-jobdemo .hero h1{
+    font-family:'Fraunces',serif; font-weight:600; font-size:clamp(2.2rem,4.4vw,3.6rem);
+    line-height:1.06; margin:0.6rem 0 1.2rem; letter-spacing:-0.01em;
+  }
+#view-jobdemo .hero h1 .grad{
+    font-style:italic; color:var(--purple);
+  }
+#view-jobdemo .hero p.lede{ font-size:1.12rem; color:var(--ink-soft); max-width:68ch; margin:0 0 1.4rem;}
+#view-jobdemo .role-tag{
+    display:inline-flex; gap:0.6rem; align-items:center;
+    font-family:'IBM Plex Mono',monospace; font-size:11.5px; letter-spacing:0.06em;
+    text-transform:uppercase; color:var(--brown); border:1px solid var(--brown);
+    padding:0.5rem 0.9rem;
+  }
+#view-jobdemo section{ max-width:1100px; margin:0 auto; padding:3.6rem 6vw; border-top:1px solid var(--line); }
+#view-jobdemo .section-head{ display:grid; grid-template-columns:1fr 2fr; gap:2rem; margin-bottom:2.2rem; }
+#view-jobdemo .section-head h2{ font-family:'Fraunces',serif; font-size:clamp(1.6rem,2.4vw,2.1rem); font-weight:600; margin:0.4rem 0 0; }
+#view-jobdemo .section-head .support{ color:var(--ink-soft); max-width:64ch; }
+#view-jobdemo .matrix{ display:grid; grid-template-columns:repeat(3,1fr); gap:1.3rem; }
+#view-jobdemo .matrix-card{
+    background:var(--paper); border:1px solid var(--line); border-top:5px solid var(--c, var(--brown));
+    padding:1.4rem 1.4rem;
+  }
+#view-jobdemo .matrix-card .init{ font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:0.08em; text-transform:uppercase; color:var(--c, var(--brown)); }
+#view-jobdemo .matrix-card h3{ font-family:'Fraunces',serif; font-weight:600; font-size:1.12rem; margin:0.4rem 0 0.5rem; }
+#view-jobdemo .matrix-card p{ margin:0; color:var(--ink-soft); font-size:0.9rem; }
+#view-jobdemo .lp-header{
+    background:var(--paper); border:1px solid var(--line); border-left:5px solid var(--rust);
+    padding:1.6rem 1.8rem; margin-bottom:1.6rem;
+  }
+#view-jobdemo .lp-header .cat{ font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.06em; text-transform:uppercase; color:var(--ink-soft); }
+#view-jobdemo .lp-header h3{ font-family:'Fraunces',serif; font-weight:600; font-size:1.5rem; margin:0.4rem 0 0.6rem; }
+#view-jobdemo .lp-header .meta{ display:flex; flex-wrap:wrap; gap:0.5rem; }
+#view-jobdemo .lp-header .meta span{
+    font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:0.04em;
+    background:var(--wall); border:1px solid var(--line); padding:0.3rem 0.6rem;
+  }
+#view-jobdemo .accordion{ display:flex; flex-direction:column; gap:0.9rem; }
+#view-jobdemo .acc-item{ background:var(--paper); border:1px solid var(--line); cursor:pointer; overflow:hidden; }
+#view-jobdemo .acc-head{
+    display:flex; justify-content:space-between; align-items:center;
+    padding:1.1rem 1.4rem; gap:1rem;
+  }
+#view-jobdemo .acc-head .stage{ font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:0.08em; text-transform:uppercase; color:var(--sage); }
+#view-jobdemo .acc-head h4{ font-family:'Fraunces',serif; font-weight:600; font-size:1.15rem; margin:0.2rem 0 0; }
+#view-jobdemo .acc-head .chev{ font-family:'IBM Plex Mono',monospace; font-size:14px; color:var(--ink-soft); transition:transform 0.25s ease; }
+#view-jobdemo .acc-item.open .chev{ transform:rotate(45deg); }
+#view-jobdemo .acc-body{ max-height:0; overflow:hidden; transition:max-height 0.4s ease; }
+#view-jobdemo .acc-item.open .acc-body{ max-height:800px; }
+#view-jobdemo .acc-body-inner{ padding:0 1.4rem 1.3rem; color:var(--ink-soft); font-size:0.94rem; border-top:1px dashed var(--line); margin-top:0; padding-top:1rem;}
+#view-jobdemo .acc-body-inner ul{ margin:0.4rem 0 0; padding-left:1.2rem; }
+#view-jobdemo .acc-body-inner li{ margin-bottom:0.4rem; }
+#view-jobdemo .prompt{
+    background:var(--wall); border-left:3px solid var(--gold);
+    padding:0.7rem 0.9rem; margin:0.7rem 0; font-style:italic; font-family:'Fraunces',serif; color:var(--ink);
+  }
+#view-jobdemo .exhib{
+    background:var(--paper); border:1px solid var(--line); padding:2rem;
+  }
+#view-jobdemo .exhib h3{ font-family:'Fraunces',serif; font-weight:600; font-size:1.7rem; margin:0 0 0.3rem; }
+#view-jobdemo .exhib .sub{ color:var(--ink-soft); font-style:italic; margin:0 0 1.4rem; }
+#view-jobdemo .faculty-row{ display:grid; grid-template-columns:repeat(3,1fr); gap:1.2rem; }
+#view-jobdemo .faculty-card{ border:1px solid var(--line); border-top:4px solid var(--c,var(--sage)); padding:1.1rem 1.2rem; }
+#view-jobdemo .faculty-card .dept{ font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:0.06em; text-transform:uppercase; color:var(--c,var(--sage)); }
+#view-jobdemo .faculty-card h5{ font-family:'Fraunces',serif; font-weight:600; font-size:1.02rem; margin:0.35rem 0 0.4rem; }
+#view-jobdemo .faculty-card p{ margin:0; font-size:0.87rem; color:var(--ink-soft); }
+#view-jobdemo footer{ max-width:1100px; margin:0 auto; padding:2.6rem 6vw 4.5rem; color:var(--ink-soft); font-size:0.88rem; border-top:1px solid var(--line); }
+@media (max-width: 860px){#view-jobdemo .section-head{ grid-template-columns:1fr; gap:0.6rem; }
+#view-jobdemo .matrix{ grid-template-columns:1fr; }
+#view-jobdemo .faculty-row{ grid-template-columns:1fr; }}
+
+/* ===== suite chrome: nav switcher ===== */
+.suite-nav{
+  position:sticky; top:0; z-index:50;
+  background:var(--paper, #fffdf8);
+  border-bottom:1px solid rgba(34,28,26,0.16);
+  display:flex; align-items:center; justify-content:space-between;
+  padding:0.9rem 6vw;
+  font-family:'IBM Plex Mono',monospace;
+}
+.suite-nav .suite-brand{
+  font-size:11px; letter-spacing:0.12em; text-transform:uppercase; color:#5c534c;
+}
+.suite-nav .suite-tabs{ display:flex; gap:0.6rem; }
+.suite-nav button{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:11.5px; letter-spacing:0.05em; text-transform:uppercase;
+  background:transparent; border:1px solid #221c1a; color:#221c1a;
+  padding:0.55rem 1rem; cursor:pointer;
+}
+.suite-nav button.active{ background:#221c1a; color:#fffdf8; }
+@media (max-width:700px){
+  .suite-nav{ flex-direction:column; align-items:flex-start; gap:0.6rem; }
+}
+
+</style>
+</head>
+<body>
+
+<nav class="suite-nav">
+  <div class="suite-brand">Curatorial Practice — Demo Suite</div>
+  <div class="suite-tabs">
+    <button id="tab-portfolio" class="active">Portfolio &amp; Philosophy</button>
+    <button id="tab-jobdemo">UW Academic Engagement Demo</button>
+  </div>
+</nav>
+
+<div id="view-portfolio">
+
+
+<div class="hero">
+  <div>
+    <div class="eyebrow">Curatorial Practice — Selected Work</div>
+    <h1>Art is nothing<br>without the <span class="grad">viewer.</span></h1>
+    <p class="lede">A curator's practice built on three questions: what a work is made of, whom it was made for, and who finds it afterward — and why that third, uninvited audience is where meaning keeps happening.</p>
+  </div>
+  <div class="diagram-wrap">
+    <svg viewBox="0 0 340 300" width="100%" style="max-width:380px">
+      <circle cx="150" cy="110" r="95" fill="none" stroke="#3f2352" stroke-width="2"/>
+      <circle cx="105" cy="185" r="95" fill="none" stroke="#1e4d3a" stroke-width="2"/>
+      <circle cx="195" cy="185" r="95" fill="none" stroke="#a8791a" stroke-width="2"/>
+      <circle cx="150" cy="160" r="28" fill="#3f2352"/>
+      <text x="150" y="157" text-anchor="middle" class="venn-label center">meaning</text>
+      <text x="150" y="167" text-anchor="middle" class="venn-label center">made</text>
+      <text x="150" y="55" text-anchor="middle" class="venn-label">artist's origin</text>
+      <text x="150" y="68" text-anchor="middle" class="venn-label">community</text>
+      <text x="60" y="255" text-anchor="middle" class="venn-label">intended</text>
+      <text x="60" y="268" text-anchor="middle" class="venn-label">audience</text>
+      <text x="240" y="255" text-anchor="middle" class="venn-label">third community</text>
+      <text x="240" y="268" text-anchor="middle" class="venn-label">(critics, spectators)</text>
+    </svg>
+  </div>
+</div>
+
+<section id="philosophy">
+  <div class="section-head">
+    <div class="eyebrow">Framework</div>
+    <div>
+      <h2>Three aspects, three communities</h2>
+      <p class="support">Every object is read through what it's made of, how it moves through the world, and what it's come to mean — and every object belongs, whether it likes it or not, to three overlapping communities. The case studies below are that framework in practice, not just theory.</p>
+    </div>
+  </div>
+
+  <div class="triad">
+    <div class="triad-card" style="--c:#6e1423">
+      <div class="num">01 — FORMALISM</div>
+      <h3>What it's made from</h3>
+      <p>Material, composition, craft — the object on its own terms.</p>
+    </div>
+    <div class="triad-card" style="--c:#1e4d3a">
+      <div class="num">02 — SOCIETY</div>
+      <h3>How it moves in the world</h3>
+      <p>The mechanisms it passes through: markets, institutions, audiences, geography.</p>
+    </div>
+    <div class="triad-card" style="--c:#a8791a">
+      <div class="num">03 — THEORY</div>
+      <h3>What it comes to mean</h3>
+      <p>Interpretation and reinterpretation — meaning as something made, not just found.</p>
+    </div>
+  </div>
+
+  <blockquote class="thesis">
+    The most interesting community is the one the artist never intended — the critics and historians who arrive later and bring their own speculation to the object, engaging its psychic value as spectators rather than owners of its truth.
+    <cite>Framework developed under Prof. Cecilia González-Andrieu — where art and religion intersect, and theology becomes a tool for reading meaning.</cite>
+  </blockquote>
+</section>
+
+<section id="work">
+  <div class="section-head">
+    <div class="eyebrow">The Framework, In Practice</div>
+    <div>
+      <h2>Selected curatorial work</h2>
+      <p class="support">Each card carries an original color study made for this portfolio — an impression of the artist's medium, not a reproduction of their work. Click a label for the fuller story.</p>
+    </div>
+  </div>
+
+  <div class="labels" id="labelGrid">
+
+    <!-- LMU -->
+    <div class="label-card" style="--c:#6e1423">
+      <svg class="art-panel" viewBox="0 0 400 150" preserveAspectRatio="none">
+        <rect width="400" height="150" fill="#6e1423"/>
+        <rect x="30" y="30" width="70" height="90" fill="#fff" stroke="#221c1a" stroke-width="2"/>
+        <rect x="120" y="45" width="55" height="75" fill="#fff" stroke="#221c1a" stroke-width="2"/>
+        <rect x="200" y="20" width="80" height="100" fill="#fff" stroke="#221c1a" stroke-width="2"/>
+        <line x1="0" y1="135" x2="400" y2="135" stroke="#221c1a" stroke-width="2" stroke-dasharray="4 4"/>
+      </svg>
+      <div class="label-inner">
+        <div class="label-cat">LMU.CO-OP — FOUNDING MEMBER → PRESIDENT</div>
+        <div class="label-title">Building a gallery from the ground up</div>
+        <div class="label-role">Stewardship &amp; Facilities Leadership</div>
+        <p class="label-body">Joined a brand-new student gallery co-op as its very first member, after years of student fundraising finally built LMU a dedicated gallery wing. Elected Vice President, later President.</p>
+        <div class="label-more"><div class="label-more-inner">
+          Held sole responsibility for keys and access, and for the stewardship of every object in the space — housing, storage, and wall maintenance. Installed with mobile wall systems and enforced the gallery's 56-inch hanging standard across every show. <em>Demonstrates: aspect 02, society</em> — the physical mechanisms an object has to pass through before anyone ever sees it.
+        </div></div>
+        <span class="art-caption">Original study — gallery walls &amp; mobile partitions</span>
+        <div class="label-toggle"><span class="txt"></span></div>
+      </div>
+    </div>
+
+    <!-- Otis show -->
+    <div class="label-card" style="--c:#1e4d3a">
+      <svg class="art-panel" viewBox="0 0 400 150" preserveAspectRatio="none">
+        <rect width="400" height="150" fill="#eaf3ec"/>
+        <g opacity="0.9">
+          <circle cx="40" cy="40" r="14" fill="#e8703a"/><circle cx="75" cy="30" r="10" fill="#c98a1c"/>
+          <circle cx="105" cy="55" r="16" fill="#7b2d5e"/><circle cx="55" cy="75" r="9" fill="#4f7a5c"/>
+          <circle cx="95" cy="95" r="12" fill="#e8703a"/><circle cx="30" cy="105" r="8" fill="#c98a1c"/>
+          <circle cx="130" cy="30" r="7" fill="#4f7a5c"/><circle cx="70" cy="115" r="11" fill="#7b2d5e"/>
+        </g>
+        <path d="M220 120 C 240 60, 280 60, 300 100 S 340 60, 370 40" fill="none" stroke="#2f6f7a" stroke-width="6" stroke-linecap="round" opacity="0.8"/>
+        <path d="M210 100 C 240 130, 280 130, 310 110 S 350 130, 380 100" fill="none" stroke="#4fa3ad" stroke-width="6" stroke-linecap="round" opacity="0.7"/>
+      </svg>
+      <div class="label-inner">
+        <div class="label-cat">LMU × OTIS — INAUGURAL PARTNER EXHIBITION</div>
+        <div class="label-title">First show curating outside the family</div>
+        <div class="label-role">Selection &amp; Artist Care</div>
+        <p class="label-body">Curator-photographer Molly Corey led a yearly practicum pairing LMU's gallery with Otis College of Art &amp; Design. This was the first time curating artists who weren't peers.</p>
+        <div class="label-more"><div class="label-more-inner">
+          Selected Charlie Edminston, a colorblind artist who built a colorblindness-test artwork he couldn't fully see himself, relying on others to choose the paint — his frames were later damaged in a mounting accident and had to be repaired at real cost; he went on to design skateboards for MTV. Also selected Franchesca Quintano, whose underwater imagery was left uncollected long enough that the gallery instituted formal pickup contracts — she's since become a working muralist. <em>Demonstrates: aspect 01, formalism</em> — a work whose entire material logic (color) was inaccessible to its own maker.
+        </div></div>
+        <span class="art-caption">Original studies — spectrum dot field / underwater current</span>
+        <div class="label-toggle"><span class="txt"></span></div>
+      </div>
+    </div>
+
+    <!-- Android Jones -->
+    <div class="label-card" style="--c:#3f2352">
+      <svg class="art-panel" viewBox="0 0 400 150" preserveAspectRatio="none">
+        <rect width="400" height="150" fill="#2a1330"/>
+        <circle cx="120" cy="75" r="66" fill="#3f2352"/>
+        <circle cx="120" cy="75" r="34" fill="#a8791a" opacity="0.9"/>
+        <g fill="none" stroke="#fff" stroke-width="1.5" opacity="0.55">
+          <circle cx="120" cy="75" r="18"/><circle cx="120" cy="75" r="34"/><circle cx="120" cy="75" r="50"/>
+          <circle cx="120" cy="75" r="66"/>
+        </g>
+        <g fill="#fff" opacity="0.85">
+          <circle cx="120" cy="25" r="3"/><circle cx="120" cy="125" r="3"/>
+          <circle cx="70" cy="75" r="3"/><circle cx="170" cy="75" r="3"/>
+          <circle cx="86" cy="41" r="3"/><circle cx="154" cy="109" r="3"/>
+          <circle cx="154" cy="41" r="3"/><circle cx="86" cy="109" r="3"/>
+        </g>
+      </svg>
+      <div class="label-inner">
+        <div class="label-cat">DENVER — NAGARAJA, SOLO EXHIBITION</div>
+        <div class="label-title">Negotiating for the artist, not the wall</div>
+        <div class="label-role">Artist Representation &amp; Contract Negotiation</div>
+        <p class="label-body">Curated several exhibitions with visionary digital artist Android Jones, including <em>Nagaraja</em>, his first solo show. Toured the Santa Fe Art District with the gallery's director to place the work.</p>
+        <div class="label-more"><div class="label-more-inner">
+          Pushed back on a proposed contract claiming 50% of any future sale of unsold work, indefinitely, even through other venues — negotiated down to a fixed window instead, a harder case given a mix of print editions and unique drawings on the wall. Later edited and effectively ghostwrote the artist's statement, framing his digital tools as "minerals" — a literal parallel between the metal implant from his own brain surgery and the mineral basis of both electronics and paint pigment. <em>Demonstrates: aspect 02 and 03 together</em> — market mechanism and theoretical meaning, negotiated in the same conversation.
+        </div></div>
+        <span class="art-caption">Original study — visionary mandala, concentric form</span>
+        <div class="label-toggle"><span class="txt"></span></div>
+      </div>
+    </div>
+
+    <!-- James Harris -->
+    <div class="label-card" style="--c:#a8791a">
+      <svg class="art-panel" viewBox="0 0 400 150" preserveAspectRatio="none">
+        <rect width="400" height="150" fill="#3a2a12"/>
+        <g fill="#f4d99a" opacity="0.9">
+          <path d="M200 130 Q 190 90 210 60 Q 230 90 220 130 Z"/>
+          <path d="M230 130 Q 224 100 244 78 Q 256 105 246 130 Z"/>
+          <path d="M170 130 Q 164 105 180 82 Q 196 105 190 130 Z"/>
+        </g>
+        <ellipse cx="210" cy="132" rx="90" ry="8" fill="#221c1a" opacity="0.5"/>
+      </svg>
+      <div class="label-inner">
+        <div class="label-cat">ONGOING — BRONZE SCULPTURE SERIES</div>
+        <div class="label-title">Scaling a studio practice into an exhibition</div>
+        <div class="label-role">Producer &amp; Wall Text Writer</div>
+        <p class="label-body">Collaborating with James Harris — former lead photographer for Design Miami — on bronze sculpture built from high-resolution leaf photography, composited and produced through precision 3D printing before casting.</p>
+        <div class="label-more"><div class="label-more-inner">
+          Proposed exhibiting the finished bronzes on plinths of petrified wood — now a signature of the presentation. Currently building the client and investor base to scale the work for exhibition at Chatsworth House's annual outdoor sculpture show, alongside writing wall texts and exhibition PDFs. <em>Demonstrates: aspect 01, formalism</em> — a material born as a photograph, ending as bronze.
+        </div></div>
+        <span class="art-caption">Original study — cast leaf forms on petrified wood</span>
+        <div class="label-toggle"><span class="txt"></span></div>
+      </div>
+    </div>
+
+    <!-- Sleeprs -->
+    <div class="label-card" style="--c:#221c1a">
+      <svg class="art-panel" viewBox="0 0 400 150" preserveAspectRatio="none">
+        <rect width="400" height="150" fill="#221c1a"/>
+        <ellipse cx="200" cy="80" rx="55" ry="65" fill="#3a322e"/>
+        <rect x="165" y="60" width="70" height="26" rx="6" fill="#c98a1c" opacity="0.85"/>
+        <circle cx="185" cy="73" r="5" fill="#221c1a"/><circle cx="215" cy="73" r="5" fill="#221c1a"/>
+      </svg>
+      <div class="label-inner">
+        <div class="label-cat">LONDON — TRAVELING SOLO EXHIBITION</div>
+        <div class="label-title">Writing meaning into the catalogue</div>
+        <div class="label-role">Catalogue Essayist</div>
+        <p class="label-body">Authored the essay for Sleeprs — an anonymous, masked performance artist — for his London solo show, printed as part of the exhibition's traveling catalogue.</p>
+        <div class="label-more"><div class="label-more-inner">
+          Writing for an artist who withholds his own identity is its own curatorial problem: the essay had to carry meaning the artist himself wasn't going to explain in person. <em>Demonstrates: aspect 03, theory</em> — interpretation standing in for a maker who deliberately isn't present.
+        </div></div>
+        <span class="art-caption">Original study — the mask, unlit</span>
+        <div class="label-toggle"><span class="txt"></span></div>
+      </div>
+    </div>
+
+    <!-- Remax / Arturo / Bryce -->
+    <div class="label-card" style="--c:#1e4d3a">
+      <svg class="art-panel" viewBox="0 0 400 150" preserveAspectRatio="none">
+        <rect width="400" height="150" fill="#f1ece0"/>
+        <path d="M20 110 Q 90 40 160 95 T 300 70" fill="none" stroke="#4f7a5c" stroke-width="8" stroke-linecap="round" opacity="0.85"/>
+        <path d="M40 130 Q 110 90 180 120 T 320 100" fill="none" stroke="#8a6a3c" stroke-width="6" stroke-linecap="round" opacity="0.6"/>
+        <g opacity="0.7">
+          <circle cx="340" cy="35" r="4" fill="#e8703a"/><circle cx="355" cy="50" r="4" fill="#c98a1c"/>
+          <circle cx="365" cy="30" r="4" fill="#7b2d5e"/><circle cx="350" cy="65" r="4" fill="#4f7a5c"/>
+        </g>
+      </svg>
+      <div class="label-inner">
+        <div class="label-cat">DENVER — REMAX OFFICE ART PROGRAM</div>
+        <div class="label-title">A gallery inside a real estate office</div>
+        <div class="label-role">Corporate &amp; Community Placement</div>
+        <p class="label-body">As office manager, built a rotating art exhibition into the office's existing client events. Met wildlife painter Arturo Garcia while volunteering at the Denver Art Society, an artist-run cooperative gallery.</p>
+        <div class="label-more"><div class="label-more-inner">
+          Garcia left a prior career after a cancer diagnosis to paint full-time, working in abstract realism focused on capturing movement in wildlife. Chosen for the program for the sincerity of that commitment — art for its own sake. Also represents chalk artist Bryce, whose large-scale ephemeral chalk work and commercial branding jobs (like a brewery's chalkboards) support his family; advised him on entering the gallery market. <em>Demonstrates: aspect 02, society</em> — an exhibition built inside a business that had never held one before.
+        </div></div>
+        <span class="art-caption">Original studies — motion brushwork / chalk dust</span>
+        <div class="label-toggle"><span class="txt"></span></div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<section id="thesis-close">
+  <div class="section-head">
+    <div class="eyebrow">Why Curate</div>
+    <div>
+      <h2>Community is the medium</h2>
+      <p class="support">A recurring reference point: Folkestone's public scavenger hunt for artworks and artist identities — closer to a London egg hunt than a gallery opening — where the public's search <em>is</em> the exhibition.</p>
+    </div>
+  </div>
+  <blockquote class="thesis">
+    Art is nothing without the viewer. All art is communal.
+  </blockquote>
+</section>
+
+<section id="roles">
+  <div class="section-head">
+    <div class="eyebrow">Looking Ahead</div>
+    <div>
+      <h2>The kind of work I'm looking for</h2>
+      <p class="support">Not a single job title — a set of engagements this practice is already built for, drawn straight from the work above.</p>
+    </div>
+  </div>
+  <div class="engage-grid">
+    <div class="engage-card" style="--c:#6e1423">
+      <h4>Gallery &amp; Institutional Curating</h4>
+      <p>Running a program end to end — selection, install, stewardship — the way the LMU gallery was run.</p>
+    </div>
+    <div class="engage-card" style="--c:#3f2352">
+      <h4>Artist Representation &amp; Studio Partnership</h4>
+      <p>Long-term work alongside a single artist's practice: contracts, statements, scaling a body of work — as with Android Jones and James Harris.</p>
+    </div>
+    <div class="engage-card" style="--c:#a8791a">
+      <h4>Collections Stewardship &amp; Registrarial Work</h4>
+      <p>Housing, hanging standards, loan agreements — the physical care of objects and the paperwork that protects them.</p>
+    </div>
+    <div class="engage-card" style="--c:#1e4d3a">
+      <h4>Corporate &amp; Community Art Placement</h4>
+      <p>Bringing exhibitions into spaces that weren't built for them, the way the Remax program did.</p>
+    </div>
+    <div class="engage-card" style="--c:#1a3a52">
+      <h4>Public Art &amp; Community Engagement Projects</h4>
+      <p>Folkestone-style programming where the audience's participation is part of the artwork itself.</p>
+    </div>
+    <div class="engage-card" style="--c:#221c1a">
+      <h4>Writing &amp; Catalogue Work</h4>
+      <p>Exhibition essays, artist statements, and wall texts — writing meaning into a show, as with Sleeprs and Android Jones.</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  Prepared as a working portfolio demo. Case studies are drawn from real exhibitions, artists, and institutions in this practice's record; the artwork panels above are original color studies made for this document, not reproductions of the artists' actual work.
+</footer>
+</div>
+
+<div id="view-jobdemo" style="display:none">
+
+
+<div class="hero">
+  <div class="eyebrow">Prepared for — University of Wyoming Art Museum</div>
+  <h1>The museum as <span class="grad">a laboratory for learning.</span></h1>
+  <p class="lede">A working sample of what this practice already does: turning objects and artist relationships into inquiry-based class visits, cross-disciplinary partnerships, and Teaching Gallery exhibitions — the core of the Curator of Academic Engagement role.</p>
+  <span class="role-tag">Sample materials — not a real UWAM class or exhibition</span>
+</div>
+
+<section id="matrix">
+  <div class="section-head">
+    <div class="eyebrow">Research &amp; Creative Activities</div>
+    <div>
+      <h2>Where this collection already meets UW's initiatives</h2>
+      <p class="support">The job asks for someone who seeks out interdisciplinary collaboration across the Science Initiative, Engineering, Health Sciences, Energy Resources, and Honors. Here's how six objects already in this practice's record map onto exactly those conversations.</p>
+    </div>
+  </div>
+  <div class="matrix">
+    <div class="matrix-card" style="--c:#6e1423">
+      <div class="init">ENGINEERING &amp; ENERGY RESOURCES</div>
+      <h3>Leaf photograph → 3D print → bronze</h3>
+      <p>James Harris's sculptures move from digital compositing to precision 3D printing to metal casting — a direct entry point for a materials-and-process studio visit.</p>
+    </div>
+    <div class="matrix-card" style="--c:#1e4d3a">
+      <div class="init">HEALTH SCIENCES</div>
+      <h3>A colorblind artist paints color</h3>
+      <p>Charlie Edminston's colorblindness-test artwork — made without being able to see it — opens directly onto color vision science and perception research.</p>
+    </div>
+    <div class="matrix-card" style="--c:#a8791a">
+      <div class="init">HONORS / PHILOSOPHY &amp; RELIGION</div>
+      <h3>An artist who withholds his identity</h3>
+      <p>Writing the catalogue essay for the anonymous performance artist Sleeprs raises questions of authorship and identity suited to an Honors seminar discussion.</p>
+    </div>
+    <div class="matrix-card" style="--c:#3f2352">
+      <div class="init">SCIENCE INITIATIVE</div>
+      <h3>Underwater imagery as ecological record</h3>
+      <p>Franchesca Quintano's underwater works can anchor a conversation about marine and environmental science alongside the aesthetics of the image.</p>
+    </div>
+    <div class="matrix-card" style="--c:#6e1423">
+      <div class="init">HEALTH SCIENCES / KINESIOLOGY</div>
+      <h3>Painting an animal in motion</h3>
+      <p>Arturo Garcia's abstract-realist wildlife work, built around capturing movement, connects naturally to kinesiology and biomechanics coursework.</p>
+    </div>
+    <div class="matrix-card" style="--c:#1e4d3a">
+      <div class="init">MUSEUM STUDIES / MARKET &amp; POLICY</div>
+      <h3>A contract dispute as a case study</h3>
+      <p>The Android Jones royalty negotiation is a ready-made, real-world case study for a Museum Studies class on contracts, consignment, and artist rights.</p>
+    </div>
+  </div>
+</section>
+
+<section id="lesson-plan">
+  <div class="section-head">
+    <div class="eyebrow">Teaching</div>
+    <div>
+      <h2>Sample class visit — object-based &amp; inquiry-driven</h2>
+      <p class="support">Click each stage to open it. Built the way the job description asks: research the course, meet with faculty, design materials, lead the inquiry-based visit itself.</p>
+    </div>
+  </div>
+
+  <div class="lp-header">
+    <div class="cat">SAMPLE LESSON PLAN — NOT AN ACTUAL SCHEDULED CLASS</div>
+    <h3>Held in Metal: Process, Material, and the Nonhuman</h3>
+    <div class="meta">
+      <span>Course: Mechanical Engineering — Materials &amp; Manufacturing Processes</span>
+      <span>Object: bronze sculpture (leaf photography → 3D print → cast bronze)</span>
+      <span>Format: 75-min gallery + print study room visit</span>
+    </div>
+  </div>
+
+  <div class="accordion" id="acc">
+
+    <div class="acc-item">
+      <div class="acc-head"><div><div class="stage">Before the visit</div><h4>Faculty meeting &amp; goal-setting</h4></div><div class="chev">+</div></div>
+      <div class="acc-body"><div class="acc-body-inner">
+        Meet with the instructor to learn what the course already covers about casting, additive manufacturing, and material transformation — then set one goal for the visit: can students trace a single decision (why bronze, why this scale) all the way from source photograph to final object?
+        <ul>
+          <li>Confirm which object comes out of storage, coordinated with the Collections Manager</li>
+          <li>Send a one-page pre-visit reading: a short note on the leaf-photograph-to-bronze process</li>
+        </ul>
+      </div></div>
+    </div>
+
+    <div class="acc-item">
+      <div class="acc-head"><div><div class="stage">During the visit</div><h4>Object-based inquiry in the gallery</h4></div><div class="chev">+</div></div>
+      <div class="acc-body"><div class="acc-body-inner">
+        Students spend the first ten minutes looking before being told anything — a core inquiry-model move. Then the conversation opens with observation, not information.
+        <div class="prompt">"Before I tell you what this is made of — what do you think this surface is telling you about how it was made?"</div>
+        <ul>
+          <li>Reveal the process in stages: photograph → digital composite → print → cast — pausing for questions at each step</li>
+          <li>Small groups examine a physical 3D-print test piece alongside the finished bronze, comparing surface and weight</li>
+        </ul>
+        <div class="prompt">"What does the material lose, and what does it gain, moving from a photograph of something living to a cast metal object?"</div>
+      </div></div>
+    </div>
+
+    <div class="acc-item">
+      <div class="acc-head"><div><div class="stage">After the visit</div><h4>Follow-up assignment</h4></div><div class="chev">+</div></div>
+      <div class="acc-body"><div class="acc-body-inner">
+        A short written or sketched response: students choose one material in their own coursework or lab and describe what changes — physically and conceptually — when it moves from raw form to finished object, using the same before/after framing from the gallery.
+        <ul>
+          <li>Optional extension: an artmaking activity — a small cast or 3D-printed test piece — for courses with studio access</li>
+          <li>Faculty debrief scheduled the following week to fold observations back into the syllabus</li>
+        </ul>
+      </div></div>
+    </div>
+
+  </div>
+</section>
+
+<section id="exhibition">
+  <div class="section-head">
+    <div class="eyebrow">Curation</div>
+    <div>
+      <h2>Sample Teaching Gallery proposal</h2>
+      <p class="support">The role asks for two Teaching Gallery exhibitions a year, developed in partnership with up to four faculty. Here's a concept built the same way, using objects and relationships already in this practice.</p>
+    </div>
+  </div>
+  <div class="exhib">
+    <h3>Held in Metal, Held in Water</h3>
+    <p class="sub">A Teaching Gallery exhibition on how material carries meaning across disciplines — proposed as a fall-semester show, four-faculty partnership.</p>
+    <div class="faculty-row">
+      <div class="faculty-card" style="--c:#6e1423">
+        <div class="dept">MECHANICAL ENGINEERING</div>
+        <h5>Process &amp; casting</h5>
+        <p>Anchors the show in the leaf-to-bronze sculptures — a live demonstration of digital-to-material process.</p>
+      </div>
+      <div class="faculty-card" style="--c:#1e4d3a">
+        <div class="dept">HEALTH SCIENCES</div>
+        <h5>Perception &amp; color</h5>
+        <p>The colorblindness-test artwork, paired with a short faculty talk on color vision science.</p>
+      </div>
+      <div class="faculty-card" style="--c:#a8791a">
+        <div class="dept">ENVIRONMENTAL &amp; NATURAL RESOURCES</div>
+        <h5>Water &amp; ecology</h5>
+        <p>Underwater imagery framed alongside a faculty reading on aquatic ecosystems and the Wyoming water cycle.</p>
+      </div>
+      <div class="faculty-card" style="--c:#3f2352">
+        <div class="dept">HONORS PROGRAM</div>
+        <h5>Authorship &amp; identity</h5>
+        <p>A closing panel on the anonymous artist case, tying material questions back to questions of the maker.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  Prepared as a working demonstration for the Curator of Academic Engagement search at the University of Wyoming Art Museum, Laramie. All lesson plans and exhibition concepts above are original proposals built from this practice's real curatorial record, not descriptions of scheduled UWAM programming.
+</footer>
+</div>
+
+<script>
+  document.querySelectorAll('.label-card').forEach(function(card){
+    card.addEventListener('click', function(){ card.classList.toggle('open'); });
+  });
+</script>
+<script>
+  document.querySelectorAll('.acc-item').forEach(function(item){
+    item.querySelector('.acc-head').addEventListener('click', function(){
+      item.classList.toggle('open');
+    });
+  });
+</script>
+
+<script>
+  var tabPortfolio = document.getElementById('tab-portfolio');
+  var tabJobdemo = document.getElementById('tab-jobdemo');
+  var viewPortfolio = document.getElementById('view-portfolio');
+  var viewJobdemo = document.getElementById('view-jobdemo');
+
+  function showPortfolio(){
+    viewPortfolio.style.display = '';
+    viewJobdemo.style.display = 'none';
+    tabPortfolio.classList.add('active');
+    tabJobdemo.classList.remove('active');
+    window.scrollTo(0,0);
+  }
+  function showJobdemo(){
+    viewJobdemo.style.display = '';
+    viewPortfolio.style.display = 'none';
+    tabJobdemo.classList.add('active');
+    tabPortfolio.classList.remove('active');
+    window.scrollTo(0,0);
+  }
+  tabPortfolio.addEventListener('click', showPortfolio);
+  tabJobdemo.addEventListener('click', showJobdemo);
+</script>
+
+</body>
+</html>
