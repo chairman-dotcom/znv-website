@@ -1,0 +1,1217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Ritual Wizard — Formula Quiz</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Space+Grotesk:wght@400;500;600&display=swap');
+
+  :root{
+    --ink:#1c2b22;
+    --paper:#f4f1e9;
+    --moss:#3f5b46;
+    --moss-dark:#2a3f30;
+    --clay:#c8663f;
+    --line:#c9c2af;
+    --card:#fffdf7;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Space Grotesk', sans-serif;
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:24px;
+  }
+  .rx{
+    width:100%;
+    max-width:640px;
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:2px;
+    box-shadow: 0 1px 0 var(--line), 0 20px 40px -24px rgba(28,43,34,0.35);
+    position:relative;
+    overflow:hidden;
+  }
+  .rx::before{
+    content:"";
+    position:absolute;
+    top:0; left:0; right:0;
+    height:6px;
+    background:repeating-linear-gradient(90deg, var(--moss) 0 18px, var(--clay) 18px 20px);
+    opacity:.85;
+  }
+  header.top{
+    padding:22px 32px 0;
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+    font-family:'Fraunces', serif;
+  }
+  .mark{
+    font-size:1rem;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--moss-dark);
+  }
+  .mark b{color:var(--clay); font-weight:600;}
+  .rx-no{
+    font-size:.72rem;
+    color:#8b8470;
+    letter-spacing:.05em;
+  }
+  .track-wrap{
+    padding:14px 32px 0;
+  }
+  .track{
+    height:3px;
+    background:var(--line);
+    border-radius:2px;
+    overflow:hidden;
+  }
+  .track-fill{
+    height:100%;
+    background:var(--moss);
+    width:0%;
+    transition:width .4s cubic-bezier(.65,0,.35,1);
+  }
+  .step-label{
+    display:flex;
+    justify-content:space-between;
+    font-size:.68rem;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    color:#8b8470;
+    margin-top:6px;
+  }
+  .panel{
+    padding:36px 32px 32px;
+    min-height:360px;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+  }
+  .eyebrow{
+    font-size:.7rem;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--clay);
+    font-weight:600;
+    margin-bottom:10px;
+  }
+  h1{
+    font-family:'Fraunces', serif;
+    font-weight:500;
+    font-size:1.7rem;
+    line-height:1.25;
+    margin:0 0 10px;
+    color:var(--moss-dark);
+  }
+  .sub{
+    font-size:.9rem;
+    color:#5c5747;
+    line-height:1.5;
+    margin:0 0 26px;
+  }
+  .field{
+    margin-bottom:18px;
+  }
+  label.flabel{
+    display:block;
+    font-size:.72rem;
+    letter-spacing:.06em;
+    text-transform:uppercase;
+    color:#5c5747;
+    margin-bottom:7px;
+  }
+  input[type=text], input[type=email], select{
+    width:100%;
+    padding:13px 14px;
+    border:1px solid var(--line);
+    background:#fffef c;
+    background:#fffdf6;
+    border-radius:1px;
+    font-family:'Space Grotesk', sans-serif;
+    font-size:.95rem;
+    color:var(--ink);
+    outline:none;
+    transition:border-color .15s;
+  }
+  input:focus, select:focus{
+    border-color:var(--moss);
+  }
+  .chip-grid{
+    display:grid;
+    grid-template-columns:repeat(2, 1fr);
+    gap:9px;
+  }
+  .chip{
+    border:1px solid var(--line);
+    padding:12px 14px;
+    font-size:.85rem;
+    cursor:pointer;
+    user-select:none;
+    background:#fffdf6;
+    transition:all .15s;
+    line-height:1.3;
+  }
+  .chip:hover{border-color:var(--moss);}
+  .chip.sel{
+    background:var(--moss);
+    border-color:var(--moss);
+    color:#fffdf6;
+  }
+  .chip-note{
+    font-size:.72rem;
+    color:#8b8470;
+    margin-top:-10px;
+    margin-bottom:16px;
+  }
+  .count-hint{
+    font-size:.72rem;
+    color:var(--clay);
+    margin-top:8px;
+    min-height:14px;
+  }
+  .row-2{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:14px;
+  }
+  footer.nav{
+    padding:0 32px 30px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+  }
+  button{
+    font-family:'Space Grotesk', sans-serif;
+    cursor:pointer;
+    border:none;
+  }
+  .btn-next{
+    background:var(--moss-dark);
+    color:#fffdf6;
+    padding:13px 26px;
+    font-size:.85rem;
+    letter-spacing:.04em;
+    text-transform:uppercase;
+    border-radius:1px;
+    transition:background .15s, transform .1s;
+  }
+  .btn-next:hover{background:var(--moss);}
+  .btn-next:disabled{
+    background:#cfc9b7;
+    cursor:not-allowed;
+  }
+  .btn-back{
+    background:transparent;
+    color:#8b8470;
+    font-size:.8rem;
+    text-decoration:underline;
+    text-underline-offset:3px;
+  }
+  .btn-back:hover{color:var(--ink);}
+  .btn-back.invisible{visibility:hidden;}
+
+  .yesno{
+    display:flex;
+    gap:10px;
+  }
+  .yesno .chip{flex:1; text-align:center;}
+
+  .result{
+    text-align:center;
+  }
+  .result .eyebrow{margin-bottom:14px;}
+  .result h1{font-size:1.9rem;}
+  .result-card{
+    text-align:left;
+    background:var(--paper);
+    border:1px solid var(--line);
+    padding:18px 20px;
+    margin-top:18px;
+    font-size:.85rem;
+    line-height:1.7;
+  }
+  .result-card dt{
+    color:#8b8470;
+    text-transform:uppercase;
+    font-size:.68rem;
+    letter-spacing:.06em;
+    margin-top:10px;
+  }
+  .result-card dt:first-child{margin-top:0;}
+  .result-card dd{margin:0; color:var(--ink);}
+  .result-dt-row{
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+    margin-top:10px;
+  }
+  .result-dt-row:first-child{margin-top:0;}
+  .result-dt-row dt{margin:0;}
+  .edit-link{
+    background:transparent;
+    color:var(--moss);
+    font-size:.7rem;
+    text-decoration:underline;
+    text-underline-offset:2px;
+  }
+  .edit-link:hover{color:var(--clay);}
+
+  .ingredient-list{
+    margin-top:24px;
+    border-top:1px solid var(--line);
+  }
+  .ing-row{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:14px 4px;
+    border-bottom:1px solid var(--line);
+  }
+  .ing-info{flex:1; min-width:0;}
+  .ing-name{
+    font-family:'Fraunces', serif;
+    font-size:1rem;
+    color:var(--moss-dark);
+  }
+  .ing-from{
+    font-size:.7rem;
+    color:#8b8470;
+    margin-top:2px;
+    text-transform:uppercase;
+    letter-spacing:.04em;
+  }
+  .ing-conflict{
+    background:#fbf1ea;
+    margin:0 -14px;
+    padding-left:14px;
+    padding-right:14px;
+    border-bottom-color:#e3c9b5;
+  }
+  .ing-warn-row{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    flex-wrap:wrap;
+    margin-top:6px;
+  }
+  .ing-warn{
+    font-size:.72rem;
+    color:var(--clay);
+    font-weight:500;
+  }
+  .swap-btn{
+    font-size:.7rem;
+    color:var(--moss-dark);
+    background:#fffdf6;
+    border:1px solid var(--moss);
+    padding:4px 9px;
+    border-radius:1px;
+    white-space:nowrap;
+  }
+  .swap-btn:hover{background:var(--moss); color:#fffdf6;}
+  .ing-ctrl{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    flex-shrink:0;
+  }
+  .stepper{
+    width:26px; height:26px;
+    border:1px solid var(--line);
+    background:#fffdf6;
+    color:var(--moss-dark);
+    font-size:1rem;
+    line-height:1;
+    border-radius:1px;
+    display:flex; align-items:center; justify-content:center;
+    transition:border-color .15s;
+  }
+  .stepper:hover{border-color:var(--moss);}
+  .dose-val{
+    font-size:.82rem;
+    min-width:82px;
+    text-align:center;
+    color:var(--ink);
+    font-variant-numeric:tabular-nums;
+  }
+  .ing-remove{
+    width:24px; height:24px;
+    background:transparent;
+    color:#b0a993;
+    font-size:1.1rem;
+    line-height:1;
+    flex-shrink:0;
+    transition:color .15s;
+  }
+  .ing-remove:hover{color:var(--clay);}
+  .add-wrap{margin-top:14px;}
+  .add-select{
+    width:100%;
+    padding:12px 14px;
+    border:1px dashed var(--line);
+    background:transparent;
+    font-family:'Space Grotesk', sans-serif;
+    font-size:.85rem;
+    color:#5c5747;
+    border-radius:1px;
+  }
+
+  .tab-bar{
+    display:flex;
+    gap:4px;
+    border-bottom:1px solid var(--line);
+    margin-bottom:18px;
+  }
+  .tab-btn{
+    background:transparent;
+    padding:10px 4px 12px;
+    margin-right:20px;
+    font-size:.8rem;
+    letter-spacing:.02em;
+    color:#8b8470;
+    border-bottom:2px solid transparent;
+    position:relative;
+    display:flex;
+    align-items:center;
+    gap:6px;
+    transition:color .15s, border-color .15s;
+  }
+  .tab-btn:hover{color:var(--moss-dark);}
+  .tab-btn.active{
+    color:var(--moss-dark);
+    border-bottom-color:var(--clay);
+    font-weight:500;
+  }
+  .tab-dot{
+    width:6px; height:6px;
+    border-radius:50%;
+    background:var(--moss);
+    display:inline-block;
+  }
+  .tab-pane{min-height:120px;}
+  .tab-hint{
+    font-size:.82rem;
+    color:#5c5747;
+    line-height:1.5;
+    margin:0 0 14px;
+  }
+  .dropzone{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:4px;
+    border:1px dashed var(--line);
+    padding:30px 16px;
+    text-align:center;
+    cursor:pointer;
+    transition:border-color .15s, background .15s;
+  }
+  .dropzone:hover{
+    border-color:var(--moss);
+    background:var(--paper);
+  }
+  .drop-label{
+    font-size:.85rem;
+    color:var(--moss-dark);
+    font-weight:500;
+  }
+  .drop-sub{
+    font-size:.72rem;
+    color:#8b8470;
+  }
+  .file-row{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    border:1px solid var(--line);
+    padding:14px 16px;
+    background:var(--paper);
+  }
+  .file-info{flex:1; min-width:0;}
+  .file-name{
+    font-size:.85rem;
+    color:var(--moss-dark);
+    word-break:break-all;
+  }
+  .file-meta{
+    font-size:.7rem;
+    color:#8b8470;
+    margin-top:2px;
+  }
+  .upload-note{
+    font-size:.72rem;
+    color:#8b8470;
+    line-height:1.5;
+    margin-top:16px;
+  }
+  .section-divider{
+    border-top:1px dashed var(--line);
+    margin:26px 0 18px;
+  }
+  .section-title{
+    font-family:'Fraunces', serif;
+    font-weight:500;
+    font-size:1.15rem;
+    color:var(--moss-dark);
+    margin:0 0 6px;
+    text-align:center;
+  }
+
+  @media (max-width:480px){
+    .chip-grid{grid-template-columns:1fr;}
+    .row-2{grid-template-columns:1fr;}
+    .panel{padding:28px 20px;}
+    header.top, .track-wrap, footer.nav{padding-left:20px; padding-right:20px;}
+  }
+</style>
+</head>
+<body>
+
+<div class="rx" id="app"></div>
+
+<script>
+const GOALS = ["Weight Management","Eye Health","Digestion","Cognition","Bone Protection","Post-Workout","Pre-Workout","Hair and Nails","Energy","Mood","Joint Health","Stress","Immunity","General Health","Heart Health"];
+const RESTRICTIONS = ["Lactose Intolerance","Gluten Intolerance","Peanut Allergy","Soy Allergy","Fish Allergy"];
+
+// Maps each goal to candidate ingredients with a starting dose.
+// Ingredients are deduped and merged across selected goals.
+const INGREDIENT_MAP = {
+  "Weight Management": [{n:"Green Tea Extract",d:300,u:"mg"},{n:"Chromium Picolinate",d:200,u:"mcg"},{n:"L-Carnitine",d:500,u:"mg"}],
+  "Eye Health": [{n:"Lutein",d:10,u:"mg"},{n:"Zeaxanthin",d:2,u:"mg"},{n:"Vitamin A",d:900,u:"mcg"}],
+  "Digestion": [{n:"Probiotic Blend",d:10,u:"billion CFU"},{n:"Digestive Enzymes",d:1,u:"capsule"},{n:"Ginger Root",d:250,u:"mg"}],
+  "Cognition": [{n:"Lion's Mane Extract",d:500,u:"mg"},{n:"Omega-3 (DHA)",d:400,u:"mg"},{n:"Bacopa Monnieri",d:300,u:"mg"}],
+  "Bone Protection": [{n:"Vitamin D3",d:2000,u:"IU"},{n:"Vitamin K2",d:100,u:"mcg"},{n:"Calcium Citrate",d:500,u:"mg"}],
+  "Post-Workout": [{n:"Magnesium Glycinate",d:200,u:"mg"},{n:"Tart Cherry Extract",d:480,u:"mg"},{n:"Zinc",d:15,u:"mg"}],
+  "Pre-Workout": [{n:"Beta-Alanine",d:1600,u:"mg"},{n:"Citrulline Malate",d:3000,u:"mg"},{n:"B-Complex",d:1,u:"capsule"}],
+  "Hair and Nails": [{n:"Biotin",d:5000,u:"mcg"},{n:"Collagen Peptides",d:2500,u:"mg"},{n:"Silica",d:10,u:"mg"}],
+  "Energy": [{n:"Vitamin B12",d:1000,u:"mcg"},{n:"CoQ10",d:100,u:"mg"},{n:"Iron Bisglycinate",d:18,u:"mg"}],
+  "Mood": [{n:"Ashwagandha (KSM-66)",d:300,u:"mg"},{n:"5-HTP",d:50,u:"mg"},{n:"Vitamin D3",d:2000,u:"IU"}],
+  "Joint Health": [{n:"Glucosamine Sulfate",d:1500,u:"mg"},{n:"Turmeric (Curcumin)",d:500,u:"mg"},{n:"Omega-3 (EPA)",d:400,u:"mg"}],
+  "Stress": [{n:"Ashwagandha (KSM-66)",d:300,u:"mg"},{n:"L-Theanine",d:200,u:"mg"},{n:"Magnesium Glycinate",d:200,u:"mg"}],
+  "Immunity": [{n:"Vitamin C",d:500,u:"mg"},{n:"Zinc",d:15,u:"mg"},{n:"Elderberry Extract",d:300,u:"mg"}],
+  "General Health": [{n:"Multivitamin Base",d:1,u:"capsule"},{n:"Vitamin D3",d:2000,u:"IU"},{n:"Omega-3 (DHA)",d:400,u:"mg"}],
+  "Heart Health": [{n:"Omega-3 (EPA)",d:600,u:"mg"},{n:"CoQ10",d:100,u:"mg"},{n:"Vitamin K2",d:100,u:"mcg"}]
+};
+
+const EXTRA_INGREDIENTS = [
+  {n:"Vitamin D3",d:2000,u:"IU"},{n:"Magnesium Glycinate",d:200,u:"mg"},{n:"Vitamin C",d:500,u:"mg"},
+  {n:"Zinc",d:15,u:"mg"},{n:"Omega-3 (DHA)",d:400,u:"mg"},{n:"B-Complex",d:1,u:"capsule"},
+  {n:"Iron Bisglycinate",d:18,u:"mg"},{n:"CoQ10",d:100,u:"mg"},{n:"Probiotic Blend",d:10,u:"billion CFU"}
+];
+
+// Which restrictions conflict with which ingredients, and what to swap in instead.
+const RESTRICTION_CONFLICTS = {
+  "Fish Allergy": {
+    ingredients: ["Omega-3 (EPA)","Omega-3 (DHA)"],
+    substitute: n => ({ name: "Algae-Based " + n, dose: n.includes("EPA") ? 600 : 400, unit: "mg" })
+  },
+  "Lactose Intolerance": {
+    ingredients: ["Probiotic Blend"],
+    substitute: () => ({ name: "Dairy-Free Probiotic Blend", dose: 10, unit: "billion CFU" })
+  },
+  "Soy Allergy": { ingredients: [], substitute: null },
+  "Peanut Allergy": { ingredients: [], substitute: null },
+  "Gluten Intolerance": { ingredients: [], substitute: null }
+};
+
+function conflictsFor(ingredientName, restrictions){
+  return restrictions.filter(r => (RESTRICTION_CONFLICTS[r]?.ingredients || []).includes(ingredientName));
+}
+
+// --- Skincare recommendation data ---
+const SKIN_TYPES = ["Oily","Dry","Combination","Normal","Sensitive"];
+const SKIN_CONCERNS = ["Acne & Breakouts","Fine Lines & Wrinkles","Hyperpigmentation","Dullness","Redness & Sensitivity","Large Pores","Dehydration"];
+
+const SKIN_TYPE_BASE = {
+  "Oily": [{n:"Gel Cleanser (Oil-Free)", note:"AM & PM cleanser"},{n:"Lightweight Gel Moisturizer", note:"Daily moisturizer"}],
+  "Dry": [{n:"Cream Cleanser", note:"AM & PM cleanser"},{n:"Rich Barrier Cream", note:"Daily moisturizer"}],
+  "Combination": [{n:"Balancing Foam Cleanser", note:"AM & PM cleanser"},{n:"Lightweight Lotion Moisturizer", note:"Daily moisturizer"}],
+  "Normal": [{n:"Gentle Daily Cleanser", note:"AM & PM cleanser"},{n:"Everyday Moisturizer", note:"Daily moisturizer"}],
+  "Sensitive": [{n:"Fragrance-Free Cleanser", note:"AM & PM cleanser"},{n:"Ceramide Barrier Cream", note:"Daily moisturizer"}]
+};
+
+const SKINCARE_MAP = {
+  "Acne & Breakouts": [{n:"Salicylic Acid Treatment (2%)", note:"PM, spot or full-face"},{n:"Niacinamide Serum (10%)", note:"AM serum"}],
+  "Fine Lines & Wrinkles": [{n:"Retinol Treatment (0.3%)", note:"PM, 2–3x/week to start"},{n:"Peptide Complex Serum", note:"AM or PM serum"}],
+  "Hyperpigmentation": [{n:"Vitamin C Serum (15%)", note:"AM serum"},{n:"Tranexamic Acid Serum", note:"AM or PM serum"}],
+  "Dullness": [{n:"AHA Exfoliating Toner", note:"2–3x/week"},{n:"Vitamin C Serum (15%)", note:"AM serum"}],
+  "Redness & Sensitivity": [{n:"Centella Asiatica Cream", note:"AM & PM, barrier repair"},{n:"Mineral SPF 30+", note:"AM, daily"}],
+  "Large Pores": [{n:"Niacinamide Serum (10%)", note:"AM serum"},{n:"Clay Mask", note:"Weekly treatment"}],
+  "Dehydration": [{n:"Hyaluronic Acid Serum", note:"AM & PM, on damp skin"},{n:"Ceramide Moisturizer", note:"Daily moisturizer"}]
+};
+
+function buildFormula(goals){
+  const byName = {};
+  goals.forEach(g => {
+    (INGREDIENT_MAP[g] || []).forEach(ing => {
+      if(!byName[ing.n]) byName[ing.n] = { name: ing.n, dose: ing.d, unit: ing.u, from: [g] };
+      else if(!byName[ing.n].from.includes(g)) byName[ing.n].from.push(g);
+    });
+  });
+  return Object.values(byName);
+}
+
+// Rebuilds the formula from the current goal selection, while preserving
+// any manual dose edits, removals, and manually-added ingredients.
+function rebuildFormula(){
+  const base = buildFormula(state.goals).filter(ing => !state.removedNames.includes(ing.name));
+  base.forEach(ing => {
+    if(state.doseOverrides[ing.name] !== undefined) ing.dose = state.doseOverrides[ing.name];
+  });
+  state.addedIngredients.forEach(a => {
+    if(!base.some(b => b.name === a.name)){
+      const dose = state.doseOverrides[a.name] !== undefined ? state.doseOverrides[a.name] : a.dose;
+      base.push({ name: a.name, dose, unit: a.unit, from: ["Added by you"] });
+    }
+  });
+  state.formula = base;
+  state.formulaGoals = state.goals.slice();
+}
+
+function goalsChanged(){
+  const a = state.goals.slice().sort().join("|");
+  const b = state.formulaGoals.slice().sort().join("|");
+  return a !== b;
+}
+
+function buildSkincare(){
+  const byName = {};
+  (SKIN_TYPE_BASE[state.skinType] || []).forEach(p => {
+    byName[p.n] = { name: p.n, note: p.note, from: ["Skin type: " + state.skinType] };
+  });
+  state.skinConcerns.forEach(c => {
+    (SKINCARE_MAP[c] || []).forEach(p => {
+      if(!byName[p.n]) byName[p.n] = { name: p.n, note: p.note, from: [c] };
+      else if(!byName[p.n].from.includes(c)) byName[p.n].from.push(c);
+    });
+  });
+  state.skincare = Object.values(byName).filter(p => !state.removedSkincareNames.includes(p.name));
+  state.skincareProfile = { type: state.skinType, concerns: state.skinConcerns.slice() };
+}
+
+function skincareChanged(){
+  const a = state.skinType + "|" + state.skinConcerns.slice().sort().join(",");
+  const b = state.skincareProfile.type + "|" + state.skincareProfile.concerns.slice().sort().join(",");
+  return a !== b;
+}
+
+const state = {
+  step: 0,
+  name: "",
+  sex: "",
+  birthMonth: "",
+  goals: [],
+  email: "",
+  country: "",
+  diet: [],
+  lifestyle: [],
+  sleep: [],
+  hasRestrictions: null,
+  restrictions: [],
+  dietType: "",
+  formulaName: "",
+  formula: null,
+  formulaGoals: [],
+  removedNames: [],
+  doseOverrides: {},
+  addedIngredients: [],
+  activeUploadTab: "device",
+  uploads: { device: null, healthcare: null, genetic: null },
+  editReturn: false,
+  skinType: "",
+  skinConcerns: [],
+  skincare: null,
+  skincareProfile: { type: "", concerns: [] },
+  removedSkincareNames: []
+};
+
+const steps = [
+  "intro","name","about","goals","email","country",
+  "diet","lifestyle","sleep","restrictions","dietType","skincare","biodata","formulaName","result"
+];
+
+function el(tag, attrs={}, ...children){
+  const e = document.createElement(tag);
+  for(const k in attrs){
+    if(k === "class") e.className = attrs[k];
+    else if(k.startsWith("on")) e.addEventListener(k.slice(2), attrs[k]);
+    else e.setAttribute(k, attrs[k]);
+  }
+  children.forEach(c => {
+    if(typeof c === "string") e.appendChild(document.createTextNode(c));
+    else if(c) e.appendChild(c);
+  });
+  return e;
+}
+
+function toggle(arr, val, max){
+  const i = arr.indexOf(val);
+  if(i >= 0){ arr.splice(i,1); return; }
+  if(max && arr.length >= max) return;
+  arr.push(val);
+}
+
+function formatSize(bytes){
+  if(bytes < 1024) return bytes + " B";
+  if(bytes < 1024*1024) return (bytes/1024).toFixed(0) + " KB";
+  return (bytes/(1024*1024)).toFixed(1) + " MB";
+}
+
+function render(){
+  const app = document.getElementById("app");
+  app.innerHTML = "";
+  const key = steps[state.step];
+  const total = steps.length - 2; // exclude intro & result from progress math
+  const progress = key === "intro" ? 0 : key === "result" ? 100 : Math.round(((state.step) / (steps.length-2)) * 100);
+
+  app.appendChild(
+    el("header", {class:"top"},
+      el("div", {class:"mark"}, "the ritual ", el("b",{},"wizard")),
+      el("div", {class:"rx-no"}, "RITUAL QUIZ · Nº 001")
+    )
+  );
+
+  if(key !== "intro" && key !== "result"){
+    const wrap = el("div", {class:"track-wrap"});
+    const track = el("div", {class:"track"});
+    const fill = el("div", {class:"track-fill"});
+    fill.style.width = progress + "%";
+    track.appendChild(fill);
+    wrap.appendChild(track);
+    wrap.appendChild(el("div", {class:"step-label"},
+      el("span",{}, "Step " + state.step + " of " + (steps.length-2)),
+      el("span",{}, progress + "%")
+    ));
+    app.appendChild(wrap);
+  }
+
+  const panel = el("div", {class:"panel"});
+  app.appendChild(panel);
+  renderStep(key, panel);
+
+  if(key !== "intro" && key !== "result"){
+    const footer = el("footer", {class:"nav"});
+    const back = el("button", {class:"btn-back" + (state.step===1 ? " invisible" : ""), onclick: () => {
+      if(state.editReturn){ state.editReturn = false; state.step = steps.indexOf("result"); }
+      else state.step--;
+      render();
+    }}, "← Back");
+    const next = el("button", {class:"btn-next", onclick: () => {
+      if(!validateStep(key)) return;
+      if(state.editReturn){
+        state.editReturn = false;
+        state.step = steps.indexOf("result");
+      } else {
+        state.step++;
+      }
+      render();
+    }}, key === "formulaName" ? "See my formula →" : (state.editReturn ? "Save & return to formula →" : "Continue →"));
+    if(!isValid(key)) next.disabled = true;
+    footer.appendChild(back);
+    footer.appendChild(next);
+    app.appendChild(footer);
+  }
+}
+
+function isValid(key){
+  switch(key){
+    case "name": return state.name.trim().length > 0;
+    case "about": return state.sex && state.birthMonth;
+    case "goals": return state.goals.length >= 3 && state.goals.length <= 5;
+    case "email": return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(state.email);
+    case "country": return state.country !== "";
+    case "diet": return true;
+    case "lifestyle": return true;
+    case "sleep": return true;
+    case "restrictions": return state.hasRestrictions !== null && (state.hasRestrictions === "No" || state.restrictions.length > 0);
+    case "dietType": return state.dietType !== "";
+    case "skincare": return state.skinType !== "";
+    case "biodata": return true;
+    case "formulaName": return state.formulaName.trim().length > 0;
+    default: return true;
+  }
+}
+function validateStep(key){ return isValid(key); }
+
+function renderStep(key, panel){
+  if(key === "intro"){
+    panel.appendChild(el("div", {class:"eyebrow"}, "Welcome"));
+    panel.appendChild(el("h1", {}, "Let's build something made for your body, not the average one."));
+    panel.appendChild(el("p", {class:"sub"}, "Answer a few honest questions about how you live, eat, and feel. We'll turn it into an exact, editable formula — you'll see every ingredient before it's yours."));
+    panel.appendChild(el("button", {class:"btn-next", style:"align-self:flex-start", onclick: () => { state.step = 1; render(); }}, "Let's go →"));
+    return;
+  }
+
+  if(key === "name"){
+    panel.appendChild(el("div", {class:"eyebrow"}, "First things first"));
+    panel.appendChild(el("h1", {}, "Who are we formulating for?"));
+    const field = el("div", {class:"field"});
+    const input = el("input", {type:"text", placeholder:"Your first name", value: state.name});
+    input.addEventListener("input", e => { state.name = e.target.value; syncButton("name"); });
+    field.appendChild(input);
+    panel.appendChild(field);
+    return;
+  }
+
+  if(key === "about"){
+    panel.appendChild(el("div", {class:"eyebrow"}, "Good to meet you" + (state.name ? ", " + state.name : "") + "."));
+    panel.appendChild(el("h1", {}, "A couple of biological basics."));
+    panel.appendChild(el("p", {class:"sub"}, "Nutrient needs and safe dosing shift with sex at birth and age — this keeps your formula accurate."));
+
+    const row = el("div", {class:"row-2"});
+
+    const f1 = el("div", {class:"field"});
+    f1.appendChild(el("label", {class:"flabel"}, "Sex at birth"));
+    const sel1 = el("select", {});
+    ["Select…","Prefer not to disclose","Male","Female"].forEach(o => {
+      const opt = el("option", {value: o === "Select…" ? "" : o}, o);
+      if(state.sex === o) opt.setAttribute("selected","selected");
+      sel1.appendChild(opt);
+    });
+    sel1.addEventListener("change", e => { state.sex = e.target.value; syncButton("about"); });
+    f1.appendChild(sel1);
+
+    const f2 = el("div", {class:"field"});
+    f2.appendChild(el("label", {class:"flabel"}, "Birthday month"));
+    const sel2 = el("select", {});
+    const months = ["Select…","January","February","March","April","May","June","July","August","September","October","November","December"];
+    months.forEach(o => {
+      const opt = el("option", {value: o === "Select…" ? "" : o}, o);
+      if(state.birthMonth === o) opt.setAttribute("selected","selected");
+      sel2.appendChild(opt);
+    });
+    sel2.addEventListener("change", e => { state.birthMonth = e.target.value; syncButton("about"); });
+    f2.appendChild(sel2);
+
+    row.appendChild(f1); row.appendChild(f2);
+    panel.appendChild(row);
+    return;
+  }
+
+  if(key === "goals"){
+    panel.appendChild(el("div", {class:"eyebrow"}, "Priorities"));
+    panel.appendChild(el("h1", {}, "Where do you want to feel the biggest difference?"));
+    panel.appendChild(el("div", {class:"chip-note"}, "Pick between 3 and 5 — this is what drives your formula."));
+    const grid = el("div", {class:"chip-grid"});
+    GOALS.forEach(g => {
+      const chip = el("div", {class:"chip" + (state.goals.includes(g) ? " sel" : "")}, g);
+      chip.addEventListener("click", () => {
+        toggle(state.goals, g, 5);
+        render();
+      });
+      grid.appendChild(chip);
+    });
+    panel.appendChild(grid);
+    panel.appendChild(el("div", {class:"count-hint"}, state.goals.length + " selected" + (state.goals.length < 3 ? " · pick at least 3" : "")));
+    return;
+  }
+
+  if(key === "email"){
+    panel.appendChild(el("div", {class:"eyebrow"}, "Stay in the loop"));
+    panel.appendChild(el("h1", {}, "Where should we send your results?"));
+    panel.appendChild(el("p", {class:"sub"}, "You'll get a copy of your formula and can revisit or adjust it any time."));
+    const field = el("div", {class:"field"});
+    const input = el("input", {type:"email", placeholder:"you@email.com", value: state.email});
+    input.addEventListener("input", e => { state.email = e.target.value; syncButton("email"); });
+    field.appendChild(input);
+    panel.appendChild(field);
+    return;
+  }
+
+  if(key === "country"){
+    panel.appendChild(el("div", {class:"eyebrow"}, "Delivery"));
+    panel.appendChild(el("h1", {}, "And where in the world are you?"));
+    const field = el("div", {class:"field"});
+    const sel = el("select", {});
+    ["Select…","United States","Canada","United Kingdom","Australia","Other"].forEach(o => {
+      const opt = el("option", {value: o === "Select…" ? "" : o}, o);
+      if(state.country === o) opt.setAttribute("selected","selected");
+      sel.appendChild(opt);
+    });
+    sel.addEventListener("change", e => { state.country = e.target.value; syncButton("country"); });
+    field.appendChild(sel);
+    panel.appendChild(field);
+    return;
+  }
+
+  if(key === "diet"){
+    panel.appendChild(el("div", {class:"eyebrow"}, "On your plate"));
+    panel.appendChild(el("h1", {}, "How would you describe your eating pattern?"));
+    panel.appendChild(el("div", {class:"chip-note"}, "Select any that ring true."));
+    const opts = ["Seafood shows up in my meals a couple times a week or more","Fruit and veg fill most of my plate, most days","I rarely skip a meal — 3+ a day, most days"];
+    const grid = el("div", {class:"chip-grid", style:"grid-template-columns:1fr;"});
+    opts.forEach(o => {
+      const chip = el("div", {class:"chip" + (state.diet.includes(o) ? " sel" : "")}, o);
+      chip.addEventListener("click", () => { toggle(state.diet, o); render(); });
+      grid.appendChild(chip);
+    });
+    panel.appendChild(grid);
+    return;
+  }
+
+  if(key === "lifestyle"){
+    panel.appendChild(el("div", {class:"eyebrow"}, "Day to day"));
+    panel.appendChild(el("h1", {}, "Tell us how you actually spend your days."));
+    panel.appendChild(el("div", {class:"chip-note"}, "Select any that ring true."));
+    const opts = ["I get under 20 minutes of real sunlight most days, or my mood dips with the seasons","I'm moving my body — 75+ minutes of cardio a week","I smoke, or I'm regularly around secondhand smoke"];
+    const grid = el("div", {class:"chip-grid", style:"grid-template-columns:1fr;"});
+    opts.forEach(o => {
+      const chip = el("div", {class:"chip" + (state.lifestyle.includes(o) ? " sel" : "")}, o);
+      chip.addEventListener("click", () => { toggle(state.lifestyle, o); render(); });
+      grid.appendChild(chip);
+    });
+    panel.appendChild(grid);
+    return;
+  }
+
+  if(key === "sleep"){
+    panel.appendChild(el("div", {class:"eyebrow"}, "Rest & recovery"));
+    panel.appendChild(el("h1", {}, "What's your sleep and stress picture look like right now?"));
+    panel.appendChild(el("div", {class:"chip-note"}, "Select any that ring true."));
+    const opts = ["Stress has been running high lately, mentally or emotionally","My energy through the day is solid — 8 or higher out of 10","I'm consistently getting 6+ hours of decent sleep"];
+    const grid = el("div", {class:"chip-grid", style:"grid-template-columns:1fr;"});
+    opts.forEach(o => {
+      const chip = el("div", {class:"chip" + (state.sleep.includes(o) ? " sel" : "")}, o);
+      chip.addEventListener("click", () => { toggle(state.sleep, o); render(); });
+      grid.appendChild(chip);
+    });
+    panel.appendChild(grid);
+    return;
+  }
+
+  if(key === "restrictions"){
+    panel.appendChild(el("div", {class:"eyebrow"}, "Safety check"));
+    panel.appendChild(el("h1", {}, "Anything we should formulate around?"));
+    const yn = el("div", {class:"yesno"});
+    ["Yes","No"].forEach(o => {
+      const chip = el("div", {class:"chip" + (state.hasRestrictions === o ? " sel" : "")}, o);
+      chip.addEventListener("click", () => {
+        state.hasRestrictions = o;
+        if(o === "No") state.restrictions = [];
+        render();
+      });
+      yn.appendChild(chip);
+    });
+    panel.appendChild(yn);
+
+    if(state.hasRestrictions === "Yes"){
+      const grid = el("div", {class:"chip-grid", style:"margin-top:16px;"});
+      RESTRICTIONS.forEach(r => {
+        const chip = el("div", {class:"chip" + (state.restrictions.includes(r) ? " sel" : "")}, r);
+        chip.addEventListener("click", () => { toggle(state.restrictions, r); render(); });
+        grid.appendChild(chip);
+      });
+      panel.appendChild(grid);
+    }
+    return;
+  }
+
+  if(key === "dietType"){
+    panel.appendChild(el("div", {class:"eyebrow"}, "Last basic"));
+    panel.appendChild(el("h1", {}, "Which best fits how you eat?"));
+    const grid = el("div", {class:"chip-grid", style:"grid-template-columns:1fr;"});
+    ["Vegan","Vegetarian","Neither"].forEach(o => {
+      const chip = el("div", {class:"chip" + (state.dietType === o ? " sel" : "")}, o);
+      chip.addEventListener("click", () => { state.dietType = o; render(); });
+      grid.appendChild(chip);
+    });
+    panel.appendChild(grid);
+    return;
+  }
+
+  if(key === "skincare"){
+    panel.appendChild(el("div", {class:"eyebrow"}, "Skin"));
+    panel.appendChild(el("h1", {}, "What does your skin look like day to day?"));
+
+    panel.appendChild(el("label", {class:"flabel", style:"margin-top:4px;"}, "Skin type"));
+    const typeGrid = el("div", {class:"chip-grid"});
+    SKIN_TYPES.forEach(t => {
+      const chip = el("div", {class:"chip" + (state.skinType === t ? " sel" : "")}, t);
+      chip.addEventListener("click", () => { state.skinType = t; render(); });
+      typeGrid.appendChild(chip);
+    });
+    panel.appendChild(typeGrid);
+
+    panel.appendChild(el("label", {class:"flabel", style:"margin-top:20px;"}, "Skin concerns (optional, up to 3)"));
+    const concernGrid = el("div", {class:"chip-grid"});
+    SKIN_CONCERNS.forEach(c => {
+      const chip = el("div", {class:"chip" + (state.skinConcerns.includes(c) ? " sel" : "")}, c);
+      chip.addEventListener("click", () => { toggle(state.skinConcerns, c, 3); render(); });
+      concernGrid.appendChild(chip);
+    });
+    panel.appendChild(concernGrid);
+    panel.appendChild(el("div", {class:"count-hint"}, state.skinConcerns.length + " selected"));
+    return;
+  }
+
+  if(key === "biodata"){
+    panel.appendChild(el("div", {class:"eyebrow"}, "Optional · Go deeper"));
+    panel.appendChild(el("h1", {}, "Got data that could make this sharper?"));
+    panel.appendChild(el("p", {class:"sub"}, "Bring in a wearable export, a lab report, or a DNA file and we'll factor it in. None of this is required — your answers so far are already enough to build a formula."));
+
+    const TABS = [
+      {key:"device", label:"Device Data", hint:"Export from a wearable or health app — think steps, heart rate variability, sleep stages, resting heart rate.", accept:".csv,.json,.xml,.zip"},
+      {key:"healthcare", label:"Healthcare Records", hint:"A lab panel or clinical summary — bloodwork results, or a records export from your patient portal.", accept:".pdf,.csv,.xml,.json"},
+      {key:"genetic", label:"Genetic Data", hint:"A raw data file from a DNA testing service you've used, if you have one on hand.", accept:".txt,.csv,.zip"}
+    ];
+
+    const tabBar = el("div", {class:"tab-bar"});
+    TABS.forEach(t => {
+      const has = !!state.uploads[t.key];
+      const btn = el("button", {class:"tab-btn" + (state.activeUploadTab === t.key ? " active" : "")},
+        t.label,
+        has ? el("span", {class:"tab-dot"}, "") : ""
+      );
+      btn.addEventListener("click", () => { state.activeUploadTab = t.key; render(); });
+      tabBar.appendChild(btn);
+    });
+    panel.appendChild(tabBar);
+
+    const active = TABS.find(t => t.key === state.activeUploadTab);
+    const pane = el("div", {class:"tab-pane"});
+    pane.appendChild(el("p", {class:"tab-hint"}, active.hint));
+
+    const existing = state.uploads[active.key];
+    if(existing){
+      const filerow = el("div", {class:"file-row"});
+      filerow.appendChild(el("div", {class:"file-info"},
+        el("div", {class:"file-name"}, existing.name),
+        el("div", {class:"file-meta"}, existing.size)
+      ));
+      const rm = el("button", {class:"ing-remove", title:"Remove"}, "×");
+      rm.addEventListener("click", () => { state.uploads[active.key] = null; render(); });
+      filerow.appendChild(rm);
+      pane.appendChild(filerow);
+    } else {
+      const drop = el("label", {class:"dropzone"});
+      drop.appendChild(el("div", {class:"drop-label"}, "Tap to attach a file"));
+      drop.appendChild(el("div", {class:"drop-sub"}, "We take: " + active.accept));
+      const input = el("input", {type:"file", accept: active.accept, style:"display:none;"});
+      input.addEventListener("change", e => {
+        const f = e.target.files[0];
+        if(f){
+          state.uploads[active.key] = { name: f.name, size: formatSize(f.size) };
+          render();
+        }
+      });
+      drop.appendChild(input);
+      pane.appendChild(drop);
+    }
+    panel.appendChild(pane);
+
+    panel.appendChild(el("p", {class:"upload-note"},
+      "Anything you attach here is used only to fine-tune your formula, and handled under our privacy policy. Skipping this step entirely is completely fine."
+    ));
+    return;
+  }
+
+  if(key === "formulaName"){
+    panel.appendChild(el("div", {class:"eyebrow"}, "Last step, " + (state.name || "friend")));
+    panel.appendChild(el("h1", {}, "Give your formula a name."));
+    const field = el("div", {class:"field"});
+    const input = el("input", {type:"text", placeholder:"e.g. Morning Reset", value: state.formulaName});
+    input.addEventListener("input", e => { state.formulaName = e.target.value; syncButton("formulaName"); });
+    field.appendChild(input);
+    panel.appendChild(field);
+    return;
+  }
+
+  if(key === "result"){
+    if(!state.formula || goalsChanged()) rebuildFormula();
+    if(!state.skincare || skincareChanged()) buildSkincare();
+    renderResult(panel);
+    return;
+  }
+}
+
+function renderResult(panel){
+  panel.classList.add("result");
+  panel.style.textAlign = "left";
+  panel.appendChild(el("div", {class:"eyebrow", style:"text-align:center;"}, (state.name || "Friend") + ", here's what we built."));
+  const h = el("h1", {style:"text-align:center;"}, "“" + state.formulaName + "”");
+  panel.appendChild(h);
+  panel.appendChild(el("p", {class:"sub", style:"text-align:center;"}, "Drawn from the " + state.goals.length + " priorities you picked. Nothing here is final — nudge a dose, drop an ingredient, or add one, right on this screen."));
+  const editGoalsBtn = el("button", {class:"edit-link", style:"display:block; margin:0 auto 8px;"}, "Edit your goals");
+  editGoalsBtn.addEventListener("click", () => { jumpToEdit("goals"); });
+  panel.appendChild(editGoalsBtn);
+
+  const list = el("div", {class:"ingredient-list"});
+  const restrictions = state.hasRestrictions === "Yes" ? state.restrictions : [];
+  state.formula.forEach((ing, idx) => {
+    const conflicts = conflictsFor(ing.name, restrictions);
+    const row = el("div", {class:"ing-row" + (conflicts.length ? " ing-conflict" : "")});
+    const info = el("div", {class:"ing-info"});
+    info.appendChild(el("div", {class:"ing-name"}, ing.name));
+    info.appendChild(el("div", {class:"ing-from"}, "For: " + ing.from.join(", ")));
+    if(conflicts.length){
+      const warn = el("div", {class:"ing-warn"}, "⚠ Conflicts with " + conflicts.join(", "));
+      const conf = RESTRICTION_CONFLICTS[conflicts[0]];
+      if(conf && conf.substitute){
+        const sub = conf.substitute(ing.name);
+        const swapBtn = el("button", {class:"swap-btn"}, "Swap for " + sub.name);
+        swapBtn.addEventListener("click", () => { swapIngredient(idx, sub); });
+        const warnRow = el("div", {class:"ing-warn-row"}, warn, swapBtn);
+        info.appendChild(warnRow);
+      } else {
+        info.appendChild(warn);
+      }
+    }
+    row.appendChild(info);
+
+    const ctrl = el("div", {class:"ing-ctrl"});
+    const minus = el("button", {class:"stepper", onclick: () => { adjustDose(idx, -1); }}, "–");
+    const doseSpan = el("span", {class:"dose-val"}, ing.dose + " " + ing.unit);
+    const plus = el("button", {class:"stepper", onclick: () => { adjustDose(idx, 1); }}, "+");
+    ctrl.appendChild(minus); ctrl.appendChild(doseSpan); ctrl.appendChild(plus);
+    row.appendChild(ctrl);
+
+    const rm = el("button", {class:"ing-remove", title:"Remove", onclick: () => {
+      const removed = state.formula[idx];
+      state.formula.splice(idx,1);
+      if(removed.from.includes("Added by you")){
+        state.addedIngredients = state.addedIngredients.filter(a => a.name !== removed.name);
+      } else if(!state.removedNames.includes(removed.name)){
+        state.removedNames.push(removed.name);
+      }
+      delete state.doseOverrides[removed.name];
+      render();
+    }}, "×");
+    row.appendChild(rm);
+    list.appendChild(row);
+  });
+  panel.appendChild(list);
+
+  // Add ingredient control
+  const addWrap = el("div", {class:"add-wrap"});
+  const addSel = el("select", {class:"add-select"});
+  addSel.appendChild(el("option", {value:""}, "+ Add an ingredient…"));
+  EXTRA_INGREDIENTS.filter(e => !state.formula.some(f => f.name === e.n)).forEach(e => {
+    addSel.appendChild(el("option", {value: e.n}, e.n + " · " + e.d + e.u));
+  });
+  addSel.addEventListener("change", ev => {
+    const chosen = EXTRA_INGREDIENTS.find(e => e.n === ev.target.value);
+    if(chosen){
+      state.removedNames = state.removedNames.filter(n => n !== chosen.n);
+      if(!state.addedIngredients.some(a => a.name === chosen.n)){
+        state.addedIngredients.push({ name: chosen.n, dose: chosen.d, unit: chosen.u });
+      }
+      state.formula.push({name: chosen.n, dose: chosen.d, unit: chosen.u, from: ["Added by you"]});
+      render();
+    }
+  });
+  addWrap.appendChild(addSel);
+  panel.appendChild(addWrap);
+
+  // --- Skincare recommendations ---
+  panel.appendChild(el("div", {class:"section-divider"}));
+  panel.appendChild(el("h2", {class:"section-title"}, "Your skincare routine"));
+  panel.appendChild(el("p", {class:"sub", style:"margin-bottom:14px;"},
+    "Matched to " + (state.skinType || "your skin") + " skin" + (state.skinConcerns.length ? " and " + state.skinConcerns.join(", ").toLowerCase() : "") + "."
+  ));
+
+  if(state.skincare.length === 0){
+    panel.appendChild(el("p", {class:"tab-hint"}, "No skincare picks yet — add a skin type on the skincare step to see recommendations here."));
+  } else {
+    const skinList = el("div", {class:"ingredient-list"});
+    state.skincare.forEach((item, idx) => {
+      const row = el("div", {class:"ing-row"});
+      const info = el("div", {class:"ing-info"});
+      info.appendChild(el("div", {class:"ing-name"}, item.name));
+      info.appendChild(el("div", {class:"ing-from"}, item.note + " · For: " + item.from.join(", ")));
+      row.appendChild(info);
+      const rm = el("button", {class:"ing-remove", title:"Remove"}, "×");
+      rm.addEventListener("click", () => {
+        if(!state.removedSkincareNames.includes(item.name)) state.removedSkincareNames.push(item.name);
+        state.skincare.splice(idx,1);
+        render();
+      });
+      row.appendChild(rm);
+      skinList.appendChild(row);
+    });
+    panel.appendChild(skinList);
+  }
+
+  const editSkinBtn = el("button", {class:"edit-link", style:"margin-top:10px;"}, "Edit skin type & concerns");
+  editSkinBtn.addEventListener("click", () => { jumpToEdit("skincare"); });
+  panel.appendChild(editSkinBtn);
+  panel.appendChild(el("div", {class:"section-divider"}));
+
+  const card = el("dl", {class:"result-card"});
+  const addRow = (t, v, stepKey) => {
+    const dtRow = el("div", {class:"result-dt-row"});
+    dtRow.appendChild(el("dt", {}, t));
+    if(stepKey){
+      const editBtn = el("button", {class:"edit-link"}, "Edit");
+      editBtn.addEventListener("click", () => { jumpToEdit(stepKey); });
+      dtRow.appendChild(editBtn);
+    }
+    card.appendChild(dtRow);
+    card.appendChild(el("dd", {}, v || "—"));
+  };
+  addRow("Email for this formula", state.email, "email");
+  addRow("Ships to", state.country, "country");
+  addRow("Dietary restrictions", state.hasRestrictions === "Yes" ? state.restrictions.join(", ") : "None", "restrictions");
+  addRow("Diet type", state.dietType, "dietType");
+  const uploadedLabels = { device: "Device data", healthcare: "Healthcare records", genetic: "Genetic data" };
+  const uploaded = Object.keys(state.uploads).filter(k => state.uploads[k]).map(k => uploadedLabels[k]);
+  addRow("Connected data", uploaded.length ? uploaded.join(", ") : "None uploaded", "biodata");
+  panel.appendChild(card);
+
+  const actions = el("div", {style:"display:flex; gap:12px; margin-top:22px; flex-wrap:wrap;"});
+  const restart = el("button", {class:"btn-back", onclick: () => {
+    Object.assign(state, {step:0,name:"",sex:"",birthMonth:"",goals:[],email:"",country:"",diet:[],lifestyle:[],sleep:[],hasRestrictions:null,restrictions:[],dietType:"",formulaName:"",formula:null,formulaGoals:[],removedNames:[],doseOverrides:{},addedIngredients:[],activeUploadTab:"device",uploads:{device:null,healthcare:null,genetic:null},editReturn:false,skinType:"",skinConcerns:[],skincare:null,skincareProfile:{type:"",concerns:[]},removedSkincareNames:[]});
+    render();
+  }}, "← Start over");
+  const confirm = el("button", {class:"btn-next"}, "Confirm formula →");
+  actions.appendChild(restart);
+  actions.appendChild(confirm);
+  panel.appendChild(actions);
+}
+
+function jumpToEdit(stepKey){
+  state.editReturn = true;
+  state.step = steps.indexOf(stepKey);
+  render();
+}
+
+function adjustDose(idx, dir){
+  const ing = state.formula[idx];
+  const step = ing.dose >= 1000 ? 100 : ing.dose >= 100 ? 25 : ing.dose >= 10 ? 5 : 1;
+  ing.dose = Math.max(step, ing.dose + dir * step);
+  state.doseOverrides[ing.name] = ing.dose;
+  render();
+}
+
+function swapIngredient(idx, sub){
+  const old = state.formula[idx];
+  if(!state.removedNames.includes(old.name)) state.removedNames.push(old.name);
+  delete state.doseOverrides[old.name];
+  state.addedIngredients = state.addedIngredients.filter(a => a.name !== old.name);
+  if(!state.addedIngredients.some(a => a.name === sub.name)){
+    state.addedIngredients.push({ name: sub.name, dose: sub.dose, unit: sub.unit });
+  }
+  state.formula[idx] = { name: sub.name, dose: sub.dose, unit: sub.unit, from: old.from.filter(f => f !== "Added by you").concat(["Added by you"]) };
+  render();
+}
+
+function syncButton(){
+  const footer = document.querySelector("footer.nav");
+  if(!footer) return;
+  const next = footer.querySelector(".btn-next");
+  if(next) next.disabled = !isValid(steps[state.step]);
+}
+
+render();
+</script>
+</body>
+</html>
