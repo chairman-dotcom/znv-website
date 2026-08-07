@@ -195,6 +195,45 @@ p { margin: 0; }
 .hero-note { font-family: var(--font-mono); font-size: 11.5px; color: #92a091; margin-top: 34px; letter-spacing: 0.03em; }
 
 .hero-graphic { position: relative; }
+.hero-hologram { min-height: 480px; }
+.holo-perspective {
+  position: relative; width: 100%; height: 100%; min-height: 480px;
+  display: flex; align-items: center; justify-content: center;
+  perspective: 1100px;
+}
+.holo-rotator {
+  transform-style: preserve-3d;
+  animation: holoSpin 18s linear infinite, holoFlicker 6.5s ease-in-out infinite;
+}
+@keyframes holoSpin {
+  from { transform: rotateY(0deg); }
+  to   { transform: rotateY(360deg); }
+}
+@keyframes holoFlicker {
+  0%, 100% { opacity: 1; }
+  42% { opacity: 1; }
+  43% { opacity: 0.62; }
+  44% { opacity: 1; }
+  71% { opacity: 1; }
+  71.5% { opacity: 0.7; }
+  72.5% { opacity: 1; }
+}
+.holo-jitter { animation: holoVibrate 0.22s steps(3) infinite; }
+@keyframes holoVibrate {
+  0%   { transform: translate(0px, 0px); }
+  33%  { transform: translate(0.7px, -0.5px); }
+  66%  { transform: translate(-0.6px, 0.6px); }
+  100% { transform: translate(0px, 0px); }
+}
+.holo-jitter .tree-svg { width: min(30vw, 460px); height: auto; overflow: visible; display: block; }
+@keyframes holoRingBreath {
+  0%, 100% { opacity: 0.42; }
+  50% { opacity: 0.18; }
+}
+@keyframes nodePulse {
+  0%, 100% { opacity: 0.75; }
+  50% { opacity: 1; }
+}
 .hero-graphic svg { width: 100%; height: auto; }
 .node { transform-origin: center; }
 .draw-path {
@@ -382,6 +421,7 @@ p { margin: 0; }
 .am-text { font-family: var(--font-display); font-size: 1.05rem; font-weight: 600; letter-spacing: 0.01em; }
 
 .shop-featured { margin-top: 8px; }
+.shop-card-featured + .shop-card-featured { margin-top: 24px; }
 .shop-card-featured {
   display: grid; grid-template-columns: 0.85fr 1.15fr; gap: 0; overflow: hidden;
   background: var(--forest-800); border-radius: 6px; border: 1px solid var(--line-dark);
@@ -453,6 +493,9 @@ p { margin: 0; }
 @media (max-width: 980px) {
   .hero .wrap { grid-template-columns: 1fr; }
   .hero-graphic { order: -1; max-width: 340px; margin: 0 auto 20px; }
+  .hero-hologram { min-height: 0; }
+  .holo-perspective { min-height: 0; }
+  .holo-jitter .tree-svg { width: min(70vw, 340px); }
   .hero { padding: 150px 0 80px; }
   .stat-block, .engine-grid, .impact-grid, .product-grid { grid-template-columns: 1fr; gap: 40px; }
   .domain-grid, .pillar-grid { grid-template-columns: 1fr; }
