@@ -51,3 +51,26 @@ if (form) {
     }
   });
 }
+
+// Apothecary — size selector (front-end only, swaps active state)
+document.querySelectorAll('.shop-size-row').forEach((row) => {
+  row.querySelectorAll('.shop-size-btn').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      row.querySelectorAll('.shop-size-btn').forEach((b) => b.classList.remove('is-active'));
+      btn.classList.add('is-active');
+    });
+  });
+});
+
+// Apothecary — add to cart (front-end only stub, no real cart/checkout)
+document.querySelectorAll('.add-to-cart').forEach((btn) => {
+  const original = btn.innerHTML;
+  btn.addEventListener('click', () => {
+    btn.classList.add('is-added');
+    btn.innerHTML = 'Added ✓';
+    setTimeout(() => {
+      btn.classList.remove('is-added');
+      btn.innerHTML = original;
+    }, 1800);
+  });
+});

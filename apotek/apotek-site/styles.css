@@ -175,7 +175,7 @@ p { margin: 0; }
 .btn-primary { background: var(--mint-400); color: var(--forest-900); }
 .btn-primary:hover { background: var(--mint-500); transform: translateY(-2px); }
 .btn-ghost { background: transparent; border-color: var(--line-dark); color: var(--paper-100); }
-.on-paper .btn-ghost { border-color: var(--ink-900); color: var(--ink-900); }
+.on-paper .btn-ghost, .on-paper-alt .btn-ghost { border-color: var(--ink-900); color: var(--ink-900); }
 .btn-ghost:hover { border-color: var(--mint-400); color: var(--mint-400); }
 .btn-arrow { transition: transform 0.2s var(--ease); }
 .btn:hover .btn-arrow { transform: translateX(3px); }
@@ -349,6 +349,75 @@ p { margin: 0; }
 .footer-links a:hover { color: var(--mint-400); }
 .footer-copy { font-family: var(--font-mono); font-size: 11px; color: #6c7a69; }
 
+/* ---------- Hero product (Skin Manna) ---------- */
+.product-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; }
+.product-media { border-radius: 6px; overflow: hidden; box-shadow: var(--shadow-card); }
+.product-media img { width: 100%; height: auto; display: block; }
+.product-feature-list { display: flex; flex-direction: column; gap: 18px; margin: 26px 0 0; padding: 0; }
+.product-feature-list li { list-style: none; display: flex; gap: 14px; align-items: flex-start; font-size: 14px; color: var(--ink-600); line-height: 1.5; }
+.product-feature-list .pf-icon {
+  width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--line-light);
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: var(--mint-600);
+}
+.product-feature-list .pf-icon svg { width: 15px; height: 15px; }
+.size-row { display: flex; gap: 12px; margin: 30px 0 0; }
+.size-chip {
+  flex: 1; text-align: center; border: 1px solid var(--line-light); border-radius: 4px;
+  padding: 12px 8px; background: var(--paper-050);
+}
+.size-chip .sz-val { display: block; font-family: var(--font-display); font-size: 1.2rem; color: var(--ink-900); }
+.size-chip .sz-label { display: block; font-family: var(--font-mono); font-size: 9.5px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-600); margin-top: 4px; }
+.product-included { margin-top: 26px; font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.04em; color: var(--ink-600); }
+
+/* ---------- The Apothecary (store) ---------- */
+.apothecary-mark {
+  display: inline-flex; align-items: center; gap: 12px; margin-bottom: 36px;
+  padding: 10px 20px 10px 14px; border: 1px solid var(--line-dark); border-radius: 30px;
+}
+.am-icon {
+  width: 30px; height: 30px; border-radius: 50%; background: var(--mint-400);
+  display: flex; align-items: center; justify-content: center; color: var(--forest-900); flex-shrink: 0;
+}
+.am-icon svg { width: 15px; height: 15px; }
+.am-text { font-family: var(--font-display); font-size: 1.05rem; font-weight: 600; letter-spacing: 0.01em; }
+
+.shop-featured { margin-top: 8px; }
+.shop-card-featured {
+  display: grid; grid-template-columns: 0.85fr 1.15fr; gap: 0; overflow: hidden;
+  background: var(--forest-800); border-radius: 6px; border: 1px solid var(--line-dark);
+}
+.shop-media { background: var(--paper-050); }
+.shop-media img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.shop-body { padding: 40px; }
+.shop-brand { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--cyan-400); }
+.shop-card-featured .shop-body h3 { font-family: var(--font-display); font-size: 1.5rem; color: var(--paper-100); margin: 10px 0 14px; }
+.shop-card-featured .shop-body p { font-size: 14px; color: #b7c2b5; line-height: 1.55; margin: 0; }
+.shop-size-row { display: flex; gap: 10px; margin-top: 24px; flex-wrap: wrap; }
+.shop-size-btn {
+  font-family: var(--font-mono); font-size: 12px; padding: 10px 14px; border-radius: 3px;
+  border: 1px solid var(--line-dark); background: transparent; color: #b7c2b5;
+  transition: border-color 0.2s var(--ease), color 0.2s var(--ease);
+}
+.shop-size-btn:hover { border-color: var(--mint-400); color: var(--paper-100); }
+.shop-size-btn.is-active { border-color: var(--mint-400); color: var(--mint-400); background: rgba(31, 158, 111, 0.1); }
+
+.shop-subhead { margin-top: 64px; margin-bottom: 24px; }
+.shop-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 22px; }
+.shop-grid .shop-card {
+  background: var(--forest-800); border: 1px solid var(--line-dark); border-radius: 4px;
+  padding: 26px 24px; display: flex; flex-direction: column;
+}
+.shop-cat { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--cyan-400); }
+.shop-grid h3 { font-family: var(--font-display); font-size: 1.15rem; color: var(--paper-100); margin: 10px 0 2px; }
+.shop-brand-sm { font-family: var(--font-mono); font-size: 11px; color: #8fa89b; }
+.shop-grid p { font-size: 13px; color: #b7c2b5; line-height: 1.5; margin: 12px 0 0; flex: 1; }
+.shop-foot { display: flex; align-items: center; justify-content: space-between; margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--line-dark); }
+.shop-price { font-family: var(--font-mono); font-size: 15px; color: var(--paper-100); }
+.shop-foot .btn-ghost { padding: 8px 14px; font-size: 11px; }
+.add-to-cart.is-added { background: var(--mint-500) !important; color: var(--forest-900) !important; border-color: var(--mint-500) !important; }
+.shop-note { margin-top: 40px; font-size: 13px; color: #8fa89b; text-align: center; }
+.shop-note-link { color: var(--mint-400); text-decoration: underline; text-underline-offset: 2px; }
+
 /* ---------- Quiz promo (Try It Yourself) ---------- */
 .quiz-feature-list { display: flex; flex-direction: column; gap: 14px; margin: 28px 0 0; padding: 0; }
 .quiz-feature-list li { list-style: none; display: flex; gap: 12px; font-size: 14px; color: #b7c2b5; line-height: 1.5; }
@@ -385,7 +454,7 @@ p { margin: 0; }
   .hero .wrap { grid-template-columns: 1fr; }
   .hero-graphic { order: -1; max-width: 340px; margin: 0 auto 20px; }
   .hero { padding: 150px 0 80px; }
-  .stat-block, .engine-grid, .impact-grid { grid-template-columns: 1fr; gap: 40px; }
+  .stat-block, .engine-grid, .impact-grid, .product-grid { grid-template-columns: 1fr; gap: 40px; }
   .domain-grid, .pillar-grid { grid-template-columns: 1fr; }
   .ritual-grid { grid-template-columns: 1fr; }
   .dosage-strip { grid-template-columns: 1fr; }
@@ -393,10 +462,16 @@ p { margin: 0; }
   .nav-cta { display: none; }
   .nav-toggle { display: block; }
   .quiz-preview-card { max-width: 100%; }
+  .product-media { order: -1; }
+  .shop-grid { grid-template-columns: repeat(2, 1fr); }
+  .shop-card-featured { grid-template-columns: 1fr; }
+  .shop-media { height: 260px; }
 }
 @media (max-width: 560px) {
   .wrap { padding: 0 20px; }
   .waitlist-form { flex-direction: column; }
   .section-pad { padding: 80px 0; }
   .price-card { padding: 36px 26px; }
+  .shop-grid { grid-template-columns: 1fr; }
+  .shop-body { padding: 28px 24px; }
 }
