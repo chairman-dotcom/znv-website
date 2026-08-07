@@ -17,11 +17,12 @@
   <div class="nav-links" id="navLinks">
     <a href="#solution">Solution</a>
     <a href="#engine">How it works</a>
+    <a href="quiz.html">Take the Quiz</a>
     <a href="#ritual">The Ritual</a>
     <a href="#pricing">Pricing</a>
     <a href="#impact">Impact</a>
   </div>
-  <a href="#join" class="nav-cta">Join the waitlist</a>
+  <a href="quiz.html" class="nav-cta">Take the quiz</a>
   <button class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false">
     <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path class="bar bar-top" d="M3 6h16"/><path class="bar bar-mid" d="M3 11h16"/><path class="bar bar-bot" d="M3 16h16"/></svg>
   </button>
@@ -29,10 +30,11 @@
 <div class="mobile-menu" id="mobileMenu">
   <a href="#solution">Solution</a>
   <a href="#engine">How it works</a>
+  <a href="quiz.html">Take the Quiz</a>
   <a href="#ritual">The Ritual</a>
   <a href="#pricing">Pricing</a>
   <a href="#impact">Impact</a>
-  <a href="#join" class="btn btn-primary" style="margin-top:12px;justify-content:center;">Join the waitlist</a>
+  <a href="quiz.html" class="btn btn-primary" style="margin-top:12px;justify-content:center;">Take the ritual quiz</a>
 </div>
 
 <!-- ============ HERO ============ -->
@@ -42,7 +44,7 @@
       <h1>Your biology.<br>Your regimen.<br><em>Powered by AI.</em></h1>
       <p class="lede">Apotek unifies internal health, skincare, and recovery into a single adaptive daily ritual — formulated for you, refined every month by a personalization engine that models your whole system at once.</p>
       <div class="hero-actions">
-        <a href="#join" class="btn btn-primary">Join the waitlist <span class="btn-arrow">→</span></a>
+        <a href="quiz.html" class="btn btn-primary">Take the ritual quiz <span class="btn-arrow">→</span></a>
         <a href="#engine" class="btn btn-ghost">See how it works</a>
       </div>
       <p class="hero-note">GMP-CERTIFIED FORMULATION · PATENT-PROTECTED PERSONALIZATION ENGINE</p>
@@ -162,6 +164,39 @@
   </div>
 </section>
 
+<!-- ============ TRY THE QUIZ ============ -->
+<section class="on-dark section-pad" id="try-quiz">
+  <div class="wrap engine-grid">
+    <div class="reveal">
+      <span class="eyebrow">Try It Yourself</span>
+      <h2>Build your formula, live.</h2>
+      <p class="lede" style="margin-top:22px;">Answer a few honest questions about your goals, lifestyle, and skin. Watch your formula assemble in real time, then adjust every dose or swap any ingredient before you commit to anything.</p>
+      <ul class="quiz-feature-list">
+        <li>Editable ingredient list — nudge doses or remove anything, instantly</li>
+        <li>Automatic allergy-conflict detection, with one-tap swaps</li>
+        <li>A matched skincare routine generated alongside your formula</li>
+      </ul>
+      <div class="hero-actions" style="margin-top:32px;">
+        <a href="quiz.html" class="btn btn-primary">Take the ritual quiz <span class="btn-arrow">→</span></a>
+      </div>
+      <p class="hero-note">~3 MINUTES · NO ACCOUNT REQUIRED</p>
+    </div>
+    <div class="reveal">
+      <div class="quiz-preview-card">
+        <div class="qp-head">
+          <span class="qp-mark">The Ritual <b>Wizard</b></span>
+          <span class="qp-no">Nº 001</span>
+        </div>
+        <div class="qp-track"><div class="qp-track-fill"></div></div>
+        <div class="qp-title">"Morning Reset"</div>
+        <div class="qp-row"><span>Lion's Mane Extract</span><span class="qp-dose">500 mg</span></div>
+        <div class="qp-row"><span>Omega-3 (DHA)</span><span class="qp-dose">400 mg</span></div>
+        <div class="qp-row qp-row-alert"><span>Vitamin D3</span><span class="qp-dose">2000 IU</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- ============ RITUAL ============ -->
 <section class="on-paper section-pad" id="ritual">
   <div class="wrap">
@@ -227,7 +262,7 @@
           <li>Monthly AI re-tuning + practitioner review</li>
           <li>Direct access to licensed telehealth practitioners</li>
         </ul>
-        <a href="#join" class="btn btn-primary" style="width:100%;justify-content:center;">Start your regimen</a>
+        <a href="quiz.html" class="btn btn-primary" style="width:100%;justify-content:center;">Build your formula</a>
       </div>
     </div>
   </div>
@@ -253,12 +288,16 @@
 <!-- ============ CTA ============ -->
 <section class="on-dark cta-section" id="join">
   <div class="wrap">
-    <span class="eyebrow" style="justify-content:center;">Join The Waitlist</span>
+    <span class="eyebrow" style="justify-content:center;">Get Started</span>
     <h2>Be first to start your regimen.</h2>
-    <p class="lede">Early access opens in phases — join now to secure your intake slot and founding-member pricing.</p>
-    <form class="waitlist-form" onsubmit="return false;">
+    <p class="lede">Build your formula in about 3 minutes — see every ingredient and dose before you commit to anything.</p>
+    <div class="hero-actions" style="justify-content:center; margin-top: 6px;">
+      <a href="quiz.html" class="btn btn-primary">Take the ritual quiz <span class="btn-arrow">→</span></a>
+    </div>
+    <p class="form-note" style="margin-top:36px;">Not ready yet? Join the waitlist instead.</p>
+    <form class="waitlist-form" onsubmit="return false;" style="margin-top:14px;">
       <input type="email" placeholder="you@email.com" required aria-label="Email address">
-      <button type="submit" class="btn btn-primary">Join <span class="btn-arrow">→</span></button>
+      <button type="submit" class="btn btn-ghost">Join <span class="btn-arrow">→</span></button>
     </form>
     <p class="form-note">No spam. One email when your intake slot opens.</p>
   </div>
@@ -270,6 +309,7 @@
     <div class="footer-links">
       <a href="#solution">Solution</a>
       <a href="#engine">How it works</a>
+      <a href="quiz.html">Take the Quiz</a>
       <a href="#pricing">Pricing</a>
       <a href="#impact">Impact</a>
     </div>

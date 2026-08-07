@@ -174,7 +174,7 @@ p { margin: 0; }
 }
 .btn-primary { background: var(--mint-400); color: var(--forest-900); }
 .btn-primary:hover { background: var(--mint-500); transform: translateY(-2px); }
-.btn-ghost { border-color: var(--line-dark); color: var(--paper-100); }
+.btn-ghost { background: transparent; border-color: var(--line-dark); color: var(--paper-100); }
 .on-paper .btn-ghost { border-color: var(--ink-900); color: var(--ink-900); }
 .btn-ghost:hover { border-color: var(--mint-400); color: var(--mint-400); }
 .btn-arrow { transition: transform 0.2s var(--ease); }
@@ -349,6 +349,30 @@ p { margin: 0; }
 .footer-links a:hover { color: var(--mint-400); }
 .footer-copy { font-family: var(--font-mono); font-size: 11px; color: #6c7a69; }
 
+/* ---------- Quiz promo (Try It Yourself) ---------- */
+.quiz-feature-list { display: flex; flex-direction: column; gap: 14px; margin: 28px 0 0; padding: 0; }
+.quiz-feature-list li { list-style: none; display: flex; gap: 12px; font-size: 14px; color: #b7c2b5; line-height: 1.5; }
+.quiz-feature-list li::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--cyan-400); margin-top: 7px; flex-shrink: 0; }
+.quiz-preview-card {
+  background: var(--paper-050); border: 1px solid var(--line-light); border-radius: 4px;
+  padding: 26px 26px 22px; box-shadow: var(--shadow-card); position: relative; max-width: 400px;
+}
+.quiz-preview-card::before {
+  content: ""; position: absolute; top: 0; left: 0; right: 0; height: 5px; border-radius: 4px 4px 0 0;
+  background-image: repeating-linear-gradient(90deg, var(--mint-400) 0 14px, var(--violet-400) 14px 16px);
+}
+.qp-head { display: flex; justify-content: space-between; align-items: baseline; margin-top: 10px; }
+.qp-mark { font-family: var(--font-display); font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-900); }
+.qp-mark b { color: var(--mint-600); }
+.qp-no { font-family: var(--font-mono); font-size: 10px; color: var(--ink-600); }
+.qp-track { height: 3px; background: var(--line-light); border-radius: 2px; margin-top: 14px; overflow: hidden; }
+.qp-track-fill { height: 100%; width: 62%; background: var(--mint-600); }
+.qp-title { font-family: var(--font-display); font-size: 1.3rem; color: var(--ink-900); margin: 20px 0 14px; }
+.qp-row { display: flex; justify-content: space-between; align-items: center; padding: 11px 0; border-top: 1px solid var(--line-light); font-size: 13px; color: var(--ink-900); }
+.qp-row .qp-dose { font-family: var(--font-mono); font-size: 12px; color: var(--ink-600); }
+.qp-row-alert { background: rgba(193, 122, 63, 0.08); margin: 0 -26px; padding-left: 26px; padding-right: 26px; }
+.qp-row-alert .qp-dose { color: #a2632f; }
+
 /* ---------- Reveal on scroll ---------- */
 .reveal { opacity: 0; transform: translateY(22px); transition: opacity 0.7s var(--ease), transform 0.7s var(--ease); }
 .reveal.in { opacity: 1; transform: translateY(0); }
@@ -368,6 +392,7 @@ p { margin: 0; }
   .nav-links { display: none; }
   .nav-cta { display: none; }
   .nav-toggle { display: block; }
+  .quiz-preview-card { max-width: 100%; }
 }
 @media (max-width: 560px) {
   .wrap { padding: 0 20px; }
