@@ -203,6 +203,23 @@
   .rank-bar-track{width:140px;background:var(--line);border-radius:4px;height:10px;overflow:hidden;flex-shrink:0;}
   .rank-bar-fill{height:100%;border-radius:4px;background:var(--emerald);}
   .rank-score{font-family:var(--font-mono);font-size:12px;color:var(--ink-soft);width:42px;text-align:right;flex-shrink:0;}
+
+  .agent-trace{display:flex;flex-direction:column;gap:8px;margin-top:14px;}
+  .agent-step{display:flex;gap:12px;font-size:12.5px;padding:8px 10px;background:#fff;border:1px solid var(--line);border-radius:6px;animation:feedin .3s ease;}
+  .agent-step-tag{font-family:var(--font-mono);color:var(--ink-soft);flex-shrink:0;}
+
+  .draft-card{background:#fff;border:1px solid var(--line);border-left:3px solid var(--teal);border-radius:8px;padding:16px 18px;margin-top:14px;animation:feedin .35s ease;}
+  .draft-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;flex-wrap:wrap;gap:8px;}
+  .draft-to{font-size:12.5px;color:var(--ink-soft);}
+  .draft-subject{font-weight:600;font-size:14px;margin-bottom:8px;}
+  .draft-body{font-size:13.5px;color:var(--ink);line-height:1.6;}
+  .badge-draft{font-family:var(--font-mono);font-size:10.5px;background:var(--rust-light);color:var(--rust);padding:2px 9px;border-radius:10px;white-space:nowrap;}
+
+  .agent-row{display:flex;align-items:center;gap:12px;padding:9px 0;border-bottom:1px solid var(--line);font-size:12.5px;flex-wrap:wrap;}
+  .agent-row:last-child{border-bottom:none;}
+  .agent-name{font-weight:600;width:170px;flex-shrink:0;}
+  .agent-party{font-family:var(--font-mono);font-size:10.5px;background:var(--teal-light);color:var(--teal);padding:2px 8px;border-radius:10px;flex-shrink:0;white-space:nowrap;}
+  .agent-desc{flex:1;color:var(--ink-soft);min-width:200px;}
   .btn-copy{font-family:var(--font-body);font-size:12.5px;background:var(--emerald);color:#fff;border:none;padding:7px 14px;border-radius:16px;cursor:pointer;}
   .btn-copy:hover{opacity:.9;}
 
@@ -281,6 +298,7 @@
     <button class="tab-btn" data-tab="sectors">Sectors</button>
     <button class="tab-btn" data-tab="verification">Verification</button>
     <button class="tab-btn" data-tab="casestudy">Case study: mangroves</button>
+    <button class="tab-btn" data-tab="agents">Agents</button>
     <button class="tab-btn" data-tab="donors">Donors &amp; funding</button>
     <button class="tab-btn" data-tab="briefings">Briefings</button>
   </nav>
@@ -423,6 +441,44 @@
     <div class="verdict">A verification layer like this doesn't change how many mangroves get planted — it changes whether the Board can say, with evidence, how many survived. That's the difference between a planting count and an impact number.</div>
   </section>
 
+  <section id="tab-agents" class="tab-panel">
+    <div class="panel">
+      <h2>How agents would work together</h2>
+      <p class="desc">Specialized agents, each responsible for one relationship, coordinated by a router. Every outbound message is a draft — an agent never contacts a donor, affiliate, or field team without a human approving it first.</p>
+    </div>
+
+    <div class="panel">
+      <h2>Run the workflow</h2>
+      <p class="desc">Traces the Al Zorah flag from detection through to two drafted outreach messages.</p>
+      <button class="btn-play" id="run-workflow-btn" onclick="runWorkflow()">&#9654; Run the agent workflow</button>
+      <div class="agent-trace" id="agent-trace"></div>
+
+      <div class="draft-card" id="draft-fieldops" style="display:none;">
+        <div class="draft-head">
+          <span class="draft-to">Field-ops agent &rarr; IFHC field coordinator, Al Zorah</span>
+          <span class="badge-draft">Draft &mdash; pending sign-off</span>
+        </div>
+        <div class="draft-subject">Site check requested — Al Zorah canopy zone</div>
+        <div class="draft-body">Canopy confidence at Al Zorah has dropped from 94% to 88% over the last three satellite passes, and verified survival is now the lowest in the network at 49%. Could someone take a look this week? Full detection detail is in the portfolio dashboard.</div>
+      </div>
+
+      <div class="draft-card" id="draft-donor" style="display:none;">
+        <div class="draft-head">
+          <span class="draft-to">Donor-relations agent &rarr; Donor group C</span>
+          <span class="badge-draft">Draft &mdash; pending sign-off</span>
+        </div>
+        <div class="draft-subject">A quick heads-up on the Al Zorah mangrove zone</div>
+        <div class="draft-body">Wanted to flag this proactively: monitoring has picked up a decline in canopy confidence at Al Zorah, one of the zones tied to your energy &amp; climate commitment. We're sending a field team to confirm and will follow up with what we find — wanted you hearing it from us first, not in a quarterly report.</div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2>The agent roster</h2>
+      <p class="desc">Who talks to whom, and what triggers them.</p>
+      <div id="agent-roster"></div>
+    </div>
+  </section>
+
   <section id="tab-donors" class="tab-panel">
     <div class="panel">
       <h2>Where donors already overlap</h2>
@@ -431,6 +487,20 @@
         <div class="matrix" id="matrix"></div>
       </div>
       <p class="matrix-caption">Illustrative: across the full donor set, roughly 22 of 90+ relationships already fund more than one sector — the sample above is for illustration, not statistically representative.</p>
+    </div>
+
+    <div class="panel">
+      <h2>Beyond Erth Zayed's own donors — a network other funders could join</h2>
+      <p class="desc">Everything above is built for Erth Zayed's own 90+ donors. The verification layer underneath it doesn't have to stay Erth Zayed's alone.</p>
+      <span class="badge badge-proposed" style="display:inline-block;margin-bottom:16px;">Proposed capability</span>
+      <div id="network-systems"></div>
+    </div>
+
+    <div class="panel">
+      <h2>Network growth, if Erth Zayed leads it</h2>
+      <p class="desc">Illustrative adoption curve — Erth Zayed as the founding member of a regional verification standard, not just another user of one.</p>
+      <div id="network-growth"></div>
+      <div class="verify-stat" style="margin-top:14px;">For the firm delivering this: it's the difference between a single engagement and becoming the infrastructure other regional philanthropies eventually license — with Erth Zayed positioned as the reference client, not just a customer.</div>
     </div>
   </section>
 
@@ -723,6 +793,51 @@
     });
   });
 
+  // Beyond Erth Zayed: network-effect systems for other philanthropies
+  const networkSystems=[
+    {name:"Verified Impact Passport",
+     pitch:"A reusable trust credential — verify once, trust everywhere.",
+     method:"Once a grantee or field site is AI-verified through this system, any participating funder can rely on that verification instead of re-auditing independently. The same idea a KYC utility applies in banking, applied to grant due diligence.",
+     stat:"Illustrative: a shared passport could cut duplicate site-verification costs by an estimated 30&ndash;40% across a 10-funder network."},
+    {name:"Cross-funder benchmark",
+     pitch:"See how your verified outcomes compare, without exposing your numbers.",
+     method:"Participating philanthropies opt in to an anonymized comparison layer — verified survival rates, completion rates, donor diversification — blinded by organization. Erth Zayed's 64% mangrove survival could sit against a regional benchmark instead of standing alone.",
+     stat:"Illustrative: comparison is usually the strongest recruiting tool — nobody wants to be the one foundation not in the benchmark."},
+    {name:"Co-funding match engine",
+     pitch:"The donor-overlap idea, pointed outward instead of inward.",
+     method:"The same matching logic that finds overlap among Erth Zayed's own 90+ donors could scan participating funders' stated interests against Erth Zayed-verified initiatives — surfacing external funders willing to co-invest once they can see independent verification, not just a grant report.",
+     stat:"Illustrative: verified initiatives are easier to co-fund — the verification layer becomes the credibility that unlocks outside capital."},
+    {name:"Verification-as-a-service",
+     pitch:"The infrastructure itself, licensed to funders who can't build it alone.",
+     method:"Smaller foundations without the scale to stand up satellite and acoustic monitoring in-house could subscribe to the same verification layer built for Erth Zayed — with Erth Zayed positioned as the founding reference deployment, not just a customer.",
+     stat:"This is the literal mechanism by which other philanthropic organizations end up running on this system."}
+  ];
+  const netSysEl=document.getElementById('network-systems');
+  if(netSysEl){
+    netSysEl.innerHTML=networkSystems.map(s=>`
+      <div class="verify-card">
+        <div class="verify-head"><span class="verify-title">${s.name}</span></div>
+        <p class="verify-method" style="font-weight:600;color:var(--ink);margin-bottom:6px;">${s.pitch}</p>
+        <p class="verify-method">${s.method}</p>
+        <div class="verify-stat">${s.stat}</div>
+      </div>`).join('');
+  }
+  const networkGrowth=[
+    {label:"Year 1 — Erth Zayed, founding member", count:1},
+    {label:"Year 2 — +4 regional partners", count:5},
+    {label:"Year 3 — +9 more", count:14}
+  ];
+  const netGrowthEl=document.getElementById('network-growth');
+  if(netGrowthEl){
+    const maxCount=networkGrowth[networkGrowth.length-1].count;
+    netGrowthEl.innerHTML=networkGrowth.map(g=>`
+      <div class="rank-row">
+        <span class="rank-name">${g.label}</span>
+        <div class="rank-bar-track"><div class="rank-bar-fill" style="width:${(g.count/maxCount*100).toFixed(0)}%"></div></div>
+        <span class="rank-score">${g.count}</span>
+      </div>`).join('');
+  }
+
   // Timeline
   const tlEl=document.getElementById('timeline');
   timeline.forEach(t=>{
@@ -968,6 +1083,60 @@
         <span class="rank-name">${z.name}</span>
         <div class="rank-bar-track"><div class="rank-bar-fill" style="width:${(z.gain/maxGain*100).toFixed(0)}%"></div></div>
         <span class="rank-score">${z.gain.toFixed(2)}</span>
+      </div>`).join('');
+  }
+
+  // Agentic workflow
+  const agentSteps=[
+    "Verification agent — Al Zorah anomaly score 0.61, above the 0.50 threshold",
+    "Orchestrator agent — routing to field-ops and donor-relations in parallel",
+    "Field-ops agent — drafting a site-visit request to the IFHC field coordinator",
+    "Donor-relations agent — drafting a heads-up to Donor group C",
+    "Both drafts held for human sign-off — nothing sent automatically",
+    "Board-briefing agent — folding this into the January review, once approved"
+  ];
+  const stepReveals={2:'draft-fieldops', 3:'draft-donor'};
+  function runWorkflow(){
+    const trace=document.getElementById('agent-trace');
+    const btn=document.getElementById('run-workflow-btn');
+    if(!trace || !btn) return;
+    trace.innerHTML='';
+    const fo=document.getElementById('draft-fieldops'), dr=document.getElementById('draft-donor');
+    if(fo) fo.style.display='none';
+    if(dr) dr.style.display='none';
+    btn.disabled=true;
+    agentSteps.forEach((text,i)=>{
+      setTimeout(()=>{
+        const el=document.createElement('div');
+        el.className='agent-step';
+        el.innerHTML=`<span class="agent-step-tag">Step ${i+1}</span><span>${text}</span>`;
+        trace.appendChild(el);
+        trace.scrollTop=trace.scrollHeight;
+        const revealId=stepReveals[i];
+        if(revealId){
+          const card=document.getElementById(revealId);
+          if(card) card.style.display='block';
+        }
+        if(i===agentSteps.length-1) setTimeout(()=>btn.disabled=false,500);
+      }, i*1400);
+    });
+  }
+
+  const agentRoster=[
+    {name:"Verification agent", party:"Internal", desc:"Cross-checks satellite/drone/acoustic feeds against self-reported figures; computes anomaly scores."},
+    {name:"Affiliate-liaison agent", party:"12 affiliates", desc:"Pulls initiative status updates from each affiliate's own systems on a set cadence."},
+    {name:"Field-ops agent", party:"Field teams", desc:"Drafts site-visit requests when a zone is flagged. Never sends without approval."},
+    {name:"Donor-relations agent", party:"Donors", desc:"Drafts proactive updates when a flagged initiative touches an existing donor commitment."},
+    {name:"Board-briefing agent", party:"Board of trustees", desc:"Compiles verified data and approved outreach into the recurring board review."},
+    {name:"Orchestrator agent", party:"Routes internally", desc:"Watches for flags and decides which specialist agent(s) to wake up — the coordination layer."}
+  ];
+  const rosterEl=document.getElementById('agent-roster');
+  if(rosterEl){
+    rosterEl.innerHTML=agentRoster.map(a=>`
+      <div class="agent-row">
+        <span class="agent-name">${a.name}</span>
+        <span class="agent-party">${a.party}</span>
+        <span class="agent-desc">${a.desc}</span>
       </div>`).join('');
   }
 
