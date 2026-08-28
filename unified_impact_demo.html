@@ -264,11 +264,89 @@
   .compare-col ul{margin:0;padding-left:18px;font-size:12.5px;color:var(--ink-soft);}
   .compare-col li{margin-bottom:5px;}
 
+  /* Ambient background */
+  body::before{
+    content:'';position:fixed;inset:-10%;z-index:-1;
+    background:
+      radial-gradient(circle at 20% 20%, rgba(43,90,76,0.08), transparent 40%),
+      radial-gradient(circle at 80% 70%, rgba(169,129,46,0.08), transparent 40%),
+      radial-gradient(circle at 50% 100%, rgba(61,110,120,0.06), transparent 45%);
+    animation: drift 34s ease-in-out infinite alternate;
+  }
+  @keyframes drift{0%{transform:translate(0,0) scale(1);}100%{transform:translate(-2%,2%) scale(1.06);}}
+
+  /* Splash intro */
+  .splash{position:fixed;inset:0;z-index:9999;background:linear-gradient(160deg,#1E2A26,#16211C 65%,#1E2A26);
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;
+    transition:opacity .6s ease, visibility .6s ease;cursor:pointer;}
+  .splash.hidden{opacity:0;visibility:hidden;pointer-events:none;}
+  .splash-crest circle{opacity:0;animation:petalIn .6s ease forwards;transform-box:fill-box;transform-origin:center;}
+  .splash-crest circle:nth-child(1){animation-delay:.1s;}
+  .splash-crest circle:nth-child(2){animation-delay:.2s;}
+  .splash-crest circle:nth-child(3){animation-delay:.3s;}
+  .splash-crest circle:nth-child(4){animation-delay:.4s;}
+  .splash-crest circle:nth-child(5){animation-delay:.5s;}
+  .splash-crest circle:nth-child(6){animation-delay:.65s;}
+  @keyframes petalIn{from{opacity:0;transform:scale(.2) translateY(-16px);}to{opacity:1;transform:scale(1) translateY(0);}}
+  .splash-title{font-family:var(--font-display);font-weight:600;font-size:30px;color:#F6F2E8;opacity:0;animation:riseIn .6s ease forwards;animation-delay:.75s;text-align:center;padding:0 20px;}
+  .splash-stats{display:flex;gap:34px;flex-wrap:wrap;justify-content:center;padding:0 20px;}
+  .splash-stat{opacity:0;animation:riseIn .5s ease forwards;text-align:center;}
+  .splash-stat .n{font-family:var(--font-mono);font-size:26px;color:#E7D9B0;}
+  .splash-stat .l{font-size:11px;color:#9FAFA8;margin-top:2px;letter-spacing:.04em;text-transform:uppercase;}
+  .splash-tagline{font-family:var(--font-display);font-style:italic;font-size:15px;color:#C9D6D0;opacity:0;animation:riseIn .6s ease forwards;animation-delay:1.55s;}
+  .splash-hint{font-family:var(--font-mono);font-size:11px;color:#6E7E77;opacity:0;animation:riseIn .6s ease forwards, pulseHint 2s ease infinite 2.4s;animation-delay:1.9s;}
+  @keyframes riseIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+  @keyframes pulseHint{0%,100%{opacity:.5;}50%{opacity:1;}}
+
+  /* Command palette */
+  .btn-search{font-family:var(--font-mono);font-size:11.5px;background:transparent;border:1px solid var(--line);color:var(--ink-soft);padding:5px 12px;border-radius:14px;cursor:pointer;}
+  .btn-search:hover{border-color:var(--gold);color:var(--ink);}
+  .palette-overlay{position:fixed;inset:0;background:rgba(30,42,38,.55);z-index:9998;display:none;align-items:flex-start;justify-content:center;padding-top:12vh;}
+  .palette-overlay.open{display:flex;}
+  .palette-box{background:#fff;width:min(560px,90vw);border-radius:12px;box-shadow:0 20px 60px rgba(0,0,0,.35);overflow:hidden;animation:paletteIn .18s ease;}
+  @keyframes paletteIn{from{opacity:0;transform:translateY(-8px) scale(.98);}to{opacity:1;transform:translateY(0) scale(1);}}
+  .palette-input{width:100%;border:none;border-bottom:1px solid var(--line);padding:16px 18px;font-family:var(--font-body);font-size:15px;outline:none;box-sizing:border-box;color:var(--ink);}
+  .palette-results{max-height:340px;overflow-y:auto;}
+  .palette-item{display:flex;gap:12px;align-items:center;padding:11px 18px;cursor:pointer;font-size:13.5px;}
+  .palette-item:hover{background:var(--sand);}
+  .palette-cat{font-family:var(--font-mono);font-size:10px;color:var(--emerald);background:var(--emerald-light);padding:2px 8px;border-radius:8px;flex-shrink:0;width:52px;text-align:center;}
+  .palette-label{flex:1;}
+  .palette-empty{padding:20px 18px;font-size:13px;color:var(--ink-soft);}
+  .palette-hint{padding:8px 18px;font-size:11px;color:var(--ink-soft);border-top:1px solid var(--line);font-family:var(--font-mono);}
+
   @media (max-width:860px){.donut-row{flex-direction:column;align-items:flex-start;}}
-  @media (max-width:640px){.kpi-grid{grid-template-columns:1fr 1fr;}h1{font-size:30px;}.matrix{min-width:520px;}}
+  @media (max-width:640px){.kpi-grid{grid-template-columns:1fr 1fr;}h1{font-size:30px;}.matrix{min-width:520px;}.splash-stats{gap:20px;}}
 </style>
 </head>
 <body>
+<div class="splash" id="splash">
+  <svg class="splash-crest" width="120" height="120" viewBox="0 0 64 64" aria-hidden="true">
+    <circle cx="32" cy="12" r="7" fill="#3D6E78"/>
+    <circle cx="51" cy="25.8" r="7" fill="#A9812E"/>
+    <circle cx="43.76" cy="48.18" r="7" fill="#6B7A3E"/>
+    <circle cx="20.24" cy="48.18" r="7" fill="#2B5A4C"/>
+    <circle cx="12.98" cy="25.8" r="7" fill="#8C3B2A"/>
+    <circle cx="32" cy="32" r="5.5" fill="#F6F2E8"/>
+  </svg>
+  <div class="splash-title">Unified Impact Intelligence</div>
+  <div class="splash-stats">
+    <div class="splash-stat" style="animation-delay:.9s"><div class="n">AED 1.24B</div><div class="l">Tracked</div></div>
+    <div class="splash-stat" style="animation-delay:1.05s"><div class="n">5</div><div class="l">Sectors</div></div>
+    <div class="splash-stat" style="animation-delay:1.2s"><div class="n">12</div><div class="l">Affiliates</div></div>
+    <div class="splash-stat" style="animation-delay:1.35s"><div class="n">90+</div><div class="l">Donors</div></div>
+  </div>
+  <div class="splash-tagline">One dashboard. Five sectors. Total visibility.</div>
+  <div class="splash-hint">Click anywhere, or press any key, to continue</div>
+</div>
+
+<div class="palette-overlay" id="palette-overlay" onclick="if(event.target===this) closePalette();">
+  <div class="palette-box">
+    <input type="text" id="palette-input" class="palette-input" placeholder="Search tabs, questions, zones, actions…" oninput="renderResults(this.value)" autocomplete="off">
+    <div class="palette-results" id="palette-results"></div>
+    <div class="palette-hint">&#8629; to select &middot; Esc to close</div>
+  </div>
+</div>
+
 <div class="wrap">
 
   <div class="rule"></div>
@@ -277,7 +355,11 @@
       <div class="eyebrow">Erth Zayed Philanthropies &nbsp;·&nbsp; proposed engagement demo</div>
       <h1>Unified Impact Intelligence</h1>
       <p class="subhead">One view across five sectors and twelve affiliate entities — built so the Board of Trustees can ask a question in the room and get an answer, instead of waiting on a consolidated report.</p>
-      <div class="live-status"><span class="live-dot"></span>Live &middot; synced <span id="sync-secs">0</span>s ago</div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
+        <div class="live-status"><span class="live-dot"></span>Live &middot; synced <span id="sync-secs">0</span>s ago</div>
+        <button class="btn-search" onclick="openPalette()">&#8984;K Search everything</button>
+        <button class="btn-clear" onclick="replaySplash()">Replay intro</button>
+      </div>
     </div>
     <svg class="crest" width="64" height="64" viewBox="0 0 64 64" aria-hidden="true">
       <circle cx="32" cy="12" r="7" fill="#2B5A4C"/>
@@ -300,6 +382,7 @@
     <button class="tab-btn" data-tab="casestudy">Case study: mangroves</button>
     <button class="tab-btn" data-tab="agents">Agents</button>
     <button class="tab-btn" data-tab="donors">Donors &amp; funding</button>
+    <button class="tab-btn" data-tab="roadmap">Roadmap</button>
     <button class="tab-btn" data-tab="briefings">Briefings</button>
   </nav>
 
@@ -504,6 +587,40 @@
     </div>
   </section>
 
+  <section id="tab-roadmap" class="tab-panel">
+    <div class="panel">
+      <h2>Where this platform could go next</h2>
+      <p class="desc">Six ideas from outside the usual dashboard playbook — finance, climate science, conservation genetics, behavioral analytics, compliance, and governance. All proposed, none built.</p>
+      <span class="badge badge-proposed" style="display:inline-block;">Proposed capability</span>
+    </div>
+
+    <div class="panel">
+      <h2>The efficient impact frontier</h2>
+      <p class="desc">Portfolio theory, applied to verification instead of financial risk: for each sector, how confident is the model, and how large is the impact? Illustrative.</p>
+      <div id="frontier-chart"></div>
+      <div class="verify-stat">Agriculture, global health, and energy &amp; climate sit on the efficient frontier — each the best trade-off available between confidence and impact. Education and heritage sit inside it, not because they matter less, but because learning gains and cultural preservation don't yet have the same continuous, remote-sensed proof that satellite and acoustic data give the other three. That's a proof-method gap, not a funding recommendation — and it's exactly what a second phase of this engagement would close.</div>
+    </div>
+
+    <div class="panel">
+      <h2>Turn verified survival into carbon revenue</h2>
+      <p class="desc">AI-verified canopy establishment is close to the evidence a blue-carbon credit methodology actually requires.</p>
+      <p class="verify-method">Verra's VM0033 — the standard covering roughly 99% of blue-carbon credits issued to date — was written for exactly this kind of tidal-wetland restoration, and mangrove-restoration credits currently command $15&ndash;35 per credit, a premium over the average nature-based credit.</p>
+      <div class="verify-stat">Applying the UAE's own national sequestration estimate (~115,000 tons CO&sub2;/year at full build-out, or roughly 2.4 tons per hectare per year) to the 1,095 hectares and 64% verified survival already tracked across these six zones: an illustrative <strong>1,670 tons of verified CO&sub2; per year</strong> &mdash; worth roughly <strong>$25,000&ndash;$58,000 annually</strong> if registered as credits. Small next to Erth Zayed's own commitments, but it's revenue that funds more monitoring instead of asking donors for it.</div>
+    </div>
+
+    <div class="panel">
+      <h2>Genetic diversity monitoring for captive breeding</h2>
+      <p class="desc">The natural extension of IFHC's existing satellite-tracking infrastructure, applied one step earlier — before release, not after.</p>
+      <p class="verify-method">IFHC already runs one of the world's largest houbara captive-breeding and release programmes, with satellite tracking on released birds going back to the 1990s. An AI model tracking pedigree and kinship across the breeding population itself would flag a proposed pairing that raises inbreeding risk before it happens, not after a clutch shows reduced viability.</p>
+      <div class="gauge-row">
+        <div id="gauge2"></div>
+        <ul class="score-breakdown" id="score-breakdown2"></ul>
+      </div>
+    </div>
+
+    <div id="roadmap-cards"></div>
+  </section>
+
   <section id="tab-briefings" class="tab-panel">
     <div class="panel">
       <h2>From decree to dashboard</h2>
@@ -621,14 +738,40 @@
   ];
 
   // Tabs
+  function switchTab(name){
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.toggle('active', b.dataset.tab===name));
+    document.querySelectorAll('.tab-panel').forEach(p=>p.classList.toggle('active', p.id==='tab-'+name));
+  }
   document.querySelectorAll('.tab-btn').forEach(btn=>{
-    btn.addEventListener('click', ()=>{
-      document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
-      document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
-      btn.classList.add('active');
-      document.getElementById('tab-'+btn.dataset.tab).classList.add('active');
-    });
+    btn.addEventListener('click', ()=> switchTab(btn.dataset.tab));
   });
+
+  // Splash intro
+  function dismissSplash(){
+    const splash=document.getElementById('splash');
+    if(splash) splash.classList.add('hidden');
+  }
+  function replaySplash(){
+    const splash=document.getElementById('splash');
+    if(!splash) return;
+    splash.classList.remove('hidden');
+    splash.querySelectorAll('.splash-crest circle, .splash-title, .splash-stat, .splash-tagline, .splash-hint').forEach(el=>{
+      el.style.animation='none';
+      void el.offsetWidth;
+      el.style.animation='';
+    });
+    clearTimeout(window.__splashTimer);
+    window.__splashTimer=setTimeout(dismissSplash,4200);
+  }
+  (function initSplash(){
+    const splash=document.getElementById('splash');
+    if(!splash) return;
+    splash.addEventListener('click', dismissSplash);
+    document.addEventListener('keydown', function onceKey(e){
+      if(!splash.classList.contains('hidden')){ dismissSplash(); }
+    });
+    window.__splashTimer=setTimeout(dismissSplash,4200);
+  })();
 
   // KPI count-up
   function animateValue(el,{from,to,decimals=0,prefix='',suffix='',duration=900}){
@@ -667,11 +810,12 @@
       <text x="${CX}" y="${CY+20}" text-anchor="middle" style="font-size:11px;fill:#54615A">/ 100</text>
     </svg>`;
   }
-  const gaugeEl=document.getElementById('gauge');
-  if(gaugeEl){
-    gaugeEl.innerHTML=gaugeSVG(PORTFOLIO_BASE_SCORE);
-    const list=document.getElementById('score-breakdown');
-    scoreFactors.forEach(f=>{
+  function renderGauge(gaugeId, listId, score, factors, totalLabel, totalNote){
+    const gaugeEl=document.getElementById(gaugeId);
+    if(!gaugeEl) return;
+    gaugeEl.innerHTML=gaugeSVG(score);
+    const list=document.getElementById(listId);
+    factors.forEach(f=>{
       const li=document.createElement('li');
       const sign = f.base ? '' : (f.pts>=0?'delta-pos':'delta-neg');
       const val = f.base ? f.pts : (f.pts>=0? '+'+f.pts : '\u2212'+Math.abs(f.pts));
@@ -679,8 +823,85 @@
       list.appendChild(li);
     });
     const totalLi=document.createElement('li');
-    totalLi.innerHTML=`<span>Portfolio health score</span><span>${PORTFOLIO_BASE_SCORE} / 100 &mdash; Strong</span>`;
+    totalLi.innerHTML=`<span>${totalLabel}</span><span>${score} / 100 &mdash; ${totalNote}</span>`;
     list.appendChild(totalLi);
+  }
+  renderGauge('gauge','score-breakdown',PORTFOLIO_BASE_SCORE,scoreFactors,'Portfolio health score','Strong');
+
+  const geneticsFactors=[
+    {label:"Baseline population diversity", pts:70, base:true},
+    {label:"Founder-lineage tracking coverage", pts:15},
+    {label:"One bloodline flagged for elevated kinship", pts:-3}
+  ];
+  renderGauge('gauge2','score-breakdown2',82,geneticsFactors,'Genetic diversity index','Healthy, one flag');
+
+  // Efficient impact frontier
+  function frontierChartSVG(){
+    const points=[
+      {name:"Global health", x:62, y:78, color:"#2B5A4C", frontier:true},
+      {name:"Education", x:70, y:42, color:"#A9812E", frontier:false},
+      {name:"Agriculture", x:88, y:38, color:"#6B7A3E", frontier:true},
+      {name:"Energy & climate", x:48, y:92, color:"#3D6E78", frontier:true},
+      {name:"Heritage", x:75, y:32, color:"#8C3B2A", frontier:false}
+    ];
+    const W=600,H=280,padL=54,padR=30,padT=24,padB=44;
+    const plotW=W-padL-padR, plotH=H-padT-padB;
+    const x=v=>padL+(v/100)*plotW, y=v=>padT+(1-v/100)*plotH;
+    let grid='';
+    [0,50,100].forEach(v=>{
+      grid+=`<line x1="${padL}" y1="${y(v)}" x2="${W-padR}" y2="${y(v)}" stroke="#DCD3BE" stroke-width="1"/>`;
+      grid+=`<line x1="${x(v)}" y1="${padT}" x2="${x(v)}" y2="${H-padB}" stroke="#EAE4D3" stroke-width="1"/>`;
+    });
+    const axisLabels=`
+      <text x="${padL}" y="${H-14}" style="font-size:10.5px;fill:#54615A">Low confidence</text>
+      <text x="${W-padR}" y="${H-14}" text-anchor="end" style="font-size:10.5px;fill:#54615A">High confidence</text>
+      <text x="${padL-8}" y="${padT+6}" text-anchor="end" style="font-size:10.5px;fill:#54615A">High impact</text>
+      <text x="${padL-8}" y="${H-padB}" text-anchor="end" style="font-size:10.5px;fill:#54615A">Low impact</text>`;
+    const frontierPts=points.filter(p=>p.frontier).sort((a,b)=>a.x-b.x);
+    const frontierLine=`<polyline points="${frontierPts.map(p=>`${x(p.x)},${y(p.y)}`).join(' ')}" fill="none" stroke="#A9812E" stroke-width="1.5" stroke-dasharray="5 4"/>`;
+    let dots='';
+    points.forEach(p=>{
+      const r=p.frontier?7:6;
+      const op=p.frontier?1:0.55;
+      dots+=`<circle cx="${x(p.x)}" cy="${y(p.y)}" r="${r}" fill="${p.color}" opacity="${op}" stroke="#fff" stroke-width="1.5"/>`;
+      const anchor = p.x>85 ? 'end' : 'start';
+      const dx = p.x>85 ? -10 : 10;
+      dots+=`<text x="${x(p.x)+dx}" y="${y(p.y)+4}" text-anchor="${anchor}" style="font-size:11px;fill:#1E2A26">${p.name}</text>`;
+    });
+    return `<svg width="100%" viewBox="0 0 ${W} ${H}">${grid}${frontierLine}${dots}${axisLabels}</svg>
+    <div class="spark-legend">
+      <span><span class="spark-dot" style="background:#A9812E;opacity:1"></span>Efficient frontier</span>
+      <span><span class="spark-dot" style="background:#54615A;opacity:.55"></span>Inside the frontier</span>
+    </div>`;
+  }
+  const frontierEl=document.getElementById('frontier-chart');
+  if(frontierEl) frontierEl.innerHTML=frontierChartSVG();
+
+  // Roadmap cards
+  const roadmapCards=[
+    {name:"Donor propensity &amp; retention model",
+     pitch:"Borrowed from subscription-retention analytics — predicts which donor relationships are cooling before a renewal conversation is even due.",
+     method:"Scores each of the 90+ donor relationships on recency, frequency, and engagement trend — the same signals a churn model uses for a subscription business — surfacing the ones worth a proactive check-in this quarter.",
+     stat:"Illustrative: this is the same modeling family used across retention and growth analytics, applied to stewardship instead of subscriptions."},
+    {name:"Sanctions &amp; compliance screening",
+     pitch:"Automated, recurring — not a one-time check at onboarding.",
+     method:"Screens donors, grantees, and affiliate partners against global sanctions and politically-exposed-person lists on intake and on a recurring cadence, flagging matches for human compliance review rather than blocking automatically.",
+     stat:"This is the category of screening most cross-border funders already run manually — the proposal is making it continuous, not a one-off."},
+    {name:"Board commitment tracker",
+     pitch:"Makes sure January's stated priorities don't quietly slip by December.",
+     method:"Reads board meeting minutes and the strategic priorities set at each review, extracts specific commitments, and tracks them against actual portfolio activity over the year — a simple promised-vs-delivered scorecard for the next meeting.",
+     stat:"Illustrative: the same idea as the auto-drafted briefing, pointed backward at what was already promised instead of forward at what happened."}
+  ];
+  const roadmapEl=document.getElementById('roadmap-cards');
+  if(roadmapEl){
+    roadmapEl.innerHTML=`<div class="panel"><h2>Three more, in brief</h2><p class="desc">Same proposed-capability standard as everything else here — not built, just scoped.</p>`+
+      roadmapCards.map(c=>`
+        <div class="verify-card">
+          <div class="verify-head"><span class="verify-title">${c.name}</span></div>
+          <p class="verify-method" style="font-weight:600;color:var(--ink);margin-bottom:6px;">${c.pitch}</p>
+          <p class="verify-method">${c.method}</p>
+          <div class="verify-stat">${c.stat}</div>
+        </div>`).join('')+`</div>`;
   }
 
   // Vision detection tile
@@ -960,9 +1181,10 @@
   const pillLabel={"on-track":"On track","attention":"Needs attention","flagged":"Flagged"};
   const zoneList=document.getElementById('zone-list');
   if(zoneList){
-    zones.forEach(z=>{
+    zones.forEach((z,zi)=>{
       const card=document.createElement('div');
       card.className='zone-card';
+      card.id='zone-card-'+zi;
       card.innerHTML=`
         <div class="zone-top">
           <span class="zone-name">${z.name}</span>
@@ -1312,6 +1534,62 @@
   function stopSpeak(){
     if('speechSynthesis' in window) window.speechSynthesis.cancel();
   }
+
+  // Command palette
+  const tabLabels={overview:'Overview', sectors:'Sectors', verification:'Verification', casestudy:'Case study: mangroves', agents:'Agents', donors:'Donors & funding', roadmap:'Roadmap', briefings:'Briefings'};
+  const commandIndex=[
+    ...Object.keys(tabLabels).map(t=>({cat:'Tab', label:tabLabels[t], run:()=>switchTab(t)})),
+    ...intents.map(it=>({cat:'Ask', label:it.label, run:()=>{switchTab('briefings'); setTimeout(()=>askIntent(it.id),300);}})),
+    ...zones.map((z,zi)=>({cat:'Zone', label:z.name, run:()=>{
+      switchTab('casestudy');
+      setTimeout(()=>{
+        const card=document.getElementById('zone-card-'+zi);
+        if(card){ card.classList.add('open'); card.scrollIntoView({behavior:'smooth',block:'center'}); }
+      },300);
+    }})),
+    {cat:'Action', label:'Run the agent workflow', run:()=>{switchTab('agents'); setTimeout(runWorkflow,300);}},
+    {cat:'Action', label:'Play example conversation', run:()=>{switchTab('briefings'); setTimeout(playExample,300);}},
+    {cat:'Action', label:'Scale up mangrove verification (simulator)', run:()=>{switchTab('casestudy'); setTimeout(()=>{const el=document.getElementById('sim-slider'); if(el) el.scrollIntoView({behavior:'smooth',block:'center'});},300);}},
+    {cat:'Action', label:'Copy the January board briefing', run:()=>{switchTab('briefings'); setTimeout(copyMemo,300);}},
+    {cat:'Action', label:'Replay intro', run:()=>replaySplash()}
+  ];
+  let currentMatches=[];
+  function renderResults(query){
+    const q=query.trim().toLowerCase();
+    currentMatches = (q ? commandIndex.filter(c=>c.label.toLowerCase().includes(q)) : commandIndex.slice(0,8)).slice(0,8);
+    const el=document.getElementById('palette-results');
+    el.innerHTML = currentMatches.length ? currentMatches.map((c,i)=>
+      `<div class="palette-item" onclick="runPaletteItem(${i})"><span class="palette-cat">${c.cat}</span><span class="palette-label">${c.label}</span></div>`
+    ).join('') : '<div class="palette-empty">No matches — try a tab name, a question, or a zone.</div>';
+  }
+  function runPaletteItem(i){
+    const item=currentMatches[i];
+    if(!item) return;
+    closePalette();
+    item.run();
+  }
+  function openPalette(){
+    const overlay=document.getElementById('palette-overlay');
+    const input=document.getElementById('palette-input');
+    overlay.classList.add('open');
+    input.value='';
+    renderResults('');
+    setTimeout(()=>input.focus(),10);
+  }
+  function closePalette(){
+    document.getElementById('palette-overlay').classList.remove('open');
+  }
+  document.addEventListener('keydown', e=>{
+    const isOpen=document.getElementById('palette-overlay').classList.contains('open');
+    if((e.metaKey||e.ctrlKey) && e.key.toLowerCase()==='k'){
+      e.preventDefault();
+      isOpen ? closePalette() : openPalette();
+    } else if(e.key==='Escape' && isOpen){
+      closePalette();
+    } else if(e.key==='Enter' && isOpen && currentMatches.length){
+      runPaletteItem(0);
+    }
+  });
 </script>
 </body>
 </html>
